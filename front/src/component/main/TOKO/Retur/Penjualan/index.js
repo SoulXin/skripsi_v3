@@ -28,12 +28,12 @@ const Index = () => {
     const viewData = data ? data.map((list,index) => {
         return (
             <tr key={index}>
-                <td className="p-3">{list.Retur_Penjualan_Detail.id_penjualan}</td>
                 <td className="p-3">{list.id_retur_penjualan}</td>
+                <td className="p-3">{list.Retur_Penjualan_Detail[0].id_penjualan}</td>
                 <td className="p-3">{list.tanggal_retur}</td>
-                <td className="p-3">{list.id_pelanggan ? list.id_pelanggan :'BK : ' + list.nopol}</td>
-                <td className="p-3">{list.grand_total}</td>
-                <td className="p-3">{list.alasan_retur ? list.alasan_retur : 'Tidak Ada'}</td>
+                <td className="p-3">{list.Retur_Penjualan_Detail[0].Penjualan_Header.Penjualan_Pelanggan.nama_pelanggan }</td>
+                <td className="p-3">{list.Retur_Penjualan_Detail[0].Penjualan_Header.Penjualan_Pelanggan.nomor_polisi }</td>
+                <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/detail_retur_penjualan',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
                 </td>
@@ -66,12 +66,12 @@ const Index = () => {
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
-                            <th className="p-3">ID Penjualan</th>
                             <th className="p-3">ID Retur Penjualan</th>
+                            <th className="p-3">ID Penjualan</th>
                             <th className="p-3">Tanggal Retur</th>
-                            <th className="p-3">Pelanggan</th>
+                            <th className="p-3">Nama Pelanggan</th>
+                            <th className="p-3">Nomor Polisi</th>
                             <th className="p-3">Total</th>
-                            <th className="p-3">Alasan</th>
                             <th className="p-3"></th>
                         </tr>
                     </thead>

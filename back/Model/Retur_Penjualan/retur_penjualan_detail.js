@@ -14,7 +14,8 @@ const Retur_Penjualan_Detail = db.sequelize.define('retur_penjualan_detail',{
         type : Sequelize.INTEGER
     },
     id_barang : {
-        type : Sequelize.INTEGER
+        type : Sequelize.INTEGER,
+        defaultValue: true
     },
     max : {
         type : Sequelize.INTEGER

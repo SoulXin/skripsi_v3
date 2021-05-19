@@ -3,21 +3,29 @@ const { Op } = require("sequelize");
 const Barang_Header = require('../../Model/Barang/barang_header');
 const Barang_Detail = require('../../Model/Barang/barang_detail');
 
-exports.register = (req,res) => {
+exports.register = async (req,res) => {
     const {id_penjualan,id_barang,harga_jual,jumlah,total} = req.body;
-    Penjualan_Detail.create({
-        id_penjualan : id_penjualan,
-        id_barang : id_barang,
-        harga_jual : harga_jual,
-        jumlah : jumlah,
-        total : total
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
+    try{
+        await Penjualan_Detail.destroy({ 
+            where : {
+                [Op.and] : [
+                    { id_penjualan : id_penjualan},
+                    { id_barang : id_barang }
+                ]
+            }
+        })
+        await Penjualan_Detail.create({
+            id_penjualan : id_penjualan,
+            id_barang : id_barang,
+            harga_jual : harga_jual,
+            jumlah : jumlah,
+            total : total
+        })
+        await res.status(200).send();
+    }catch(err){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.show_detail = (req,res) => {

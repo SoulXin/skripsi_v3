@@ -17,10 +17,8 @@ const Index = () => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responseOffline = await axios.get('http://localhost:5001/penjualan_header/show_all');
-                const responseOnline = await axios.get('http://localhost:5001/pesanan_pelanggan_header/show_all_success');
+                const responseOffline = await axios.get('http://localhost:5001/penjualan_header/show_all_laporan');
                 setDataOffline(responseOffline.data);
-                setDataOnline(responseOnline.data);
             }catch(error){
                 setError(true);
             }
@@ -31,27 +29,14 @@ const Index = () => {
         }
     }, []);
 
-    const viewDataOnline = dataOnline ? dataOnline.map((list,index) => {
-        return (
-            <tr key={index}>
-                <td className="p-3">{list.tanggal_pemesanan}</td>
-                <td className="p-3">{list.Pelanggan.nama_pelanggan}</td>
-                <td className="p-3">Online</td>
-                <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-                <td className="p-3">{list.status}</td>
-            </tr>
-        )
-    }) : null;
-
     const viewDataOffiline = dataOffline ? dataOffline.map((list,index) => {
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_penjualan}</td>
                 <td className="p-3">{list.tanggal_penjualan}</td>
-                <td className="p-3">{list.nopol}</td>
-                <td className="p-3">Datang Ke Toko</td>
+                <td className="p-3">{list.Penjualan_Pelanggan.nama_pelanggan}</td>
+                <td className="p-3">{list.Penjualan_Pelanggan.nomor_polisi}</td>
                 <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-                <td className="p-3">{list.status}</td>
             </tr>
         )
     }) : null;
@@ -64,10 +49,7 @@ const Index = () => {
 
         try{
             const responseOffline = await axios.post('http://localhost:5001/penjualan_header/search_date',data);
-            const responseOnline = await axios.post('http://localhost:5001/pesanan_pelanggan_header/search_date',data);
             setDataOffline(responseOffline.data);
-            setDataOnline(responseOnline.data);
-
         }catch(error){
 
         }
@@ -109,13 +91,11 @@ const Index = () => {
                             <th className="p-3">ID Penjualan</th>
                             <th className="p-3">Tanggal Penjualan</th>
                             <th className="p-3">Nama Pelanggan</th>
-                            <th className="p-3">Jenis Penjualan</th>
+                            <th className="p-3">Nomor Polisi</th>
                             <th className="p-3">Total</th>
-                            <th className="p-3">Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {viewDataOnline}
                         {viewDataOffiline}
                     </tbody>
                 </table>

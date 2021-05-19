@@ -7,8 +7,7 @@ process.env.SECRET_KEY = 'secret'
 exports.register = (req,res) => {
     const userData = {
         username : req.body.username,
-        password : req.body.password,
-        status : req.body.status
+        password : req.body.password
     }
 
     User.findOne({
@@ -22,7 +21,7 @@ exports.register = (req,res) => {
                 userData.password = hash
                 User.create(userData)
                 .then(user => {
-                    res.json({ status: user.username + ' Berhasil Di Daftarkan ' })
+                    res.status(200).json(user);
                 })
                 .catch(err => {
                     res.send('error: ' + err)
@@ -38,11 +37,7 @@ exports.register = (req,res) => {
 }
 
 exports.show_all = (req,res) => {
-    User.findAll({
-        where : {
-            status : 1
-        }
-    })
+    User.findAll({})
     .then(user => {
         res.status(200).json(user);
     })

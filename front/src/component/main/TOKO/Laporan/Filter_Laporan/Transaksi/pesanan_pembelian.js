@@ -15,7 +15,7 @@ const Index = (props) => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responseBarang = await axios.get('http://localhost:5001/pesanan_pembelian_header/show_all');
+                const responseBarang = await axios.get('http://localhost:5001/pesanan_pembelian_header/show_all_laporan');
                 setData(responseBarang.data);
                 setDetail(props.location.state); // => detail ini berisikan id pembelian, yang digunakan untuk menarik data pesanan pembelian ke pembelian
             }catch(error){
@@ -35,7 +35,6 @@ const Index = (props) => {
                 <td className="p-3">{list.tanggal_pemesanan}</td>
                 <td className="p-3">{list.Supplier.nama_supplier}</td>
                 <td className="p-3">{list.grand_total}</td>
-                <td className="p-3">{list.status}</td>
             </tr>
         )
     }) : null;
@@ -65,7 +64,6 @@ const Index = (props) => {
                             <th className="p-3">Tanggal Pemesanan</th>
                             <th className="p-3">Nama Supplier</th>
                             <th className="p-3">Total</th>
-                            <th className="p-3">Status</th>
                         </tr>
                     </thead>
                     <tbody>

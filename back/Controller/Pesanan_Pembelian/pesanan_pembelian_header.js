@@ -2,6 +2,7 @@ const Pesanan_Pembelian_Header = require('../../Model/Pesanan_Pembelian/pesanan_
 const Supplier = require('../../Model/Supplier/supplier');
 const { Op } = require("sequelize");
 const Pesanan_Pembelian_Detail = require('../../Model/Pesanan_Pembelian/pesanan_pembelian_detail');
+const Pembelian_Header = require('../../Model/Pembelian/pembelian_header');
 
 exports.register = (req,res) => {
     const {tanggal_pemesanan,id_supplier,grand_total} = req.body;
@@ -20,14 +21,29 @@ exports.register = (req,res) => {
 
 exports.show_all = (req,res) => {
     Pesanan_Pembelian_Header.findAll({
-        where : {
-            status : {
-                [Op.and] : [{
-                    [Op.notLike] : 'Pembuatan'
-                },{
-                    [Op.notLike] : 'Tolak'
-                }]
+        include : [
+            {
+                model : Supplier,
+                as : 'Supplier'
+            },
+            {
+                model : Pesanan_Pembelian_Detail,
+                as : 'Pesanan_Pembelian_Detail'
             }
+        ]
+    })
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
+
+exports.show_all_laporan = (req,res) => {
+    Pesanan_Pembelian_Header.findAll({
+        where : {
+            status : 'Selesai'
         },
         include : [
             {
@@ -58,6 +74,10 @@ exports.show_detail = (req,res) => {
             {
                 model : Supplier,
                 as : 'Supplier'
+            },
+            {
+                model : Pembelian_Header,
+                as : 'Pembelian_Header'
             }
         ]
     })
@@ -86,7 +106,6 @@ exports.search = (req,res) => {
 }
 
 exports.update = (req,res) => {
-    console.log(req.body)
     const {id} = req.params;
     const {tanggal_pemesanan,id_supplier,grand_total,status} = req.body;
     Pesanan_Pembelian_Header.update({

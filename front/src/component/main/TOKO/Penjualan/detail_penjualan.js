@@ -1,24 +1,22 @@
-import React,{useEffect, useState,useRef} from 'react'
+import React,{useEffect, useState,useRef,useContext} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../global/function'
 import {Faktur_Penjualan} from '../Laporan/Faktur/faktur_penjualan'
 import ReactToPrint from 'react-to-print';
+import {Context} from '../../../state_management/context'
 
 const Index = (props) => {
     const componentRef = useRef();
+    const {dataContext} = useContext(Context);
 
     const [data,setData] = useState([]);
     const [error,setError] = useState(false);
     const [refresh,setRefresh] = useState(false);
     
-    // Detail data
-    const [detail,setDetail] = useState();
-
-    // Id Pesanan dan pelanggan
-    const [idPelanggan,setIdPelanggan] = useState('');
+    // Id Penjualan dan pelanggan
     const [idPenjualan,setIdPenjualan] = useState('');
-
+    const [idRowPelanggan,setIdRowPelanggan] = useState('');
     // Data
     const [dataMekanik,setDataMekanik] = useState([]);
     const [dataBarang,setDataBarang] = useState([]);
@@ -34,7 +32,10 @@ const Index = (props) => {
     // Mekanik dan nopol
     const [idMekanik,setIdMekanik] = useState('');
     const [nomorPolisi,setNomorPolisi] = useState('');
+    const [namaPelanggan,setNamaPelanggan] = useState('');
     
+    const [checkRetur,setCheckRetur] = useState('');
+
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -43,15 +44,23 @@ const Index = (props) => {
                 const responsePenjualan = await axios.get(`http://localhost:5001/penjualan_header/show_detail/${detail}`);
                 const responseBarang = await axios.get(`http://localhost:5001/penjualan_detail/show_detail/${detail}`);
                 const responseService = await axios.get(`http://localhost:5001/penjualan_service/show_detail/${detail}`);
+                const responsePenjualanPelanggan = await axios.get(`http://localhost:5001/penjualan_pelanggan/show_detail/${detail}`);
+                const responseCheck = await axios.get(`http://localhost:5001/penjualan_header/show_detail/${detail}`);
+
+                setCheckRetur(responseCheck.data.Retur_Penjualan_Detail ? true : false);
+
+                // Pelanggan
+                setIdRowPelanggan(responsePenjualanPelanggan.data.id);
 
                 setDataMekanik(responseMekanik.data);
                 setDataBarang(responseBarang.data);
                 setDataService(responseService.data);
                 setIdPenjualan(responsePenjualan.data.id_penjualan);
-                setNomorPolisi(responsePenjualan.data.nopol);
+                setNomorPolisi(responsePenjualanPelanggan.data.nomor_polisi);
+                setNamaPelanggan(responsePenjualanPelanggan.data.nama_pelanggan);
                 setTanggalPemesanan(responsePenjualan.data.tanggal_penjualan);
                 setStatus(responsePenjualan.data.status);
-                setIdMekanik(responsePenjualan.data.id_mekanik == 0 ? '' : responsePenjualan.data.id_mekanik);
+                setIdMekanik(responsePenjualan.data.Mekanik_Detail ? responsePenjualan.data.Mekanik_Detail.id_mekanik : '');
                 
                 var totalBarang = 0;
                 var totalService = 0;
@@ -82,7 +91,7 @@ const Index = (props) => {
         return (
             <tr key={index}>
                 {
-                    status == "Selesai" || status == "Tolak" ? null :
+                    status == "Selesai" || !dataContext.edit_penjualan || checkRetur ? null :
                     <td>
                         <Link to={{ pathname : '/edit_barang_offline',state : list }}className="btn btn-outline-secondary mx-1">Edit</Link>
                         <button className="btn btn-danger mx-1" onClick = {() => handleDelete(list)}>Hapus</button>
@@ -101,7 +110,7 @@ const Index = (props) => {
         return (
             <tr key = {index}>
                 {
-                    status == "Selesai" || status == "Tolak" ? null :
+                    status == "Selesai" || !dataContext.edit_penjualan || checkRetur ? null :
                     <td>
                         <button className="btn btn-danger mx-1" onClick = {() => handleDelete(list)}>Hapus</button>
                     </td>
@@ -124,90 +133,60 @@ const Index = (props) => {
         
     }) : null;
 
-    const viewStatus = () => {
-        if(status == "Proses" ){
-            return (
-                <div className="row  mt-2">
-                    <button className="btn btn-danger col-5 mx-auto" onClick={handleCancel}>Batal</button>
-                    <button 
-                        className="btn btn-outline-success col-5 mx-auto" 
-                        onClick={handleAccept}
-                        disabled = { dataService.length > 0 && idMekanik === '' || nomorPolisi ===''  ? true : false}
-                    >Selesai</button>
-                </div>
-            )
-        }else if(status == "Selesai"){
-            return (
-                <div className="row mt-3">
-                    <p className="fw-b text-center text-success" disabled>Pesanan Telah Selesai</p>
-                </div>
-            )
-        }else{
-            return (
-                <div className="row mt-3">
-                    <p className="fw-b text-center text-danger">Pesanan Ditolak</p>
-                </div>
-            )
-        }
-    }
-
-    const handleCancel = () => {
-        const dataUpdate = {
-            status : 'Tolak'
-        }
-        axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataUpdate)
-        .then((res) => {
-            setRefresh(!refresh);
-            alert('Pesanan pelanggan berhasil di tolak');
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }
-
-    const handleAccept = async () => {
+    const handleCancel = async () => {
         try{
-            if(dataService.length > 0 && idMekanik !== '' || nomorPolisi !== ''){
-                const dataPenjualanHeader = {
-                    tanggal_penjualan : tanggalPemesanan,
-                    id_pesanan_pelanggan : 0,
-                    id_pelanggan : 0,
-                    nopol : nomorPolisi,
-                    id_mekanik : idMekanik,
-                    grand_total : parseInt(totalBarang + totalService),
-                    status : 'Selesai'
-                }
-                const dataUpdate = { status : 'Selesai' }
-    
-                // Kurangi stok barang
-                for(var a = 0;a < dataBarang.length;a++){
-                    const data = {
-                        stok : dataBarang[a].Barang_Header.Barang_Detail.stok - dataBarang[a].jumlah
-                    }
-                    await axios.put(`http://localhost:5001/barang_detail/update/${dataBarang[a].id_barang}`,data);
-                }
-                
-                // update kedalam table penjualan header
-                await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
-
-                // update kedalam table penjualan detail
-                for(var a = 0; a < dataBarang.length; a++){
-                    const dataPenjualanDetail = {
-                        harga_jual : dataBarang[a].harga_jual,
-                        jumlah : dataBarang[a].jumlah,
-                        total : dataBarang[a].total
-                    }
-                    await axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${dataBarang[a].id_barang}`,dataPenjualanDetail)
-                }
-    
-                setRefresh(!refresh);
-                alert('Pesanan berhasil diselesaikan');
+            if(checkRetur){
+                alert('Tidak bisa dibatalkan karena data sedang digunakan');
             }else{
-                alert('Mekanik atau nomor polisi tidak boleh kosong');
+                // Pelanggan
+                await axios.delete(`http://localhost:5001/penjualan_pelanggan/delete_detail/${idRowPelanggan}/${idPenjualan}`);
+    
+                // Mekanik
+                if(idMekanik){
+                    await axios.delete(`http://localhost:5001/mekanik_detail/delete_penjualan/${idMekanik}/${idPenjualan}`);
+                }
+    
+                // Service
+                for(var a = 0; a < dataService.length; a++){
+                    await axios.delete(`http://localhost:5001/penjualan_service/delete_detail/${idPenjualan}/${dataService[a].id_service}`);
+                }
+    
+                // Barang
+                for(var b = 0; b < dataBarang.length; b++){
+                    await axios.delete(`http://localhost:5001/penjualan_detail/delete_detail/${idPenjualan}/${dataBarang[b].id_barang}`);
+                }
+    
+                await axios.delete(`http://localhost:5001/penjualan_header/delete/${idPenjualan}`);
+                alert('Data Penjualan Berhasil Dihapus');
+                props.history.goBack();
             }
-           
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    const handleSave = async () => {
+        const dataPenjualanHeader = {
+            tanggal_penjualan : tanggalPemesanan
+        }
+
+        const dataPenjualanPelanggan = {
+            nomor_polisi : nomorPolisi,
+            nama_pelanggan : namaPelanggan
+        }
+
+        const dataPenjualanMekanik = {
+            id_mekanik : idMekanik
+        }
+
+        try{
+            await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
+            await axios.put(`http://localhost:5001/penjualan_pelanggan/update/${idPenjualan}`,dataPenjualanPelanggan);
+            await axios.put(`http://localhost:5001/mekanik_detail/update_penjualan/${idPenjualan}`,dataPenjualanMekanik);
+            alert('Data berhasil diubah');
+            props.history.goBack();
         }catch(error){
-            console.log(error);
+            console.log(error)
         }
     }
 
@@ -222,14 +201,40 @@ const Index = (props) => {
         setRefresh(!refresh);
     }
 
+    const handleComplete = async () => {
+        try{
+            const dataUpdate = {
+                status : 'Selesai'
+            }
+            await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataUpdate);
+            alert('Data Penjualan Berhasil Diubah');
+            props.history.goBack();
+        }catch(error){
+            console.log(error)
+        }
+    }
+
+    const handleEdit = async () => {
+        try{
+            const dataUpdate = {
+                status : 'Proses'
+            }
+            await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataUpdate);
+            setRefresh(!refresh);
+        }catch(error){
+            console.log(error)
+        }
+    }
+
     return (
         <div className="container px-0 pt-5">
             {/* Atas */}
-            <div className="row mb-4">
-                <div className="col-5 border-bottom">
+            <div className="row mb-4 pb-3 border-bottom">
+                <button className="col-1 btn btn-outline-secondary" onClick = {() => props.history.goBack()}>Kembali</button>
+                <div className="col-5 mx-auto">
                     <h2>Detail Penjualan</h2>
                 </div>
-                <div className="offset-5 col-2 row">
+                <div className="col-2 row">
                     <ReactToPrint
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan</button>}
                         content={() => componentRef.current}
@@ -237,6 +242,7 @@ const Index = (props) => {
                     <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} nopol = {nomorPolisi}/></div>
                 </div>
             </div>
+
             {/* Isi */}
             <div className="row">
                 {/* List */}
@@ -249,18 +255,22 @@ const Index = (props) => {
                             <label for="id_penjualan">ID Penjualan</label>
                         </div>
                         <div class="col-3 form-floating mb-3 px-0 mx-auto">
-                            <input type="text" class="form-control" id="tanggal_pemesanan" placeholder={tanggalPemesanan} value={tanggalPemesanan} disabled/>
+                            <input type="date" class="form-control" id="tanggal_pemesanan" placeholder={tanggalPemesanan} value={tanggalPemesanan} onChange = {(e) => setTanggalPemesanan(e.target.value)} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
                             <label for="tanggal_pemesanan">Tanggal Penjualan</label>
                         </div>
 
-                        
-                        <div class="form-floating mb-3 col-3 px-0">
-                            <input type="text" class="form-control" id="nomor_polisi" onChange = {(e) => setNomorPolisi(e.target.value)} value = {nomorPolisi} disabled = {status == "Selesai" || status == "Tolak" ? true : false}/>
+                        <div class="form-floating mb-3 col-2 px-0 mx-auto">
+                            <input type="text" class="form-control" id="nama_pelanggan" onChange = {(e) => setNamaPelanggan(e.target.value)} value = {namaPelanggan} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
+                            <label for="nomor_polisi">Nama Pelanggan</label>
+                        </div>
+
+                        <div class="form-floating mb-3 col-2 px-0 mx-auto">
+                            <input type="text" class="form-control" id="nomor_polisi" onChange = {(e) => setNomorPolisi(e.target.value)} value = {nomorPolisi} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'} />
                             <label for="nomor_polisi">Nomor Polisi</label>
                         </div>
      
                         <div class="col-2 form-floating mb-3 px-0 mx-auto">
-                            <select class="form-select" aria-label="Default select example" onChange = {(e => setIdMekanik(e.target.value))} disabled = {status == "Selesai" || status == "Tolak" || dataService.length == 0 ? true : false}>
+                            <select class="form-select" aria-label="Default select example" onChange = {(e => setIdMekanik(e.target.value))}  disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}>
                                 <option value='' selected>Tidak ada</option>
                                 {viewMekanik}
                             </select>
@@ -276,7 +286,7 @@ const Index = (props) => {
                             <thead>
                                 <tr>
                                     {
-                                        status == "Tolak" || status == "Selesai" ?  
+                                        status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ?  
                                         null : <th className="p-3"></th>
                                     }
                                     <th className="p-3">Jenis</th>
@@ -292,7 +302,7 @@ const Index = (props) => {
                             </tbody>
                         </table>
                         {
-                            status == "Tolak" || status == "Selesai" ? null :
+                            status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ? null :
                             <div className="col-12 row">
                                 <Link to={{ pathname : '/tambah_service_penjualan_offline',state : idPenjualan }} className = "col-5 mx-auto btn btn-outline-success">Tambah Service</Link>
                                 <Link to={{ pathname : '/tambah_barang_penjualan_offline',state : idPenjualan }} className = "col-5 mx-auto btn btn-success">Tambah Barang</Link>
@@ -325,7 +335,34 @@ const Index = (props) => {
                             </tr>
                         </tbody>
                     </table>
-                    {viewStatus()}
+                            {
+                                checkRetur ? 
+                                <p>Status Penjualan : 
+                                    <ul>
+                                        <li>Data Telah Digunakan Pada Modul Retur</li>
+                                    </ul>
+                                </p> : null
+                            }
+                        
+
+                    <div className="row">
+                        {
+                            !dataContext.hapus_penjualan || checkRetur || status == 'Selesai' ? null : 
+                            <button className="btn btn-danger w-100 col mx-1 mt-3" onClick = {handleCancel}>Batal</button>
+                        }
+                        {
+                            !dataContext.edit_penjualan || checkRetur || status == 'Selesai'  ? null : 
+                            <button className="btn btn-outline-success w-100 col mx-1 mt-3" onClick = {handleSave}>Simpan</button>
+                        }
+                        {
+                            !dataContext.edit_penjualan || checkRetur  || status == 'Selesai'  ? null : 
+                            <button className="btn btn-success w-100 col mx-1 mt-3" onClick = {handleComplete}>Selesai</button>
+                        }
+                        {
+                            !dataContext.edit_penjualan || checkRetur || status == 'Proses' ? null : 
+                            <button className="btn btn-outline-success w-100 col mx-1 mt-3" onClick = {handleEdit}>Ubah</button>
+                        }
+                    </div>
                 </div>
             </div>
         </div>

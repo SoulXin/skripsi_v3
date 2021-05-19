@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
-const Penjualan_Header = require('../Penjualan/penjualan_header');
+const Mekanik_Detail = require('./mekanik_detail');
 
 const Mekanik_Header = db.sequelize.define('mekanik_header',{
     id_mekanik : {
@@ -26,8 +26,7 @@ const Mekanik_Header = db.sequelize.define('mekanik_header',{
     }
 });
 
-Mekanik_Header.hasOne(Penjualan_Header, {as : 'Penjualan_Header', foreignKey : 'id_mekanik'});
-Penjualan_Header.belongsTo(Mekanik_Header, {as : 'Mekanik_Header', foreignKey : 'id_mekanik'});
-
+Mekanik_Header.hasOne(Mekanik_Detail, {as : 'Mekanik_Detail', foreignKey : 'id_mekanik'});
+Mekanik_Detail.belongsTo(Mekanik_Header, {as : 'Mekanik_Header', foreignKey : 'id_mekanik'});
 
 module.exports = Mekanik_Header

@@ -14,6 +14,9 @@ const Retur_Pembelian_Header = db.sequelize.define('retur_pembelian_header',{
     id_supplier  : {
         type : Sequelize.INTEGER
     },
+    jenis_penggembalian : {
+        type : Sequelize.STRING
+    },
     grand_total: {
         type : Sequelize.INTEGER
     },
@@ -23,7 +26,7 @@ const Retur_Pembelian_Header = db.sequelize.define('retur_pembelian_header',{
 });
 
 // Retur pembelian detail 
-Retur_Pembelian_Header.hasOne(Retur_Pembelian_Detail,{as : 'Retur_Pembelian_Detail', foreignKey : 'id_retur_pembelian'});
+Retur_Pembelian_Header.hasMany(Retur_Pembelian_Detail,{as : 'Retur_Pembelian_Detail', foreignKey : 'id_retur_pembelian'});
 Retur_Pembelian_Detail.belongsTo(Retur_Pembelian_Header,{as : 'Retur_Pembelian_Header', foreignKey : 'id_retur_pembelian'});
 
 

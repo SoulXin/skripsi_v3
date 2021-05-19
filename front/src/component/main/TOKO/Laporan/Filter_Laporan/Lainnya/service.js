@@ -19,10 +19,10 @@ const Index = () => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responseBarang = await axios.get('http://localhost:5001/penjualan_header/show_all_service');
+                const responsePendapatanMekanik = await axios.get('http://localhost:5001/penjualan_header/show_all_service');
                 const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_all');
 
-                setData(responseBarang.data);
+                setData(responsePendapatanMekanik.data);
                 setDataMekanik(responseMekanik.data);
             }catch(error){
                 setError(true);
@@ -35,14 +35,14 @@ const Index = () => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
-        if(list.Mekanik_Header){
+        if(list.Mekanik_Detail){
             return (
                 <tr key={index}>
-                    <td>{list.id_penjualan}</td>
-                    <td>{list.tanggal_penjualan}</td>
-                    <td>{list.Mekanik_Header.nama}</td>
-                    <td>{list.Penjualan_Service.Jenis_Service.nama}</td>
-                    <td>Rp. {formatMoney(list.Penjualan_Service.Jenis_Service.harga)}</td>
+                    <td className="p-3">{list.id_penjualan}</td>
+                    <td className="p-3">{list.tanggal_penjualan}</td>
+                    <td className="p-3">{list.Mekanik_Detail.Mekanik_Header.nama}</td>
+                    <td className="p-3">{list.Penjualan_Service.Jenis_Service.nama}</td>
+                    <td className="p-3">Rp. {formatMoney(list.Penjualan_Service.Jenis_Service.harga)}</td>
                 </tr>
             )
         }

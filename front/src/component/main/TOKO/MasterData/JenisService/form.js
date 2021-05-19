@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import {Context} from '../../../../state_management/context'
 
 const Form = (props) => {
+    const {dataContext} = useContext(Context);
     const [refresh,setRefresh] = useState(false);
     const [error,setError] = useState(false);
     const [detail,setDetail] = useState(false);
@@ -109,8 +111,8 @@ const Form = (props) => {
                 </div>
 
                 <div className="row">
-                    { detail ? <button type="button" className={aktif ? "btn btn-outline-danger mt-2 mb-5 mx-2 col" : "btn btn-outline-success mt-2 mb-5 mx-2 col"}  onClick={handleChangeStatus}>{ aktif ? 'Non-Aktifkan Service' : 'Aktifkan Service' }</button> : null }
-                    <button type="submit" className="btn btn-success mt-2 mr-auto mb-5 mx-2 col">{detail ? 'Simpan' : 'Tambah Service'}</button>
+                    { detail ? <button type="button" className={aktif ? "btn btn-outline-danger mt-2 mb-5 mx-2 col" : "btn btn-outline-success mt-2 mb-5 mx-2 col"}  onClick={handleChangeStatus} disabled = {!dataContext.hapus_jenis_service}>{ aktif ? 'Non-Aktifkan Service' : 'Aktifkan Service' }</button> : null }
+                    <button type="submit" className="btn btn-success mt-2 mr-auto mb-5 mx-2 col" disabled = {!dataContext.edit_jenis_service}>{detail ? 'Simpan' : 'Tambah Service'}</button>
                 </div>
             </form>
         </div>

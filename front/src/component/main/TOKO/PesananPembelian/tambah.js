@@ -115,6 +115,10 @@ const Index = (props) => {
             </div>
             {/* Header Isi */}
             <div className="row">
+                <div class="form-floating mb-3 px-0 col-2">
+                    <input type="text" class="form-control" value = {idPesananPembelian} id="floatingInput" disabled/>
+                    <label for="floatingInput">ID Pemesanan</label>
+                </div>
                 <div className="col-3">
                     <label>Supplier</label>
                     <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)}>
@@ -126,7 +130,7 @@ const Index = (props) => {
                     <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com" onChange = {(e) => setTanggalPemesanan(e.target.value)}/>
                     <label for="floatingInput">Tangal Pemesanan</label>
                 </div>
-                <div className="col-2 offset-5 ml-auto">
+                <div className="col-2 offset-3 ml-auto">
                     <button className="btn btn-success w-100" onClick={handleSave}>Simpan</button>
                 </div>
             </div>

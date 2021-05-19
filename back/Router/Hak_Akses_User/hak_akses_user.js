@@ -4,5 +4,6 @@ const hak_akses_user_Controller = require('../../Controller/Hak_Akses_User/hak_a
 
 router.post("/register",hak_akses_user_Controller.register);
 router.get("/show_detail/:id",hak_akses_user_Controller.show_detail);
+router.put("/update/:id/:hak_akses_id",hak_akses_user_Controller.update);
 
 module.exports = router;

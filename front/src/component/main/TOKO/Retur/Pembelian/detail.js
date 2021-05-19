@@ -1,9 +1,11 @@
-import React,{useEffect, useState} from 'react'
-import { useHistory,Link } from 'react-router-dom'
+import React,{useEffect, useState,useContext} from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../../global/function'
+import {Context} from '../../../../state_management/context'
 
 const Index = (props) => {
+    const {dataContext} = useContext(Context);
     const [refresh,setRefresh] = useState(false);
 
     const [idRetur,setIdRetur] = useState('');
@@ -12,6 +14,7 @@ const Index = (props) => {
     const [tanggalRetur,setTanggalRetur] = useState('');
     const [alasanRetur,setAlasanRetur] = useState('');
     const [grandTotal,setGrandTotal] = useState('');
+    const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
 
     useEffect(() => {
         const loadData = async () => {
@@ -23,7 +26,8 @@ const Index = (props) => {
                 setIdRetur(detail.id_retur_pembelian);
                 setIdPembelian(responseDataRetur.data[0].id_pembelian);
                 setTanggalRetur(responseHeader.data.tanggal_retur);
-                setAlasanRetur(responseHeader.data.alasan_retur)
+                setAlasanRetur(responseHeader.data.alasan_retur);
+                setJenisPenggembalian(responseHeader.data.jenis_penggembalian);
 
                 var total = 0;
                 responseDataRetur.data.map((list,index) => {
@@ -45,10 +49,13 @@ const Index = (props) => {
         if(list.id_barang != 0){
             return (
                 <tr key={index}>
-                    <td className="p-3">
-                        <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
-                        <Link to={{ pathname : '/edit_barang_retur_pembelian',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
-                    </td>
+                    {
+                        !dataContext.edit_retur_pembelian ? null : 
+                        <td className="p-3">
+                            <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
+                            <Link to={{ pathname : '/edit_barang_retur_pembelian',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
+                        </td>
+                    }
                     <td className="p-3">{list.id_barang}</td>
                     <td className="p-3">{list.Barang_Header.nama_barang}</td>
                     <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
@@ -73,6 +80,7 @@ const Index = (props) => {
         try{
             const dataUpdate = {
                 tanggal_retur : tanggalRetur,
+                jenis_penggembalian : jenisPenggembalian,
                 alasan_retur : alasanRetur,
                 grand_total : grandTotal
             }
@@ -104,6 +112,17 @@ const Index = (props) => {
         props.history.goBack();
     }
 
+    const handleCancel = async () => {
+        try{
+            await axios.delete(`http://localhost:5001/retur_pembelian_detail/delete_retur/${idRetur}`);
+            await axios.delete(`http://localhost:5001/retur_pembelian_header/delete/${idRetur}`);
+            alert('Data Retur Berhasil Dihapus');
+            props.history.goBack();
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
@@ -120,7 +139,10 @@ const Index = (props) => {
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th className="p-3"></th>
+                                {
+                                    !dataContext.edit_retur_pembelian ? null : 
+                                    <th className="p-3"></th>
+                                }
                                 <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
                                 <th className="p-3">Harga Beli</th>
@@ -133,7 +155,7 @@ const Index = (props) => {
                         </tbody>
                     </table>
                     {
-                        idPembelian == '' ? null : 
+                        idPembelian == '' || !dataContext.edit_retur_pembelian ? null : 
                         <div className="row">
                             <Link to={{ pathname : '/tambah_barang_retur_pembelian',state : {idRetur,idPembelian} }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
                         </div>
@@ -146,26 +168,46 @@ const Index = (props) => {
                             <input type="text" class="form-control" value={idPembelian} disabled/>
                             <label for="floatingInput">ID Pembelian</label>
                         </div>
-                        <div className="col-6 px-0">
-                            <Link to={{ pathname : '/tambah_data_retur_pembelian',state: idRetur}} className=" btn btn-outline-success">Ambil Data Pembelian</Link>
-                        </div>
+                        {
+                            !dataContext.edit_retur_pembelian ? null : 
+                            <div className="col-6 px-0">
+                                <Link to={{ pathname : '/tambah_data_retur_pembelian',state: idRetur}} className=" btn btn-outline-success">Ambil Data Pembelian</Link>
+                            </div>
+                        }
+                    </div>
+
+                    <div className="row form-floating mb-2">
+                        <select class="form-select" onChange = { (e) => setJenisPenggembalian(e.target.value)} disabled = {!dataContext.edit_retur_pembelian}>
+                            <option value = "1" selected = {jenisPenggembalian ? true : false}>Tunai</option>
+                            <option value = "0" selected = {!jenisPenggembalian ? true : false}>Ganti Barang</option>
+                        </select>
+                        <label>Jenis Pembayaran</label>
                     </div>
 
                     <div className="row">
                         <div class="form-floating mb-3 px-0 mx-1">
-                            <input type="date" class="form-control" value={tanggalRetur} onChange={(e) => setTanggalRetur(e.target.value)}/>
+                            <input type="date" class="form-control" value={tanggalRetur} onChange={(e) => setTanggalRetur(e.target.value)} disabled = {!dataContext.edit_retur_pembelian}/>
                             <label for="floatingInput">Tanggal Retur Pembelian</label>
                         </div>
                     </div>
 
                     <div className="row">
                         <div class="form-floating mb-3 px-0 mx-1">
-                            <textarea type="text" class="form-control" value={alasanRetur} onChange={(e) => setAlasanRetur(e.target.value)}></textarea>
+                            <textarea type="text" class="form-control" value={alasanRetur} onChange={(e) => setAlasanRetur(e.target.value)} disabled = {!dataContext.edit_retur_pembelian}></textarea>
                             <label for="floatingInput">Alasan Retur</label>
                         </div>
                     </div>
-
-                    <button className="btn btn-success w-100" onClick={handleSave} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Simpan</button>
+                    
+                    <div className="row">
+                        {
+                            !dataContext.hapus_retur_pembelian ? null : 
+                            <button className="btn btn-danger col mx-1 w-100" onClick={handleCancel} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Batal</button>
+                        }
+                        {
+                            !dataContext.edit_retur_pembelian ? null : 
+                            <button className="btn btn-success col mx-1 w-100" onClick={handleSave} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Simpan</button>
+                        }
+                    </div>
                 </div>
             </div>
 

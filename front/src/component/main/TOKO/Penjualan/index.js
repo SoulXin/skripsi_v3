@@ -6,17 +6,14 @@ import { formatMoney } from '../../../global/function'
 const Index = () => {
     let history = useHistory();
 
-    const [dataOnline,setDataOnline] = useState([]);
-    const [dataOffline,setDataOffline] = useState([]);
+    const [data,setData] = useState([]);
     const [error,setError] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responseOffline = await axios.get('http://localhost:5001/penjualan_header/show_all');
-                const responseOnline = await axios.get('http://localhost:5001/pesanan_pelanggan_header/show_all_success');
-                setDataOffline(responseOffline.data);
-                setDataOnline(responseOnline.data);
+                const response = await axios.get('http://localhost:5001/penjualan_header/show_all');
+                setData(response.data);
             }catch(error){
                 setError(true);
             }
@@ -27,69 +24,20 @@ const Index = () => {
         }
     }, []);
 
-    // const viewDataOnline = dataOnline ? dataOnline.map((list,index) => {
-    //     if(list.Penjualan_Header){
-    //         return (
-    //             <tr key={index}>
-    //                 <td className="p-3">{list.Penjualan_Header.id_penjualan}</td>
-    //                 <td className="p-3">{list.tanggal_pemesanan}</td>
-    //                 <td className="p-3">{list.Pelanggan.nama_pelanggan}</td>
-    //                 <td className="p-3">Online</td>
-    //                 <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-    //                 <td className="p-3">{list.status}</td>
-    //                 <td className="p-3" style={{position:'relative'}}>
-    //                     {
-    //                         list.status_pesanan ? 
-    //                         // Kunjungan
-    //                         <Link to={{ pathname : '/detail_penjualan_kunjungan',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
-    //                         :
-    //                         // Pengantaran
-    //                         <Link to={{ pathname : '/detail_penjualan_pengantaran',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
-    //                     }
-    //                 </td>
-    //             </tr>
-    //         )
-    //     }
-    // }) : null;
-
-    const viewDataOffiline = dataOffline ? dataOffline.map((list,index) => {
-        console.log(list)
-        if(list.Pesanan_Pelanggan_Header){
-            return (
-                <tr key={index}>
-                    <td className="p-3">{list.id_penjualan}</td>
-                    <td className="p-3">{list.tanggal_penjualan}</td>
-                    <td className="p-3">{list.Pesanan_Pelanggan_Header.Pelanggan.nama_pelanggan}</td>
-                    <td className="p-3">Online</td>
-                    <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-                    <td className="p-3">{list.status}</td>
-                    <td className="p-3" style={{position:'relative'}}>
-                        {
-                            list.Pesanan_Pelanggan_Header.status_pesanan ? 
-                            // Kunjungan
-                            <Link to={{ pathname : '/detail_penjualan_kunjungan',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
-                            :
-                            // Pengantaran
-                            <Link to={{ pathname : '/detail_penjualan_pengantaran',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
-                        }
-                    </td>
-                </tr>
-            )
-        }else{
-            return (
-                <tr key={index}>
-                    <td className="p-3">{list.id_penjualan}</td>
-                    <td className="p-3">{list.tanggal_penjualan}</td>
-                    <td className="p-3">{list.nopol}</td>
-                    <td className="p-3">Datang Ke Toko</td>
-                    <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-                    <td className="p-3">{list.status}</td>
-                    <td className="p-3" style={{position:'relative'}}>
-                        <Link to={{ pathname : '/detail_penjualan_offline',state : list.id_penjualan }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
-                    </td>
-                </tr>
-            )
-        }
+    const viewDataOffiline = data ? data.map((list,index) => {
+        return (
+            <tr key={index}>
+                <td className="p-3">{list.id_penjualan}</td>
+                <td className="p-3">{list.tanggal_penjualan}</td>
+                <td className="p-3">{list.Penjualan_Pelanggan.nama_pelanggan ? list.Penjualan_Pelanggan.nama_pelanggan : '-'}</td>
+                <td className="p-3">{list.Penjualan_Pelanggan.nomor_polisi ? list.Penjualan_Pelanggan.nomor_polisi : '-'}</td>
+                <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
+                <td className="p-3">{list.status}</td>
+                <td className="p-3" style={{position:'relative'}}>
+                    <Link to={{ pathname : '/detail_penjualan_offline',state : list.id_penjualan }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
+                </td>
+            </tr>
+        )
     }) : null;
 
     const handleAdd = () => {
@@ -117,11 +65,11 @@ const Index = () => {
                         <tr>
                             <th className="p-3">ID Penjualan</th>
                             <th className="p-3">Tanggal Penjualan</th>
-                            <th className="p-3">Nama Pelanggan / No.BK</th>
-                            <th className="p-3">Jenis Penjualan</th>
+                            <th className="p-3">Nama Pelanggan</th>
+                            <th className="p-3">BK Kereta</th>
                             <th className="p-3">Total</th>
                             <th className="p-3">Status</th>
-                            <th></th>
+                            <th className="p-3"></th>
                         </tr>
                     </thead>
                     <tbody>

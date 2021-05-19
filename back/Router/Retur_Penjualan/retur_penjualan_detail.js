@@ -8,5 +8,6 @@ router.delete('/delete_retur/:id',retur_pembelian_detail_Controller.delete_retur
 router.delete('/delete/:id/:id_barang',retur_pembelian_detail_Controller.delete);
 router.put('/update/:id/:id_barang',retur_pembelian_detail_Controller.update);
 router.get('/check_penjualan/:id/:id_penjualan',retur_pembelian_detail_Controller.check_penjualan);
+router.delete('/delete_temp/:id',retur_pembelian_detail_Controller.delete_temp);
 
 module.exports = router;

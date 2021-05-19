@@ -16,7 +16,7 @@ const Index = () => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responseBarang = await axios.get('http://localhost:5001/pembelian_header/show_all');
+                const responseBarang = await axios.get('http://localhost:5001/pembelian_header/show_all_laporan');
                 setData(responseBarang.data);
             }catch(error){
                 setError(true);
@@ -34,7 +34,6 @@ const Index = () => {
                 <td className="p-3">{list.id_pembelian}</td>
                 <td className="p-3">{list.tanggal_pembelian}</td>
                 <td className="p-3">{list.Supplier.nama_supplier}</td>
-                <td className="p-3">{list.status}</td>
                 <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
             </tr>
         )
@@ -92,7 +91,6 @@ const Index = () => {
                             <th className="p-3">ID Pembelian</th>
                             <th className="p-3">Tanggal Pembelian</th>
                             <th className="p-3">Nama Supplier</th>
-                            <th className="p-3">Status</th>
                             <th className="p-3">Total</th>
                         </tr>
                     </thead>

@@ -28,10 +28,17 @@ const Add = (props) => {
         const data = {
             username : username,
             password : password,
-            status : 1
         }
         try{
-            await axios.post('http://localhost:5001/user/register',data);
+            const response = await axios.post('http://localhost:5001/user/register',data);
+            const responseHakAkses = await axios.get('http://localhost:5001/hak_akses/show_all');
+            for(var a = 0; a < responseHakAkses.data.length; a++){
+                const dataHakAksesUser = {
+                    user_id : response.data.user_id,
+                    hak_akses_id : responseHakAkses.data[a].hak_akses_id
+                }
+                await axios.post('http://localhost:5001/hak_akses_user/register',dataHakAksesUser);
+            }
             alert('User berhasil di daftarkan');
             props.history.goBack();
        }catch(error){

@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { formatMoney } from '../../../../../global/function'
+import { formatMoney } from '../../../../global/function'
 
 const Index = (props) => {
     const [data,setData] = useState([]);
@@ -57,7 +57,7 @@ const Index = (props) => {
                 const data = {
                     id_penjualan : idPenjualan,
                     id_service : e.id_service,
-                    waktu : '',
+                    harga : e.harga,
                     no_antrian : 0
                 }
                 console.log(data)

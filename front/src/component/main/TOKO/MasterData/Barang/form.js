@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
+import {Context} from '../../../../state_management/context'
 
 const Add = (props) => {
+    const {dataContext} = useContext(Context);
     const [refresh,setRefresh] = useState(false);
     const [error,setError] = useState(false);
     const [detail,setDetail] = useState(false);
@@ -30,6 +32,8 @@ const Add = (props) => {
 
     // status aktif 
     const [aktif,setAktif] = useState('');
+
+
 
     useEffect(() => {
         const loadData = async () => {
@@ -233,8 +237,11 @@ const Add = (props) => {
                 </div>
 
                 <div className="row">
-                    { detail ? <button type="button" className={aktif ? "btn btn-outline-danger mt-2 mb-5 mx-2 col" : "btn btn-outline-success mt-2 mb-5 mx-2 col"}  onClick={handleChangeStatus}>{ aktif ? 'Non-Aktifkan Barang' : 'Aktifkan Barang' }</button> : null }
-                    <button type="submit" className="btn btn-success mt-2 mb-5 mx-2 col">{detail ? 'Simpan' : 'Tambah Barang'}</button>
+                    { 
+                        detail ? 
+                        <button type="button" className={aktif ? "btn btn-outline-danger mt-2 mb-5 mx-2 col" : "btn btn-outline-success mt-2 mb-5 mx-2 col"}  onClick={handleChangeStatus} disabled = {!dataContext.hapus_barang}>{ aktif ? 'Non-Aktifkan Barang' : 'Aktifkan Barang' }</button> : null 
+                    }
+                    <button type="submit" className="btn btn-success mt-2 mb-5 mx-2 col" disabled = {!dataContext.edit_barang}>{detail ? 'Simpan' : 'Tambah Barang'}</button>
                 </div>
             </form>
         </div>

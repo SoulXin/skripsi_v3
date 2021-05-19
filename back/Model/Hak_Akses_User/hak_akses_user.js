@@ -12,6 +12,18 @@ const Hak_Akses_User = db.sequelize.define('hak_akses_user',{
     },
     hak_akses_id : {
         type : Sequelize.INTEGER
+    },
+    lihat : {
+        type : Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    ubah : {
+        type : Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    hapus : {
+        type : Sequelize.BOOLEAN,
+        defaultValue: false
     }
 });
 

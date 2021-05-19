@@ -5,10 +5,11 @@ const Supplier = require('../../Model/Supplier/supplier');
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
-    const {tanggal_retur,id_supplier,alasan_retur,grand_total } = req.body;
+    const {tanggal_retur,id_supplier,jenis_penggembalian,alasan_retur,grand_total } = req.body;
     Retur_Pembelian_Header.create({
         tanggal_retur : tanggal_retur,
         id_supplier : id_supplier,
+        jenis_penggembalian : jenis_penggembalian,
         alasan_retur : alasan_retur,
         grand_total : grand_total
     })
@@ -43,10 +44,11 @@ exports.show_all = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {tanggal_retur,id_supplier,alasan_retur,grand_total} = req.body;
+    const {tanggal_retur,id_supplier,jenis_penggembalian,alasan_retur,grand_total} = req.body;
     Retur_Pembelian_Header.update({
         tanggal_retur : tanggal_retur,
         id_supplier : id_supplier,
+        jenis_penggembalian : jenis_penggembalian,
         alasan_retur : alasan_retur,
         grand_total : grand_total
     },{

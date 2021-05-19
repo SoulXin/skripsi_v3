@@ -1,28 +1,28 @@
-const Mekanik_Detail = require('../../Model/Mekanik/mekanik_detail');
+const Penjualan_Pelanggan = require('../../Model/Penjualan/penjualan_pelanggan');
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
-    const {id_mekanik,id_penjualan,id_service,tanggal} = req.body;
-    Mekanik_Detail.create({
-        id_mekanik : id_mekanik,
+    const {id_penjualan,nama_pelanggan,nomor_polisi} = req.body;
+    Penjualan_Pelanggan.create({
         id_penjualan : id_penjualan,
-        id_service : id_service,
-        tanggal : tanggal
+        nama_pelanggan : nama_pelanggan,
+        nomor_polisi : nomor_polisi
     })
     .then((result) => {
         res.status(200).json(result);
     }).catch((err) => {
+        console.log(err)
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
     });
 }
 
 exports.show_detail = (req,res) => {
-    const {id} = req.params;
-    Mekanik_Detail.findOne({
+    const { id } = req.params;
+    Penjualan_Pelanggan.findOne({
         where : {
-            id_mekanik : id
-        }
+            id_penjualan : id
+        },
     })
     .then((result) => {
         res.status(200).json(result);
@@ -34,19 +34,19 @@ exports.show_detail = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {nama,no_telp,alamat,gambar} = req.body;
-    Mekanik_Header.update({
-        nama : nama,
-        no_telp : no_telp,
-        alamat : alamat,
-        gambar : gambar
+    const {id_penjualan,nama_pelanggan,nomor_polisi} = req.body;
+    Penjualan_Pelanggan.update({
+        id_penjualan : id_penjualan,
+        nama_pelanggan : nama_pelanggan,
+        nomor_polisi : nomor_polisi
     },{
         where : {
-            id_mekanik : id
+            id_penjualan : id
         }
     })
     .then((result) => {
-        res.status(200);
+        res.status(200).json(result);
+
     }).catch((err) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
@@ -55,49 +55,32 @@ exports.update = (req,res) => {
 
 exports.delete = (req,res) => {
     const {id} = req.params;
-    Mekanik_Header.destroy({
+    Penjualan_Pelanggan.destroy({
         where : {
-            id_mekanik : id
+            id : id
         }
     })
     .then((result) => {
-        res.status(200);
+        res.status(200).json(result);
     }).catch((err) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
     });
 }
 
-exports.delete_penjualan = (req,res) => {
+exports.delete_detail = (req,res) => {
     const {id,id_penjualan} = req.params;
-    Mekanik_Header.destroy({
+    Penjualan_Pelanggan.destroy({
         where : {
             [Op.and] : [
-                {id_mekanik : id},
+                {id : id},
                 {id_penjualan : id_penjualan}
             ]
+            
         }
     })
     .then((result) => {
-        res.status(200);
-    }).catch((err) => {
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
-        res.status(400).end();
-    });
-}
-
-exports.update_penjualan = (req,res) => {
-    const {id} = req.params;
-    const {id_mekanik} = req.body;
-    Mekanik_Detail.update({
-        id_mekanik : id_mekanik
-    },{
-        where : {
-            id_penjualan : id
-        }
-    })
-    .then((result) => {
-        res.status(200).send();
+        res.status(200).json(result);
     }).catch((err) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();

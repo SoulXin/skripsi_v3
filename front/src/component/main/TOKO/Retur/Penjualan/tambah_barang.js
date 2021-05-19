@@ -51,7 +51,8 @@ const Index = (props) => {
     }) : null;
 
     const handleAdd = async (e) => {
-        const checkKetersediaan = dataPenyesuaianDetail.filter((list) => list.id_barang === e.id_barang && list.id_retur_penjualan === idRetur);
+        console.log(e)
+        const checkKetersediaan = dataPenyesuaianDetail.filter((list) => list.id_barang === e.id_barang && list.id_retur_penjualan === idRetur && list.total);
 
         try{
             if(!checkKetersediaan.length){ // => tidak ada di pesanan, maka tambah
@@ -66,6 +67,7 @@ const Index = (props) => {
                         jumlah : jumlah,
                         total : e.harga_jual * jumlah 
                     }
+                    await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
                     await axios.post(`http://localhost:5001/retur_penjualan_detail/register`, dataTambah);
                     setRefresh(!refresh);
                     alert('Barang berhasil di tambahkan');
@@ -74,14 +76,18 @@ const Index = (props) => {
                 }
             }else{ // => ada di pesanan, update saja
                 var jumlah = prompt("Masukan jumlah yang ingin direturkan"); // => prompt input jumlah
-                const dataUpdate = {
-                    jumlah : jumlah,
-                    total : e.harga_jual * jumlah 
+                if(jumlah <= e.jumlah){
+                    const dataUpdate = {
+                        jumlah : jumlah,
+                        total : e.harga_jual * jumlah 
+                    }
+    
+                    await axios.put(`http://localhost:5001/retur_penjualan_detail/update/${idRetur}/${e.id_barang}`, dataUpdate);
+                    setRefresh(!refresh);
+                    alert('Penyesuaian berhasil di ubah');
+                }else{
+                    alert('Jumlah tidak boleh kosong atau tidak boleh lebih dari yang dipesan');
                 }
-
-                await axios.put(`http://localhost:5001/retur_penjualan_detail/update/${idRetur}/${e.id_barang}`, dataUpdate);
-                setRefresh(!refresh);
-                alert('Penyesuaian berhasil di ubah');
             }
         }catch(error){
             console.log(error)

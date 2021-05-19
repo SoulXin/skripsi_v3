@@ -1,15 +1,15 @@
 const Retur_Penjualan_Detail = require('../../Model/Retur_Penjualan/retur_penjualan_detail');
 const Retur_Penjualan_Header = require('../../Model/Retur_Penjualan/retur_penjualan_header');
-const Pelanggan = require('../../Model/Pelanggan/pelanggan');
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const Penjualan_Header = require('../../Model/Penjualan/penjualan_header');
+const Penjualan_Pelanggan = require('../../Model/Penjualan/penjualan_pelanggan');
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
-    const {tanggal_retur,id_pelanggan,alasan_retur,grand_total } = req.body;
+    const {tanggal_retur,alasan_retur,jenis_penggembalian,grand_total } = req.body;
     Retur_Penjualan_Header.create({
         tanggal_retur : tanggal_retur,
-        id_pelanggan : id_pelanggan,
+        jenis_penggembalian,jenis_penggembalian,
         alasan_retur : alasan_retur,
         grand_total : grand_total
     })
@@ -26,11 +26,19 @@ exports.show_all = (req,res) => {
         include : [
             {
                 model : Retur_Penjualan_Detail,
-                as : 'Retur_Penjualan_Detail'
-            },
-            {
-                model : Pelanggan,
-                as : 'Pelanggan'
+                as : 'Retur_Penjualan_Detail',
+                include : [
+                    {
+                        model : Penjualan_Header,
+                        as : 'Penjualan_Header',
+                        include : [
+                            {
+                                model : Penjualan_Pelanggan,
+                                as : 'Penjualan_Pelanggan'
+                            }
+                        ]
+                    }
+                ]
             }
         ]
     })
@@ -44,11 +52,10 @@ exports.show_all = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {tanggal_retur,id_pelanggan,nopol,alasan_retur,grand_total} = req.body;
+    const {tanggal_retur,jenis_penggembalian,alasan_retur,grand_total} = req.body;
     Retur_Penjualan_Header.update({
         tanggal_retur : tanggal_retur,
-        id_pelanggan : id_pelanggan,
-        nopol : nopol,
+        jenis_penggembalian : jenis_penggembalian,
         alasan_retur : alasan_retur,
         grand_total : grand_total
     },{
@@ -98,6 +105,9 @@ exports.show_retur = async (req,res) => {
     try{
         const tempNum = [];
         const retur = await Retur_Penjualan_Header.findAll({
+            where : {
+                [Op.not] : [{grand_total : 0}]
+            },
             include : [{model : Retur_Penjualan_Detail, as : 'Retur_Penjualan_Detail', attributes : ['id_penjualan']}]
         });
 
@@ -107,20 +117,7 @@ exports.show_retur = async (req,res) => {
             }
         }
         const penjualan = await Penjualan_Header.findAll({
-            where : {
-                status : {
-                    [Op.and] : [{
-                        [Op.notLike] : 'Pembuatan'
-                    },{
-                        [Op.notLike] : 'Tolak'
-                    }]
-                }
-            },
             include : [
-                {
-                    model : Pelanggan,
-                    as : 'Pelanggan'
-                },
                 {
                     model : Penjualan_Detail,
                     as : 'Penjualan_Detail',
@@ -167,10 +164,6 @@ exports.search_date = (req,res) => {
             {
                 model : Retur_Penjualan_Detail,
                 as : 'Retur_Penjualan_Detail'
-            },
-            {
-                model : Pelanggan,
-                as : 'Pelanggan'
             }
         ]
     })

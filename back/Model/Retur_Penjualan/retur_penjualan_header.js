@@ -11,22 +11,19 @@ const Retur_Penjualan_Header = db.sequelize.define('retur_penjualan_header',{
     tanggal_retur : {
         type : Sequelize.DATE
     },
-    id_pelanggan: {
-        type : Sequelize.INTEGER
+    alasan_retur : {
+        type : Sequelize.STRING
     },
-    nopol : {
+    jenis_penggembalian : {
         type : Sequelize.STRING
     },
     grand_total: {
         type : Sequelize.INTEGER
     },
-    alasan_retur : {
-        type : Sequelize.STRING
-    }
 });
 
 // Retur pembelian detail 
-Retur_Penjualan_Header.hasOne(Retur_Penjualan_Detail,{as : 'Retur_Penjualan_Detail', foreignKey : 'id_retur_penjualan'});
+Retur_Penjualan_Header.hasMany(Retur_Penjualan_Detail,{as : 'Retur_Penjualan_Detail', foreignKey : 'id_retur_penjualan'});
 Retur_Penjualan_Detail.belongsTo(Retur_Penjualan_Header,{as : 'Retur_Penjualan_Header', foreignKey : 'id_retur_penjualan'});
 
 

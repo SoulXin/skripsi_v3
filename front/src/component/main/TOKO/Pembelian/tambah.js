@@ -114,6 +114,12 @@ const Index = (props) => {
                             }
                             await axios.put(`http://localhost:5001/barang_detail/update/${data[a].id_barang}`,dataBarang);
                         }
+                        if(metodePembayaran == 1){
+                            const dataPesananPembelianHeader = {
+                                status : 'Selesai'
+                            }
+                            await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,dataPesananPembelianHeader);
+                        }
                         await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
                         alert('Pembelian berhasil di tambahkan');
                         props.history.goBack();
@@ -149,6 +155,10 @@ const Index = (props) => {
             </div>
             {/* Header Isi */}
             <div className="row">
+                <div class="form-floating mb-3 px-0 col mx-1">
+                    <input type="text" class="form-control" id="floatingInput" value={idPembelian} disabled/>
+                    <label for="floatingInput">ID Pembelian</label>
+                </div>
                 <div className="col">
                     <label>Supplier</label>
                     <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)}>
@@ -173,7 +183,7 @@ const Index = (props) => {
                 </div>
 
                 {/* Pergi ke pesanan pembelian ambil data */}
-                <div className = "row col-4">
+                <div className = "row col-3">
                     <div class="form-floating mb-3 px-0 col mx-1">
                         <input type="text" class="form-control" id="floatingInput" value={idPesananPembelian} disabled />
                         <label for="floatingInput">ID Pesanan</label>

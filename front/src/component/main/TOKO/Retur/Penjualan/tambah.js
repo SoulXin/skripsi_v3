@@ -15,6 +15,7 @@ const Index = (props) => {
 
     const [dataBarang,setDataBarang] = useState([]);
     const [updateBarang,setUpdateBarang] = useState(true);
+    const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
 
     useEffect(() => {
         const loadData = async () => {
@@ -44,7 +45,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = dataRetur ? dataRetur.map((list,index) => {
-        if(list.id_barang != 0){
+        if(list.id_barang && list.total){
             return (
                 <tr key={index}>
                     <td className="p-3">
@@ -53,7 +54,7 @@ const Index = (props) => {
                     </td>
                     <td className="p-3">{list.id_barang}</td>
                     <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                    <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
+                    <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
                     <td className="p-3">{list.jumlah}</td>
                     <td className="p-3">Rp. {formatMoney(list.total)}</td>
                 </tr>
@@ -63,7 +64,7 @@ const Index = (props) => {
 
     const handleBack = async () => {
         try{
-            await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_retur/${idRetur}`);
+            await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
             await axios.delete(`http://localhost:5001/retur_penjualan_header/delete/${idRetur}`);
             await props.history.goBack();
         }catch(error){
@@ -85,6 +86,7 @@ const Index = (props) => {
         try{
             const dataUpdate = {
                 tanggal_retur : tanggalRetur,
+                jenis_penggembalian : jenisPenggembalian,
                 alasan_retur : alasanRetur,
                 grand_total : grandTotal
             }
@@ -163,6 +165,14 @@ const Index = (props) => {
                         <div className="col-6 px-0">
                             <Link to={{ pathname : '/tambah_data_retur_penjualan',state: idRetur}} className=" btn btn-outline-success">Ambil Data Penjualan</Link>
                         </div>
+                    </div>
+
+                    <div className="row form-floating mb-2">
+                        <select class="form-select" onChange = { (e) => setJenisPenggembalian(e.target.value)}>
+                            <option value = "1">Tunai</option>
+                            <option value = "0">Ganti Barang</option>
+                        </select>
+                        <label>Jenis Penggembalian</label>
                     </div>
 
                     <div className="row">

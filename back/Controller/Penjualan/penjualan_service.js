@@ -2,21 +2,28 @@ const Jenis_Service = require('../../Model/Jenis_Sevice/jenis_service');
 const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const { Op } = require("sequelize");
 
-exports.register = (req,res) => {
-    const {id_penjualan,id_service,waktu,no_antrian} = req.body;
-    Penjualan_Service.create({
-        id_penjualan : id_penjualan,
-        id_service : id_service,
-        waktu : waktu,
-        no_antrian : no_antrian
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
-        console.log(err)
+exports.register = async (req,res) => {
+    const {id_penjualan,id_service,harga,no_antrian} = req.body;
+    try{
+        await Penjualan_Service.destroy({ 
+            where : {
+                [Op.and] : [
+                    { id_penjualan : id_penjualan },
+                    { id_service : id_service }
+                ]
+            }
+        })
+        await Penjualan_Service.create({
+            id_penjualan : id_penjualan,
+            id_service : id_service,
+            harga : harga,
+            no_antrian : no_antrian
+        })
+        await res.status(200).send();
+    }catch(err){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.show_all = (req,res) => {
@@ -58,15 +65,16 @@ exports.show_detail = (req,res) => {
 }
 
 exports.update = (req,res) => {
-    const {id} = req.params;
-    const {id_service,waktu,no_antrian} = req.body;
+    const {id,id_service} = req.params;
+    const {harga} = req.body;
     Penjualan_Service.update({
-        id_service : id_service,
-        waktu : waktu,
-        no_antrian : no_antrian
+        harga : harga
     },{
         where : {
-            id : id
+            [Op.and] : [
+                { id_penjualan : id },
+                { id_service : id_service }
+            ]
         }
     })
     .then((result) => {

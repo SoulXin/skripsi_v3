@@ -8,7 +8,8 @@ const Pembayaran_Hutang_Detail = db.sequelize.define('pembayaran_hutang_detail',
         autoIncrement : true
     },
     id_pembayaran : {
-        type : Sequelize.INTEGER
+        type : Sequelize.INTEGER,
+        allowNull: true
     },
     id_pembelian : {
         type : Sequelize.INTEGER

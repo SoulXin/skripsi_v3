@@ -1,21 +1,20 @@
 import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-import { formatMoney } from '../../../../global/function'
 
 const Index = (props) => {
     const [data,setData] = useState([]);
     const [error,setError] = useState(false);
     const [refresh,setRefresh] = useState(false);
 
-    const [idPesananPelanggan,setIdPesananPelanggan] = useState('');
+    const [idPenjualan,setIdPenjualan] = useState('');
     const [idBarang,setIdBarang] = useState('');
 
     const [detail,setDetail] = useState('');
     const [namaBarang,setNamaBarang] = useState('');
     const [merek,setMerek] = useState('');
     const [jenisKereta,setJenisKereta] = useState('');
-    const [hargaBeli,setHargaBeli] = useState('');
+    const [hargaJualSistem,setHargaJualSistem] = useState('');
     const [hargaJual,setHargaJual] = useState('');
     const [jumlah,setJumlah] = useState('');
 
@@ -25,12 +24,12 @@ const Index = (props) => {
                 const detail = props.location.state;
                 setDetail(detail);
                 setIdBarang(detail.id_barang);
-                setIdPesananPelanggan(detail.id_pesanan_pelanggan);
+                setIdPenjualan(detail.id_penjualan);
                 setNamaBarang(detail.Barang_Header.nama_barang);
                 setMerek(detail.Barang_Header.merek_barang);
                 setJenisKereta(detail.Barang_Header.jenis_kereta);
-                setHargaBeli(detail.Barang_Header.harga_beli);
-                setHargaJual(detail.Barang_Header.harga_jual);
+                setHargaJualSistem(detail.Barang_Header.harga_jual);
+                setHargaJual(detail.harga_jual);
                 setJumlah(detail.jumlah);
             }catch(error){
                 setError(true);
@@ -44,17 +43,23 @@ const Index = (props) => {
 
     const handleSave = () => {
         const data = {
-            jumlah : jumlah
+            harga_jual : hargaJual,
+            jumlah : jumlah,
+            total : hargaJual * jumlah
         }
+
         if(jumlah && jumlah != 0){
-            console.log(jumlah);
-            axios.put(`http://localhost:5001/pesanan_pelanggan_detail/update/${idPesananPelanggan}/${idBarang}`, data)
-            .then((res) => {
-                alert('Jumlah barang berhasil di ubah');
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            if(hargaJual >= hargaJualSistem){
+                axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${idBarang}`, data)
+                .then((res) => {
+                    alert('berhasil di ubah');
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
+            }else{
+                alert('harga tidak boleh lebih rendah dari sistem');
+            }
         }else{
             alert('Jumlah tidak boleh kosong');
         }
@@ -67,7 +72,7 @@ const Index = (props) => {
                 <div className="col-5 row">
                     <button className = "col-2 mb-3 row btn btn-outline-secondary" onClick = {props.history.goBack}>Kembali</button>
                     <h1>Perubahan Edit Barang</h1>
-                    <i>Perubahan Barang Untuk Pesanan - {detail.id_pesanan_pelanggan}</i>
+                    <i>Perubahan Barang Untuk Penjualan - {detail.id_penjualan}</i>
                 </div>
              </div>
 
@@ -96,14 +101,14 @@ const Index = (props) => {
 
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaBeli} disabled/>
-                        <label for="nama_barang">Harga Beli</label>
+                        <input type="text" class="form-control" id="nama_barang" value={hargaJualSistem} disabled/>
+                        <label for="nama_barang">Harga Jual ( Sistem )</label>
                     </div>
                 </div>
 
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaJual} disabled/>
+                        <input type="text" class="form-control" id="nama_barang" value={hargaJual} onChange = {(e) => setHargaJual(e.target.value)}/>
                         <label for="nama_barang">Harga Jual</label>
                     </div>
                 </div>

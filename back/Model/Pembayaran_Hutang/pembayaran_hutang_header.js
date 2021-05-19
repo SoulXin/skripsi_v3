@@ -12,7 +12,16 @@ const Pembayaran_Hutang_Header = db.sequelize.define('pembayaran_hutang_header',
         type : Sequelize.DATE
     },
     id_supplier  : {
-        type : Sequelize.INTEGER
+        type : Sequelize.INTEGER,
+        allowNull: true
+    },
+    jenis_pembayaran : {
+        type : Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    status_pembayaran : {
+        type : Sequelize.BOOLEAN,
+        defaultValue: false
     },
     total : {
         type : Sequelize.INTEGER
@@ -20,7 +29,7 @@ const Pembayaran_Hutang_Header = db.sequelize.define('pembayaran_hutang_header',
 });
 
 // Penjualan service
-Pembayaran_Hutang_Header.hasOne(Pembayaran_Hutang_Detail,{as : 'Pembayaran_Hutang_Detail', foreignKey : 'id_pembayaran'});
+Pembayaran_Hutang_Header.hasMany(Pembayaran_Hutang_Detail,{as : 'Pembayaran_Hutang_Detail', foreignKey : 'id_pembayaran'});
 Pembayaran_Hutang_Detail.belongsTo(Pembayaran_Hutang_Header,{as : 'Pembayaran_Hutang_Header', foreignKey : 'id_pembayaran'});
 
 module.exports = Pembayaran_Hutang_Header

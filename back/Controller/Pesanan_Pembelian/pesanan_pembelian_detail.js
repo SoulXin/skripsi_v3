@@ -65,7 +65,6 @@ exports.update = (req,res) => {
 }
 
 exports.delete = (req,res) => {
-    console.log(req.params)
     const {id, id_barang} = req.params;
     Pesanan_Pembelian_Detail.destroy({
         where : {

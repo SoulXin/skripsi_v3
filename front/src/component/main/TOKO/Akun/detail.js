@@ -1,9 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState,useContext } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
 import { checkLogin } from '../../../global/function';
+import {Context} from '../../../state_management/context'
 
 const Add = (props) => {
+    const {dispatch} = useContext(Context);
+
     const [refresh,setRefresh] = useState(false);
     const [error,setError] = useState(false);
     const [userId,setUserId] = useState(false);
@@ -30,26 +33,78 @@ const Add = (props) => {
     }, [refresh]);
 
     const viewData = dataAkses ? dataAkses.map((list,index) => {
-        return (
-            <div class="px-0 col-3 my-2" key = {index}>
-                <div className="form-floating  mx-1">
-                    <select class="form-select" onChange={(e) => handleChange(list.hak_akses_id,e.target.value)} disabled={disable}>
-                        <option value="1" selected = {list.Hak_Akses_User ? true : false}>Ya</option>
-                        <option value="0" selected = {!list.Hak_Akses_User ? true : false}>Tidak</option>
-                    </select> 
-                    <label for="floatingSelect">{list.akses}</label>
-                </div>
-            </div>
-        )
+        if(list.Hak_Akses_User.user_id == userId ){
+            return (
+                <tr key = {index}>
+                    <td className="p-3">{list.akses}</td>
+                    <td className="p-3 text-center">
+                        <input class="form-check-input" type="checkbox" value={list.hak_akses_id} onChange = {(e) => handleChange(e,"lihat")} checked = {list.Hak_Akses_User.lihat}/>
+                    </td>
+                    {
+                        list.akses.includes('Laporan') || list.akses.includes('Informasi') ? 
+                        <>
+                            <td className="p-3 text-center">
+                            </td>
+                            <td className="p-3 text-center">
+                            </td>
+                        </>
+                        : 
+                        <>
+                            <td className="p-3 text-center">
+                                <input class="form-check-input" type="checkbox" value={list.hak_akses_id} onChange = {(e) => handleChange(e,"ubah")} checked = {list.Hak_Akses_User.ubah}/>
+                            </td>
+                            <td className="p-3 text-center">
+                                <input class="form-check-input" type="checkbox" value={list.hak_akses_id} onChange = {(e) => handleChange(e,"hapus")} checked = {list.Hak_Akses_User.hapus}/>
+                            </td>
+                        </>
+                    }
+                </tr>
+            )
+        }
     }) : null;
 
-    const handleChange = async (hak_akses_id,value) => {
-        const data = {
-            user_id : userId,
-            hak_akses_id : hak_akses_id,
-            value : value
+    const handleChange = async (e,value) => {
+        try{
+            if(e.target.checked){
+                if(e.target.checked && value == 'lihat'){
+                    const dataHakAkses = {
+                        lihat : 1,
+                    }
+                    await axios.put(`http://localhost:5001/hak_akses_user/update/${userId}/${e.target.value}`,dataHakAkses)
+                }else if(e.target.checked && value == 'ubah'){
+                    const dataHakAkses = {
+                        ubah : 1,
+                    }
+                    await axios.put(`http://localhost:5001/hak_akses_user/update/${userId}/${e.target.value}`,dataHakAkses)
+                }else if(e.target.checked && value == 'hapus'){
+                    const dataHakAkses = {
+                        hapus : 1,
+                    }
+                    await axios.put(`http://localhost:5001/hak_akses_user/update/${userId}/${e.target.value}`,dataHakAkses)
+                }
+            }else{
+                if(value == 'lihat'){
+                    const dataHakAkses = {
+                        lihat : 0,
+                    }
+                    await axios.put(`http://localhost:5001/hak_akses_user/update/${userId}/${e.target.value}`,dataHakAkses)
+                }else if(value == 'ubah'){
+                    const dataHakAkses = {
+                        ubah : 0,
+                    }
+                    await axios.put(`http://localhost:5001/hak_akses_user/update/${userId}/${e.target.value}`,dataHakAkses)
+                }else if(value == 'hapus'){
+                    const dataHakAkses = {
+                        hapus : 0,
+                    }
+                    await axios.put(`http://localhost:5001/hak_akses_user/update/${userId}/${e.target.value}`,dataHakAkses)
+                }
+            }
+            setRefresh(!refresh);
+            dispatch({type : 'REFRESH'});
+        }catch(error){
+            console.log(error)
         }
-        await axios.post('http://localhost:5001/hak_akses_user/register',data);
     }
 
     return (
@@ -60,9 +115,19 @@ const Add = (props) => {
             </div>
 
             <h3>Hak Akses Untuk Akun - {username} : </h3>
-            <div className="row col-12 mb-2">
-                {viewData}
-            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th className="p-3">Modul</th>
+                        <th className="p-3 text-center">Lihat</th>
+                        <th className="p-3 text-center">Ubah</th>
+                        <th className="p-3 text-center">Batal / Sembunyikan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {viewData}
+                </tbody>
+            </table>
         </div>
     )
 }

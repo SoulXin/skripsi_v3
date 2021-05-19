@@ -10,26 +10,21 @@ import IndexBarang from '../main/TOKO/MasterData/Barang/index';
 import TambahBarang from '../main/TOKO/MasterData/Barang/form';
 import IndexSupplier from '../main/TOKO/MasterData/Supplier/index';
 import FormSupplier from '../main/TOKO/MasterData/Supplier/form';
-import IndexDaerahPengantaran from '../main/TOKO/MasterData/DaerahPengantaran/index';
-import FormDaerahPengantaran from '../main/TOKO/MasterData/DaerahPengantaran/form';
 import IndexMekanik from '../main/TOKO/MasterData/Mekanik/index';
 import FormMekanik from '../main/TOKO/MasterData/Mekanik/form';
 import IndexJenisService from '../main/TOKO/MasterData/JenisService/index';
 import FormJenisService from '../main/TOKO/MasterData/JenisService/form';
 import IndexKategori from '../main/TOKO/MasterData/Kategori/index';
 import FormKategori from '../main/TOKO/MasterData/Kategori/form';
-import PesananPelanggan from '../main/TOKO/PesananPelanggan/index';
-import DetailPesananPelanggan from '../main/TOKO/PesananPelanggan/detail';
+
+// Penjualan
 import Penjualan from '../main/TOKO/Penjualan/index';
-import TambahPenjualan from '../main/TOKO/Penjualan/FormTambah/Offline/tambah_penjualan';
-import DetailPenjualanPengantaran from '../main/TOKO/Penjualan/detail_penjualan_pengantaran';
-import DetailPenjualanKunjungan from '../main/TOKO/Penjualan/detail_penjualan_kunjungan';
-import TambahServicePenjualan from '../main/TOKO/Penjualan/FormTambah/Online/tambah_service';
-import TambahBarangPenjualan from '../main/TOKO/Penjualan/FormTambah/Online/tambah_barang';
+import TambahPenjualan from '../main/TOKO/Penjualan/FormTambah/tambah_penjualan';
 import EditBarang from '../main/TOKO/Penjualan/FormEdit/edit_barang';
-import TambahServicePenjualanOffline from '../main/TOKO/Penjualan/FormTambah/Offline/tambah_service';
-import TambahBarangPenjualanOffline from '../main/TOKO/Penjualan/FormTambah/Offline/tambah_barang';
-import EditBarangOffline from '../main/TOKO/Penjualan/FormEdit/Offline/edit_barang';
+import TambahServicePenjualanOffline from '../main/TOKO/Penjualan/FormTambah/tambah_service';
+import TambahBarangPenjualanOffline from '../main/TOKO/Penjualan/FormTambah/tambah_barang';
+import EditBarangOffline from '../main/TOKO/Penjualan/FormEdit/edit_barang';
+import EditService from '../main/TOKO/Penjualan/FormEdit/edit_service';
 import DetailPenjualanOffline from '../main/TOKO/Penjualan/detail_penjualan';
 
 // Pesanan pembelian
@@ -52,7 +47,8 @@ import DetailService from '../main/TOKO/Service/detail';
 
 // Hutang
 import IndexHutang from '../main/TOKO/Hutang/index';
-import DetailHutang from '../main/TOKO/Hutang/detail';
+import IndexPembayaran from '../main/TOKO/Hutang/Pembayaran/index';
+import DetailPembayaran from '../main/TOKO/Hutang/Pembayaran/detail';
 
 // Penyesuaian
 import IndexPenyesuaian from '../main/TOKO/Penyesuaian/index';
@@ -90,7 +86,6 @@ import LaporanMekanik from '../main/TOKO/Laporan/Filter_Laporan/Master/mekanik'
 import LaporanDearahPengantaran from '../main/TOKO/Laporan/Filter_Laporan/Master/daerah_pengantaran'
 import LaporanJenisService from '../main/TOKO/Laporan/Filter_Laporan/Master/jenis_service'
 import LaporanKategori from '../main/TOKO/Laporan/Filter_Laporan/Master/kategori'
-import LaporanPesananPelanggan from '../main/TOKO/Laporan/Filter_Laporan/Transaksi/pesanan_pelanggan'
 import LaporanPenjualan from '../main/TOKO/Laporan/Filter_Laporan/Transaksi/penjualan'
 import LaporanPesananPembelian from '../main/TOKO/Laporan/Filter_Laporan/Transaksi/pesanan_pembelian'
 import LaporanPembelian from '../main/TOKO/Laporan/Filter_Laporan/Transaksi/pembelian'
@@ -104,20 +99,6 @@ import LaporanPenyesuaianStok from '../main/TOKO/Laporan/Filter_Laporan/Lainnya/
 import InformasiBarangAkanHabis from '../main/TOKO/Informasi/informasi_barang_akan_habis'
 import InformasiHutangJatuhTempo from '../main/TOKO/Informasi/informasi_hutang_jatuh_tempo'
 
-// -------------------------------------------------------------
-// =============================================================
-// -------------------------------------------------------------
-
-// Pelanggan
-import Pesanan from '../main/PELANGGAN/pesanan';
-import Status from '../main/PELANGGAN/status';
-import Retur from '../main/PELANGGAN/retur';
-import Detail_Barang from '../main/PELANGGAN/detail_barang';
-import Riwayat_Pesanan from '../main/PELANGGAN/Riwayat Pesanan/index';
-import Keranjang from '../main/PELANGGAN/Keranjang/index';
-
-// Pengaturan
-import Pengaturan from '../main/PELANGGAN/Pengaturan/index';
 
 const Routes = () => {
     return (
@@ -131,27 +112,23 @@ const Routes = () => {
                 <PrivateRoute path = "/form_barang" component = {TambahBarang}/>
                 <PrivateRoute path = "/index_supplier" component = {IndexSupplier}/>
                 <PrivateRoute path = "/form_supplier" component = {FormSupplier}/>
-                <PrivateRoute path = "/index_daerah_pengantaran" component = {IndexDaerahPengantaran}/>
-                <PrivateRoute path = "/form_daerah_pengantaran" component = {FormDaerahPengantaran}/>
                 <PrivateRoute path = "/index_mekanik" component = {IndexMekanik}/>
                 <PrivateRoute path = "/form_mekanik" component = {FormMekanik}/>
                 <PrivateRoute path = "/index_jenis_service" component = {IndexJenisService}/>
                 <PrivateRoute path = "/form_jenis_service" component = {FormJenisService}/>
                 <PrivateRoute path = "/index_kategori" component = {IndexKategori}/>
                 <PrivateRoute path = "/form_kategori" component = {FormKategori}/>
-                <PrivateRoute path = "/pesanan_pelanggan" component = {PesananPelanggan}/>
-                <PrivateRoute path = "/detail_pesanan_pelanggan" component = {DetailPesananPelanggan}/>
+
+                {/* Penjualan */}
                 <PrivateRoute path = "/penjualan" component = {Penjualan}/>
                 <PrivateRoute path = "/tambah_penjualan" component = {TambahPenjualan}/>
-                <PrivateRoute path = "/detail_penjualan_pengantaran" component = {DetailPenjualanPengantaran}/>
-                <PrivateRoute path = "/detail_penjualan_kunjungan" component = {DetailPenjualanKunjungan}/>
-                <PrivateRoute path = "/tambah_service_penjualan" component = {TambahServicePenjualan}/>
-                <PrivateRoute path = "/tambah_barang_penjualan" component = {TambahBarangPenjualan}/>
                 <PrivateRoute path = "/edit_barang" component = {EditBarang} />
                 <PrivateRoute path = "/tambah_service_penjualan_offline" component = {TambahServicePenjualanOffline}/>
                 <PrivateRoute path = "/tambah_barang_penjualan_offline" component = {TambahBarangPenjualanOffline}/>
                 <PrivateRoute path = "/edit_barang_offline" component = {EditBarangOffline}/>
+                <PrivateRoute path = "/edit_service" component = {EditService}/>
                 <PrivateRoute path = "/detail_penjualan_offline" component = {DetailPenjualanOffline}/>
+
 
                 {/* Pesanan Pembelian */}
                 <PrivateRoute path = "/index_pesanan_pembelian" component = {IndexPesananPembelian} />
@@ -171,9 +148,11 @@ const Routes = () => {
                 <PrivateRoute path = "/index_service" component = {IndexService} />
                 <PrivateRoute path = "/detail_service" component = {DetailService} />
 
-                {/* Hutang Supplier */}
+                {/* Hutang dan Pembayaran Supplier  */}
                 <PrivateRoute path = "/index_hutang" component = {IndexHutang} />
-                <PrivateRoute path = "/detail_hutang" component = {DetailHutang} />
+                <PrivateRoute path = "/index_pembayaran" component = {IndexPembayaran} />
+                <PrivateRoute path = "/detail_pembayaran" component = {DetailPembayaran} />
+                
 
                 {/* Penyesuaian */}
                 <PrivateRoute path = "/index_penyesuaian" component = {IndexPenyesuaian} />
@@ -212,7 +191,7 @@ const Routes = () => {
                 <PrivateRoute path = "/laporan_jenis_service" component = {LaporanJenisService}/>
                 <PrivateRoute path = "/laporan_kategori" component = {LaporanKategori}/>
 
-                <PrivateRoute path = "/laporan_pesanan_pelanggan" component = {LaporanPesananPelanggan}/>
+                {/* <PrivateRoute path = "/laporan_pesanan_pelanggan" component = {LaporanPesananPelanggan}/> */}
                 <PrivateRoute path = "/laporan_penjualan" component = {LaporanPenjualan}/>
                 <PrivateRoute path = "/laporan_pesanan_pembelian" component = {LaporanPesananPembelian}/>
                 <PrivateRoute path = "/laporan_pembelian" component = {LaporanPembelian}/>
@@ -225,25 +204,9 @@ const Routes = () => {
                 {/* Informasi */}
                 <PrivateRoute path = "/informasi_barang_akan_habis" component = {InformasiBarangAkanHabis}/>
                 <PrivateRoute path = "/informasi_hutang_jatuh_tempo" component = {InformasiHutangJatuhTempo}/>
-
-
-
                 
                 {/* LOGIN DAN REGISTER Pelanggan*/}
                 <PublicRoute path = "/login" component = {Login} />
-
-                {/* Router Pelanggan */}
-                <PrivateRoute path = "/pesanan" component = {Pesanan}/>
-                <PrivateRoute path = "/status" component = {Status}/>
-                <PrivateRoute path = "/retur" component = {Retur}/>
-                <PrivateRoute path = "/detail_barang/:id" component = {Detail_Barang}/>
-                <PrivateRoute path = "/riwayat_pesanan" component = {Riwayat_Pesanan}/>
-                <PrivateRoute path = "/keranjang" component = {Keranjang}/>
-
-
-                {/* Pengaturan Pelanggan */}
-                <PrivateRoute path = "/pengaturan" component = {Pengaturan}/>
-
             </Switch>
        </Router>
     )

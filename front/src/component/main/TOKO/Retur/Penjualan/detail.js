@@ -1,11 +1,13 @@
-import React,{useEffect, useState,useRef} from 'react'
+import React,{useEffect, useState,useRef,useContext} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../../global/function'
 import {Faktur_Retur_Penjualan} from '../../Laporan/Faktur/faktur_retur_penjualan'
 import ReactToPrint from 'react-to-print';
+import {Context} from '../../../../state_management/context'
 
 const Index = (props) => {
+    const {dataContext} = useContext(Context);
     const componentRef = useRef();
 
     const [refresh,setRefresh] = useState(false);
@@ -19,6 +21,9 @@ const Index = (props) => {
     // State Laporan
     const [idPelanggan,setIdPelanggan] = useState('');
     const [nomorPolisi,setNomorPolisi] = useState('');
+
+    const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
+
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -30,6 +35,7 @@ const Index = (props) => {
                 setIdPenjualan(responseDataRetur.data[0].id_penjualan);
                 setTanggalRetur(responseHeader.data.tanggal_retur);
                 setAlasanRetur(responseHeader.data.alasan_retur);
+                setJenisPenggembalian(responseHeader.data.jenis_penggembalian);
 
                 // Laporan
                 setIdPelanggan(detail.id_pelanggan);
@@ -52,13 +58,16 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = dataRetur ? dataRetur.map((list,index) => {
-        if(list.id_barang != 0){
+        if(list.id_barang && list.total){
             return (
                 <tr key={index}>
-                    <td className="p-3">
-                        <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
-                        <Link to={{ pathname : '/edit_barang_retur_penjualan',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
-                    </td>
+                    {
+                        !dataContext.edit_retur_penjualan ? null : 
+                        <td className="p-3">
+                            <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
+                            <Link to={{ pathname : '/edit_barang_retur_penjualan',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
+                        </td>
+                    }
                     <td className="p-3">{list.id_barang}</td>
                     <td className="p-3">{list.Barang_Header.nama_barang}</td>
                     <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
@@ -88,7 +97,7 @@ const Index = (props) => {
             }
 
             if(tanggalRetur != '' && dataRetur.length > 0){
-                await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete/${idRetur}/0`);
+                await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
                 await axios.put(`http://localhost:5001/retur_penjualan_header/update/${idRetur}`,dataUpdate);
                 await props.history.goBack();
                 setRefresh(!refresh);
@@ -114,6 +123,17 @@ const Index = (props) => {
         props.history.goBack();
     }
 
+    const handleCancel = async () => {
+        try{
+            await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_retur/${idRetur}`);
+            await axios.delete(`http://localhost:5001/retur_penjualan_header/delete/${idRetur}`);
+            alert('Data Retur Berhasil Dihapus');
+            props.history.goBack();
+        }catch(error){
+            console.log(error);
+        }
+    }
+
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
@@ -137,7 +157,10 @@ const Index = (props) => {
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th className="p-3"></th>
+                                {
+                                    !dataContext.edit_retur_penjualan ? null : 
+                                    <th className="p-3"></th>
+                                }
                                 <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
                                 <th className="p-3">Harga Jual</th>
@@ -150,7 +173,7 @@ const Index = (props) => {
                         </tbody>
                     </table>
                     {
-                        idPenjualan == '' ? null : 
+                        idPenjualan == '' || !dataContext.edit_retur_penjualan ? null : 
                         <div className="row">
                             <Link to={{ pathname : '/tambah_barang_retur_penjualan',state : {idRetur,idPenjualan} }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
                         </div>
@@ -163,9 +186,20 @@ const Index = (props) => {
                             <input type="text" class="form-control" value={idPenjualan} disabled/>
                             <label for="floatingInput">ID Penjualan</label>
                         </div>
-                        <div className="col-6 px-0">
-                            <Link to={{ pathname : '/tambah_data_retur_penjualan',state: idRetur}} className=" btn btn-outline-success">Ambil Data Penjualan</Link>
-                        </div>
+                        {
+                            !dataContext.edit_retur_penjualan ? null : 
+                            <div className="col-6 px-0">
+                                <Link to={{ pathname : '/tambah_data_retur_penjualan',state: idRetur}} className=" btn btn-outline-success">Ambil Data Penjualan</Link>
+                            </div>
+                        }
+                    </div>
+
+                    <div className="row form-floating mb-2">
+                        <select class="form-select" onChange = { (e) => setJenisPenggembalian(e.target.value)}>
+                            <option value = "1" selected = {jenisPenggembalian ? true : false}>Tunai</option>
+                            <option value = "0" selected = {!jenisPenggembalian ? true : false}>Ganti Barang</option>
+                        </select>
+                        <label>Jenis Pembayaran</label>
                     </div>
 
                     <div className="row">
@@ -181,8 +215,16 @@ const Index = (props) => {
                             <label for="floatingInput">Alasan Retur</label>
                         </div>
                     </div>
-
-                    <button className="btn btn-success w-100" onClick={handleSave} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Simpan</button>
+                    <div className = "row">
+                        {
+                            !dataContext.hapus_retur_penjualan ? null : 
+                            <button className="btn btn-danger col mx-1 w-100" onClick={handleCancel} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Batal</button>
+                        }
+                        {
+                            !dataContext.edit_retur_penjualan ? null : 
+                            <button className="btn btn-success col mx-1 w-100" onClick={handleSave} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Simpan</button>
+                        }
+                    </div>
                 </div>
             </div>
 

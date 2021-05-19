@@ -1,10 +1,10 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useContext} from 'react'
 import { useHistory,Link } from 'react-router-dom'
 import axios from 'axios'
-import { formatMoney } from '../../../global/function'
+import {Context} from '../../../state_management/context'
 
 const Index = (props) => {
-    let history = useHistory();
+    const {dataContext} = useContext(Context);
     const [refresh,setRefresh] = useState(false);
 
 
@@ -33,10 +33,13 @@ const Index = (props) => {
     const viewData = dataPenyesuaianDetail ? dataPenyesuaianDetail.map((list,index) => {
         return (
             <tr key={index}>
-                <td className="p-3">
-                    <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
-                    <Link to={{ pathname : '/edit_barang_penyesuaian',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
-                </td>
+                {
+                    !dataContext.edit_penyesuaian ? null :
+                    <td className="p-3">
+                        <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
+                        <Link to={{ pathname : '/edit_barang_penyesuaian',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
+                    </td>
+                }
                 <td className="p-3">{list.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.jumlah_sistem}</td>
@@ -67,6 +70,29 @@ const Index = (props) => {
         props.history.goBack();
     }
 
+    const handleCancel = async () => {
+        try{
+            await axios.delete(`http://localhost:5001/penyesuaian_detail/delete_penyesuaian/${idPenyesuaian}`); 
+            await axios.delete(`http://localhost:5001/penyesuaian_header/delete/${idPenyesuaian}`);
+            alert('Data Penyesuaian Berhasil Dihapus');
+            props.history.goBack();
+        }catch(error){
+            console.log(error);
+        }
+    } 
+
+    const handleSave = async () => {
+        try{
+            const data = {
+                tanggal_penyesuaian : tanggalPenyesuaian
+            }
+            await axios.put(`http://localhost:5001/penyesuaian_header/update/${idPenyesuaian}`,data);
+            alert('Data Penyesuaian Berhasil Diupdate');
+            props.history.goBack();
+        }catch(error){
+            console.log(error); 
+        }
+    }
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
@@ -84,7 +110,10 @@ const Index = (props) => {
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th className="p-3"></th>
+                                {
+                                    !dataContext.edit_penyesuaian ? null : 
+                                    <th className="p-3"></th>
+                                }
                                 <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
                                 <th className="p-3">Stok Sistem</th>
@@ -96,20 +125,31 @@ const Index = (props) => {
                             {viewData}
                         </tbody>
                     </table>
-                    <div className="col-12 row">
-                        <Link to={{ pathname : '/tambah_barang_penyesuaian',state : idPenyesuaian }} className = "col-5 mx-auto btn btn-success">Tambah Barang</Link>
-                    </div> 
+                    {
+                        !dataContext.edit_penyesuaian ? null : 
+                        <div className="col-12 row">
+                            <Link to={{ pathname : '/tambah_barang_penyesuaian',state : idPenyesuaian }} className = "col-5 mx-auto btn btn-success">Tambah Barang</Link>
+                        </div> 
+                    }
                 </div>
                 <div className="col-3">
                     <div className="row">
                         <div class="form-floating mb-3 px-0 mx-1">
-                            <input type="date" class="form-control" value={tanggalPenyesuaian} onChange={(e) => setTanggalPenyesuaian(e.target.value)}/>
+                            <input type="date" class="form-control" value={tanggalPenyesuaian} onChange={(e) => setTanggalPenyesuaian(e.target.value)} disabled = {!dataContext.edit_penyesuaian}/>
                             <label for="floatingInput">Tanggal Penyesuaian</label>
                         </div>
                     </div>
 
-                    <div className="mt-3">
-                        <button className="btn btn-success w-100" disabled={ tanggalPenyesuaian == '' || dataPenyesuaianDetail.length < 1 ? true : false }>Simpan</button>
+                    <div className="mt-3 row">
+                        {
+                            !dataContext.hapus_penyesuaian ? null : 
+                            <button className="btn btn-danger col mx-1 w-100" disabled={ tanggalPenyesuaian == '' || dataPenyesuaianDetail.length < 1 ? true : false } onClick = {handleCancel}>Batal</button>
+                        }
+                        {
+                            !dataContext.edit_penyesuaian ? null : 
+                            <button className="btn btn-success col mx-1 w-100" disabled={ tanggalPenyesuaian == '' || dataPenyesuaianDetail.length < 1 ? true : false } onClick = {handleSave}>Simpan</button>
+                        }
+
                     </div>
                 </div>
             </div>

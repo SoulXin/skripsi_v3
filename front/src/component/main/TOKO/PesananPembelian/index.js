@@ -29,7 +29,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
-        return (
+        return (    
             <tr key={index}>
                 <td className="p-3">{list.id_pesanan_pembelian}</td>
                 <td className="p-3">{list.tanggal_pemesanan}</td>

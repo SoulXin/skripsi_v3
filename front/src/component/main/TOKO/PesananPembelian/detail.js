@@ -1,12 +1,15 @@
-import React,{useEffect, useState,useRef} from 'react'
-import { Link } from 'react-router-dom'
+import React,{useEffect, useState,useRef,useContext} from 'react'
+import { Link,useHistory } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../global/function'
 import {Faktur_Retur_Penjualan} from '../Laporan/Faktur/faktur_pesanan_pembelian'
 import ReactToPrint from 'react-to-print';
+import {Context} from '../../../state_management/context'
 
 const Index = (props) => {
+    let history = useHistory();
     const componentRef = useRef();
+    const {dataContext} = useContext(Context);
 
     const [refresh,setRefresh] = useState(false);
 
@@ -20,6 +23,8 @@ const Index = (props) => {
     const [dataBarangDetail,setDataBarangDetail] = useState([]);
 
     const [totalBarang,setTotalBarang] = useState(0);
+    
+    const [checkPembelian,setCheckPembelian] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -28,7 +33,9 @@ const Index = (props) => {
                 const response = await axios.get(`http://localhost:5001/pesanan_pembelian_header/show_detail/${detail.id_pesanan_pembelian}`);
                 const responseBarangDetail = await axios.get(`http://localhost:5001/pesanan_pembelian_detail/show_detail/${detail.id_pesanan_pembelian}`)
                 const responseSupplier = await axios.get('http://localhost:5001/supplier/show_all');
+                const responseCheckPesanan = await axios.get(`http://localhost:5001/pesanan_pembelian_header/show_detail/${detail.id_pesanan_pembelian}`)
 
+                setCheckPembelian(responseCheckPesanan.data.Pembelian_Header ? true : false);
                 setIdPesananPembelian(detail.id_pesanan_pembelian);
                 setIdSupplier(response.data.id_supplier);
                 setNamaSupplier(response.data.Supplier.nama_supplier);
@@ -56,7 +63,7 @@ const Index = (props) => {
         return (
             <tr key={index}>
                 {
-                    status == "Tolak" || status == "Selesai" ? null :
+                    status == "Selesai" || checkPembelian || !dataContext.edit_pesanan_pembelian ? null :
                     <td className="p-3" style={{position:'relative'}}>
                         <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
                         <Link to={{ pathname : '/edit_barang_pesanan_pembelian',state : list }} className="btn btn-outline-success mx-1">Detail</Link>
@@ -83,33 +90,60 @@ const Index = (props) => {
         }
     }) : null;
 
-    const handleSave = async (type,value) => {
-        if(type == "supplier"){
-            const data = {
-                id_supplier : value
-            }
-            await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,data);
-            setIdSupplier(value);
-        }else{
-            const data = {tanggal_pemesanan : value};
-            await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,data);
-            setTanggalPemesanan(value);
+    const handleSave = async () => {
+        const data = {
+            id_supplier : idSupplier,
+            tanggal_pemesanan : tanggalPemesanan
         }
-        alert('Perubahan berhasil di simpan');
-        setRefresh(!refresh);
+        try{
+            await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,data);
+            alert('Perubahan berhasil di simpan');
+            setRefresh(!refresh);
+        }catch(err){
+            console.log(err)
+        }
     }
 
+    const handleTambahBarang = async () => {
+        try{
+            if(checkPembelian){
+                alert('Tidak bisa diubah karena data sedang digunakan');
+            }else{
+                history.push('/tambah_barang_pesanan_pembelian',idPesananPembelian);
+            }
+        }catch(error){
+            console.log(error)
+        }
+    }
+    
     const handleDelete = async (e) => {
-        await axios.delete(`http://localhost:5001/pesanan_pembelian_detail/delete/${idPesananPembelian}/${e.id_barang}`);
-        alert('Barang berhasil dihapus');
-        setRefresh(!refresh);
+        try{
+            if(checkPembelian){
+                alert('Tidak bisa diubah karena data sedang digunakan');
+            }else{
+                await axios.delete(`http://localhost:5001/pesanan_pembelian_detail/delete/${idPesananPembelian}/${e.id_barang}`);
+                alert('Barang berhasil dihapus');
+                setRefresh(!refresh);
+            }
+
+        }catch(error){
+            console.log(error);
+        }
     }
     
     const handleCancel = async () => {
-        const data = {status : 'Tolak'};
-        await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,data);
-        alert('Pesanan pembelian berhasil di batalkan');
-        setRefresh(!refresh);
+        try{
+            if(checkPembelian){
+                alert('Tidak bisa diubah karena data sedang digunakan');
+            }else{
+                await axios.delete(`http://localhost:5001/pesanan_pembelian_detail/delete_pesanan_pembelian/${idPesananPembelian}`);
+                await axios.delete(`http://localhost:5001/pesanan_pembelian_header/delete/${idPesananPembelian}`);
+                alert('Pesanan pembelian berhasil di batalkan');
+                props.history.goBack();
+            }
+        }catch(error){
+            console.log(error);
+        }
     }
     return (
         <div className="container px-0 pt-5">
@@ -130,15 +164,19 @@ const Index = (props) => {
             
             {/* Header Isi */}
             <div className="row">
+                <div class="form-floating mb-3 px-0 col-2">
+                    <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com" value={idPesananPembelian} disabled/>
+                    <label for="floatingInput">ID Pemesanan</label>
+                </div>
                 <div className="col-3">
                     <label>Supplier</label>
-                        <select class="form-select" aria-label="Default select example" onChange = {(e) => handleSave("supplier",e.target.value)} disabled={ status == "Tolak" || status == "Selesai" ? true : false }>
+                        <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)} disabled={ status == "Selesai" || checkPembelian  || !dataContext.edit_pesanan_pembelian ? true : false }>
                         <option value="" selected>Tidak Ada</option>
                         {viewSupplier}
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col-2">
-                    <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com" value={tanggalPemesanan} onChange = {(e) => handleSave("tanggal_pemesanan",e.target.value)} disabled={ status == "Tolak" || status == "Selesai" ? true : false }/>
+                    <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com" value={tanggalPemesanan} onChange = {(e) => setTanggalPemesanan(e.target.value)} disabled={ status == "Selesai" || checkPembelian || !dataContext.edit_pesanan_pembelian ? true : false }/>
                     <label for="floatingInput">Tangal Pemesanan</label>
                 </div>
             </div>
@@ -150,7 +188,7 @@ const Index = (props) => {
                         <thead>
                             <tr>
                                 {
-                                    status == "Tolak" || status == "Selesai" ? null :
+                                    status == "Selesai" || checkPembelian || !dataContext.edit_pesanan_pembelian ? null :
                                     <th className="p-3"></th>
                                 }
                                 <th className="p-3">Nama</th>
@@ -165,9 +203,12 @@ const Index = (props) => {
                         </tbody>
                     </table>
 
-                    <div className="row">
-                        <Link to={{ pathname : '/tambah_barang_pesanan_pembelian',state : idPesananPembelian }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
-                    </div> 
+                    {
+                        status == 'Selesai' || checkPembelian || !dataContext.edit_pesanan_pembelian ? null :
+                        <div className="row">
+                            <button className = "col-5 mx-auto btn btn-outline-success" onClick = {handleTambahBarang}>Tambah Barang</button>
+                        </div> 
+                    }
                 </div>
                 <div className="col-3">
                     <table>
@@ -178,9 +219,30 @@ const Index = (props) => {
                         </tr>
                     </table>
                     {
-                        status == "Tolak" || status == "Selesai" ? null :
-                        <div className="w-100 btn btn-danger mt-3" onClick={handleCancel}>
-                            Batal
+                        checkPembelian || status == 'Selesai' ? 
+                        <p>Status Pesanan : { status == 'Selesai' ? 
+                            <ul>
+                                <li>Pesanan Sudah Selesai</li>
+                            </ul> :
+                            checkPembelian ? 
+                            <ul>
+                                <li>Data Telah Digunakan Pada Module Pembelian</li>
+                            </ul> : null
+                        } </p> : null
+                    }
+                    {
+                        status == "Selesai" ? 
+                        null
+                        :
+                        <div className="row mt-3" >
+                            {
+                                !dataContext.hapus_pesanan_pembelian ? null : 
+                                <button className="w-100 btn btn-danger col mx-1" onClick={handleCancel}>Batal</button>
+                            }
+                            {
+                                !dataContext.edit_pesanan_pembelian ? null : 
+                                <button className="w-100 btn btn-success col mx-1" onClick={handleSave}>Simpan</button>
+                            }
                         </div>
                     }
                 </div>

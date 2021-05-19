@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Link,useHistory } from 'react-router-dom'
 import axios from 'axios'
-import { formatMoney } from '../../../../../global/function'
+import { formatMoney } from '../../../../global/function'
 
 const Index = (props) => {
     let history = useHistory();
@@ -16,7 +16,8 @@ const Index = (props) => {
 
     const [idMekanik,setIdMekanik] = useState('');
     const [nomorPolisi,setNomorPolisi] = useState('');
-    const [tanggalPemesanan,setTanggalPemesanan] = useState('');
+    const [namaPelanggan,setNamaPelanggan] = useState('');
+    const [tanggalPenjualan,setTanggalPenjualan] = useState('');
 
     // Data barang dan service
     const [dataBarang,setDataBarang] = useState([]);
@@ -31,8 +32,8 @@ const Index = (props) => {
             try{
                 const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_all');
                 const responsePenjualanDetail = await axios.get(`http://localhost:5001/penjualan_detail/show_detail/${props.location.state.id_penjualan}`);
-                const responsePenjualanService  = await axios.get(`http://localhost:5001/penjualan_service/show_detail/${props.location.state.id_penjualan}`)
-
+                const responsePenjualanService  = await axios.get(`http://localhost:5001/penjualan_service/show_detail/${props.location.state.id_penjualan}`);
+                
                 setIdPenjualan(props.location.state.id_penjualan);
                 setMekanik(responseMekanik.data);
                 setDataBarang(responsePenjualanDetail.data);
@@ -72,9 +73,9 @@ const Index = (props) => {
                 </td>
                 <td>Barang</td>
                 <td>{list.Barang_Header.nama_barang}</td>
-                <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
+                <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
-                <td>Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
+                <td>Rp. {formatMoney(list.harga_jual * list.jumlah)}</td>
             </tr>
         )
     }) : null;
@@ -83,13 +84,14 @@ const Index = (props) => {
         return (
             <tr key = {index}>
                 <td>
+                    <Link to={{ pathname : '/edit_service',state : {detail : list, harga : list.harga} }}className="btn btn-outline-secondary mx-1">Edit</Link>
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Service',list.id_penjualan,list.id_service)}>Hapus</button>
                 </td>
                 <td>Service</td>
                 <td>{list.Jenis_Service.nama}</td>
-                <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                <td>Rp. {formatMoney(list.harga)}</td>
                 <td>1</td>
-                <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                <td>Rp. {formatMoney(list.harga)}</td>
             </tr>
         )
     }) : null;
@@ -126,29 +128,68 @@ const Index = (props) => {
         }
     }
 
-    const handleTambah = () => {
-        const data = {
-            mekanik : idMekanik,
-            nopol : nomorPolisi,
-            tanggal_penjualan : tanggalPemesanan,
-            grand_total : totalBarang + totalService,
+    const handleTambah = async () => {
+        const dataPenjualanHeader = {
+            tanggal_penjualan : tanggalPenjualan,
+            grand_total : totalBarang + totalService
         }
-        axios.put(`http://localhost:5001/penjualan_header/proses_penjualan_header/${idPenjualan}`,data)
-        .then((res) => {
-            alert('Penjualan berhasil ditambahkan');
-            history.push('/penjualan');
-        })
-        .catch((err) => {
+        
 
-        })
+        const dataPenjualanPelanggan = {
+            id_penjualan : idPenjualan,
+            nama_pelanggan : namaPelanggan,
+            nomor_polisi : nomorPolisi
+        }
+
+        try{
+            // Detail 
+            for(var a = 0; a < dataBarang.length; a++){
+                const dataPenjualanDetail = {
+                    id_penjualan : idPenjualan,
+                    id_barang : dataBarang[a].Barang_Header.id_barang,
+                    harga_jual : dataBarang[a].Barang_Header.harga_jual,
+                    jumlah : dataBarang[a].jumlah,
+                    total : parseInt(dataBarang[a].jumlah * dataBarang[a].Barang_Header.harga_jual)
+                }
+                await axios.post('http://localhost:5001/penjualan_detail/register',dataPenjualanDetail);
+            }
+
+            // Service dan Mekanik
+            for(var b = 0; b < dataService.length; b++){
+                const dataPenjualanService = {
+                    id_penjualan : idPenjualan,
+                    id_service : dataService[b].Jenis_Service.id_service,
+                    no_antrian : 1
+                }
+
+                const dataMekanikDetail = {
+                    id_mekanik : idMekanik,
+                    id_penjualan : idPenjualan,
+                    id_service : dataService[b].Jenis_Service.id_service,
+                    tanggal : tanggalPenjualan
+                }
+                await axios.post('http://localhost:5001/penjualan_service/register',dataPenjualanService);
+                await axios.post('http://localhost:5001/mekanik_detail/register',dataMekanikDetail);
+            }
+            // Pelanggan
+            await axios.post('http://localhost:5001/penjualan_pelanggan/register',dataPenjualanPelanggan);
+
+            // Header
+            await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
+                        
+            alert('Penjualan berhasil ditambahkan');
+            props.history.goBack();
+        }catch(error){
+            console.log(error);
+        }
     }
 
     const disableTombolTambah = () => {
         if(dataService.length > 0 && idMekanik == ''){ // => jika ada pesanan service dan mekanik blm dipilih
             return true;
-        }else if(nomorPolisi == ''){ // => jika nomor polisi kosong
+        }else if(nomorPolisi == '' || namaPelanggan == ''){ // => jika nomor polisi kosong
             return true;
-        }else if(tanggalPemesanan == ''){ // => jika tanggal pemesanan blm di set
+        }else if(tanggalPenjualan == ''){ // => jika tanggal pemesanan blm di set
             return true;
         }else if(!dataBarang.length && !dataService.length){ // => jika pesanan kosong
             return true;
@@ -175,14 +216,20 @@ const Index = (props) => {
                             <label for="id_penjualan">ID Penjualan</label>
                         </div>
                         <div class="col-3 form-floating mb-3 px-0 mx-auto">
-                            <input type="date" class="form-control" id="tanggal_pemesanan"  value={tanggalPemesanan} onChange = {(e) => setTanggalPemesanan(e.target.value)} />
-                            <label for="tanggal_pemesanan">Tanggal Pemesanan</label>
+                            <input type="date" class="form-control" id="tanggal_pemesanan"  value={tanggalPenjualan} onChange = {(e) => setTanggalPenjualan(e.target.value)} />
+                            <label for="tanggal_pemesanan">Tanggal Penjualan</label>
                         </div>
-                        <div class="form-floating col-3 px-0 mb-3">
+
+                        <div class="form-floating col-2 px-0 mb-3 mx-auto">
+                            <input type="text" class="form-control" id="nomor_polisi" value = {namaPelanggan} onChange = {(e) => setNamaPelanggan(e.target.value)} />
+                            <label for="nomor_polisi">Nama Pelanggan</label>
+                        </div>
+
+                        <div class="form-floating col-2 px-0 mb-3 mx-auto">
                             <input type="text" class="form-control" id="nomor_polisi" value = {nomorPolisi} onChange = {(e) => setNomorPolisi(e.target.value)} />
                             <label for="nomor_polisi">Nomor Polisi</label>
                         </div>
-                        
+
                         <div class="col-2 form-floating mb-3 px-0 mx-auto">
                             <select class="form-select" aria-label="Default select example" onChange = {(e => setIdMekanik(e.target.value))} disabled = {dataService.length > 0 ? false : true}>
                                 <option value='' selected>Tidak ada</option>
@@ -242,7 +289,7 @@ const Index = (props) => {
                             </tr>
                         </tbody>
                     </table>
-                    <button className="btn btn-success w-100 mt-3" onClick = {handleTambah} disabled = {disableTombolTambah()}>Tambah</button>
+                    <button className="btn btn-success w-100 mt-3" onClick = {handleTambah} disabled = {disableTombolTambah()}>Simpan</button>
                 </div>
             </div>
         </div>

@@ -36,18 +36,12 @@ app.use('/gambar_pelanggan', express.static(__dirname + '/Gambar/Pelanggan/'))
 
 //Routers
 
-// Pelanggan
-app.use("/pelanggan",require("./Router/Pelanggan/pelanggan"));
-
 // Barang
 app.use("/barang_header",require("./Router/Barang/barang_header"));
 app.use("/barang_detail",require("./Router/Barang/barang_detail"));
 
 // Supplier
 app.use("/supplier",require("./Router/Supplier/supplier"));
-
-// Daerah Pengantaran
-app.use("/daerah_pengantaran",require("./Router/Daerah_Pengantaran/daerah_pengantaran"));
 
 // Mekanik
 app.use("/mekanik_header",require("./Router/Mekanik/mekanik_header"));
@@ -64,16 +58,6 @@ app.use("/user",require("./Router/User/user"));
 app.use("/hak_akses",require("./Router/Hak_Akses/index"));
 app.use("/hak_akses_user",require("./Router/Hak_Akses_User/hak_akses_user"));
 
-// Keranjang
-app.use("/keranjang_barang",require("./Router/Keranjang/keranjang_barang"));
-app.use("/keranjang_service",require("./Router/Keranjang/keranjang_service"));
-
-// pesanan pelanggan
-app.use("/pesanan_pelanggan_header",require("./Router/Pesanan_Pelanggan/pesanan_pelanggan_header"));
-app.use("/pesanan_pelanggan_detail",require("./Router/Pesanan_Pelanggan/pesanan_pelanggan_detail"));
-app.use("/pesanan_pelanggan_pengantaran",require("./Router/Pesanan_Pelanggan/pesanan_pelanggan_pengantaran"));
-app.use("/pesanan_pelanggan_booking_service",require("./Router/Pesanan_Pelanggan/pesanan_pelanggan_booking_service"));
-
 // Pesanan pembelian
 app.use("/pesanan_pembelian_header",require("./Router/Pesanan_Pembelian/pesanan_pembelian_header"));
 app.use("/pesanan_pembelian_detail",require("./Router/Pesanan_Pembelian/pesanan_pembelian_detail"));
@@ -86,6 +70,8 @@ app.use("/pembelian_detail",require("./Router/Pembelian/pembelian_detail"));
 app.use("/penjualan_header",require("./Router/Penjualan/penjualan_header"));
 app.use("/penjualan_detail",require("./Router/Penjualan/penjualan_detail"));
 app.use("/penjualan_service",require("./Router/Penjualan/penjualan_service"));
+app.use("/penjualan_pelanggan",require("./Router/Penjualan/penjualan_pelanggan"));
+
 
 // Pembayaran Hutang
 app.use("/pembayaran_hutang_header",require("./Router/Pembayaran_Hutang/pembayaran_hutang_header"));

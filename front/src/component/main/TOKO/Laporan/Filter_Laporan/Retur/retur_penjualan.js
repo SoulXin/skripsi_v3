@@ -29,12 +29,12 @@ const Index = () => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
+        console.log(list)
         return (
             <tr key={index}>
-                <td className="p-3">{list.Retur_Penjualan_Detail.id_penjualan}</td>
+                <td className="p-3">{list.Retur_Penjualan_Detail[0].id_penjualan}</td>
                 <td className="p-3">{list.id_retur_penjualan}</td>
                 <td className="p-3">{list.tanggal_retur}</td>
-                <td className="p-3">{list.id_pelanggan ? list.id_pelanggan :'BK : ' + list.nopol}</td>
                 <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
                 <td className="p-3">{list.alasan_retur ? list.alasan_retur : 'Tidak Ada'}</td>
             </tr>
@@ -92,7 +92,6 @@ const Index = () => {
                             <th className="p-3">ID Penjualan</th>
                             <th className="p-3">ID Retur Penjualan</th>
                             <th className="p-3">Tanggal Retur</th>
-                            <th className="p-3">Pelanggan</th>
                             <th className="p-3">Total</th>
                             <th className="p-3">Alasan</th>
                         </tr>

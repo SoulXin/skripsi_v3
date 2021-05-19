@@ -116,3 +116,21 @@ exports.check_penjualan = (req,res) => {
         res.status(400).end();
     });
 }
+
+exports.delete_temp = (req,res) => {
+    const {id} = req.params;
+    Retur_Penjualan_Detail.destroy({
+        where : {
+            [Op.and] : [
+                {id_retur_penjualan : id},
+                {total : 0}
+            ]
+        }
+    })
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}

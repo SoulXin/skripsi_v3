@@ -2,6 +2,8 @@ const Pembelian_Header = require('../../Model/Pembelian/pembelian_header');
 const Pembelian_Detail = require('../../Model/Pembelian/pembelian_detail');
 const Supplier = require('../../Model/Supplier/supplier');
 const { Op } = require("sequelize");
+const Pembayaran_Hutang_Detail = require('../../Model/Pembayaran_Hutang/pembayaran_hutang_detail');
+const Retur_Pembelian_Detail = require('../../Model/Retur_Pembelian/retur_pembelian_detail');
 
 exports.register = (req,res) => {
     const {id_pesanan_pembelian,tanggal_pembelian,metode_pembayaran,tanggal_jatuh_tempo,id_supplier,grand_total} = req.body;
@@ -38,8 +40,27 @@ exports.show_all = (req,res) => {
     });
 }
 
+exports.show_all_laporan = (req,res) => {
+    Pembelian_Header.findAll({
+        where : {
+            status : 'Selesai'
+        },
+        include : [
+            {
+                model : Supplier,
+                as : 'Supplier'
+            }
+        ]
+    })
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
+
 exports.show_detail = (req,res) => {
-    console.log(req.params);
     const {id} = req.params;
     Pembelian_Header.findOne({
         where : {
@@ -49,6 +70,14 @@ exports.show_detail = (req,res) => {
             {
                 model : Supplier,
                 as : 'Supplier'
+            },
+            {
+                model : Pembayaran_Hutang_Detail,
+                as : 'Pembayaran_Hutang_Detail'
+            },
+            {
+                model : Retur_Pembelian_Detail,
+                as : 'Retur_Pembelian_Detail'
             }
         ]
     })
@@ -78,7 +107,7 @@ exports.search = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {id_pesanan_pembelian,tanggal_pembelian,metode_pembayaran,tanggal_jatuh_tempo,id_supplier,grand_total,status} = req.body;
+    const {id_pesanan_pembelian,tanggal_pembelian,metode_pembayaran,tanggal_jatuh_tempo,id_supplier,grand_total,pembayaran,status} = req.body;
     Pembelian_Header.update({
         id_pesanan_pembelian : id_pesanan_pembelian,
         tanggal_pembelian : tanggal_pembelian,
@@ -86,6 +115,7 @@ exports.update = (req,res) => {
         tanggal_jatuh_tempo : tanggal_jatuh_tempo,
         id_supplier : id_supplier,
         grand_total : grand_total,
+        pembayaran : pembayaran,
         status : status
     },{
         where : {
@@ -120,9 +150,16 @@ exports.search_date = (req,res) => {
     const {dari, sampai} = req.body;
     Pembelian_Header.findAll({
         where : {
-            tanggal_pembelian : {
-                [Op.between] : [dari,sampai]
-            }
+            [Op.and] : [
+                {
+                    tanggal_pembelian : {
+                        [Op.between] : [dari,sampai]
+                    }
+                },
+                {
+                    status : 'Selesai'
+                }
+            ]
         },
         include : [
             {

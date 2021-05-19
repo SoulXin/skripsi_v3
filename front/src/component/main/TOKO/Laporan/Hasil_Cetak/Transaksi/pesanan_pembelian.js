@@ -1,5 +1,4 @@
 import React from 'react'
-import { formatMoney } from '../../../../../global/function'
 
 export class Cetak_Pesanan_Pembelian extends React.PureComponent {
     render() {
@@ -17,7 +16,6 @@ export class Cetak_Pesanan_Pembelian extends React.PureComponent {
                     <th>Tanggal Pemesanan</th>
                     <th>Nama Supplier</th>
                     <th>Total</th>
-                    <th>Status</th>
                 </thead>
                     {
                         this.props.dataTable.map((list,index) => {
@@ -27,7 +25,6 @@ export class Cetak_Pesanan_Pembelian extends React.PureComponent {
                                     <td>{list.tanggal_pemesanan}</td>
                                     <td>{list.Supplier.nama_supplier}</td>
                                     <td>{list.grand_total}</td>
-                                    <td>{list.status}</td>
                                 </tr>
                             )
                         })

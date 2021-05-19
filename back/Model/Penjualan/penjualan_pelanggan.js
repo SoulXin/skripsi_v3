@@ -1,18 +1,20 @@
 const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
 
-const User = db.sequelize.define('user',{
-    user_id : {
+const Penjualan_Service = db.sequelize.define('penjualan_pelanggan',{
+    id : {
         type : Sequelize.INTEGER,
         primaryKey : true,
-        autoIncrement : true
     },
-    username : {
+    id_penjualan : {
+        type : Sequelize.INTEGER,
+    },
+    nama_pelanggan : {
         type : Sequelize.STRING
     },
-    password : {
+    nomor_polisi: {
         type : Sequelize.STRING
     }
 });
 
-module.exports = User
+module.exports = Penjualan_Service

@@ -4,6 +4,7 @@ const penjualan_header_Controller = require('../../Controller/Penjualan/penjuala
 
 router.post("/register",penjualan_header_Controller.register);
 router.get('/show_all',penjualan_header_Controller.show_all)
+router.get('/show_all_laporan',penjualan_header_Controller.show_all_laporan);
 router.get('/show_all_service',penjualan_header_Controller.show_all_service)
 router.get('/show_detail/:id',penjualan_header_Controller.show_detail);
 router.post('/search',penjualan_header_Controller.search);

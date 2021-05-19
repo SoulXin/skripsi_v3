@@ -33,20 +33,18 @@ export class Cetak_Retur_Penjualan extends React.PureComponent {
                     <th className="p-3">ID Penjualan</th>
                     <th className="p-3">ID Retur Penjualan</th>
                     <th className="p-3">Tanggal Retur</th>
-                    <th className="p-3">Pelanggan</th>
-                    <th className="p-3">Alasan</th>
                     <th className="p-3">Total</th>
+                    <th className="p-3">Alasan</th>
                 </thead>
                     {
                         this.props.dataTable.map((list,index) => {
                             return (
                                 <tr>
-                                    <td>{list.Retur_Penjualan_Detail.id_penjualan}</td>
-                                    <td>{list.id_retur_penjualan}</td>
-                                    <td>{list.tanggal_retur}</td>
-                                    <td>{list.id_pelanggan ? list.id_pelanggan :'BK : ' + list.nopol}</td>
-                                    <td>{list.alasan_retur ? list.alasan_retur : 'Tidak Ada'}</td>
-                                    <td>Rp. {formatMoney(list.grand_total)}</td>
+                                    <td className="p-3">{list.Retur_Penjualan_Detail[0].id_penjualan}</td>
+                                    <td className="p-3">{list.id_retur_penjualan}</td>
+                                    <td className="p-3">{list.tanggal_retur}</td>
+                                    <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
+                                    <td className="p-3">{list.alasan_retur ? list.alasan_retur : 'Tidak Ada'}</td>
                                 </tr>
                             )
                         })

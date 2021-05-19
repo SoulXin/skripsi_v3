@@ -1,15 +1,17 @@
-import React,{useEffect, useState} from 'react'
-import { useHistory,Link } from 'react-router-dom'
+import React,{useEffect, useState,useContext} from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../global/function'
+import {Context} from '../../../state_management/context'
 
 const Index = (props) => {
-    let history = useHistory();
+    const {dataContext} = useContext(Context);
     const [refresh,setRefresh] = useState(false);
 
     const [idPembelian,setIdPembelian] = useState('');
+    const [idPesananPembelian,setIdPesananPembelian] = useState('');
     const [idSupplier,setIdSupplier] = useState('');
-    const [tanggalPemesanan,setTanggalPemesanan] = useState('');
+    const [tanggalPembelian,settanggalPembelian] = useState('');
     const [tanggalJatuhTempo,setTanggalJatuhTempo] = useState('');
     const [metodePembayaran,setMetodePembayaran] = useState('');
     const [status,setStatus] = useState(''); 
@@ -19,6 +21,9 @@ const Index = (props) => {
 
     const [totalBarang,setTotalBarang] = useState(0);
 
+    const [checkHutang,setCheckHutang] = useState(false);
+    const [checkRetur,setCheckRetur] = useState(false);
+    
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -26,10 +31,16 @@ const Index = (props) => {
                 const responseHeader = await axios.get(`http://localhost:5001/pembelian_header/show_detail/${detail.id_pembelian}`);
                 const responseBarangDetail = await axios.get(`http://localhost:5001/pembelian_detail/show_detail/${detail.id_pembelian}`)
                 const responseSupplier = await axios.get('http://localhost:5001/supplier/show_all');
+               
+                const responseCheck = await axios.get(`http://localhost:5001/pembelian_header/show_detail/${detail.id_pembelian}`);
+
+                setCheckHutang(responseCheck.data.Pembayaran_Hutang_Detail ? true : false);
+                setCheckRetur(responseCheck.data.Retur_Pembelian_Detail ? true : false);
 
                 setIdPembelian(detail.id_pembelian);
+                setIdPesananPembelian(responseHeader.data.id_pesanan_pembelian);
                 setIdSupplier(responseHeader.data.id_supplier);
-                setTanggalPemesanan(responseHeader.data.tanggal_pembelian);
+                settanggalPembelian(responseHeader.data.tanggal_pembelian);
                 setTanggalJatuhTempo(responseHeader.data.tanggal_jatuh_tempo);
                 setMetodePembayaran(responseHeader.data.metode_pembayaran);
                 setStatus(responseHeader.data.status);
@@ -60,10 +71,13 @@ const Index = (props) => {
     const viewData = dataBarangDetail ? dataBarangDetail.map((list,index) => {
         return (
             <tr key={index}>
-                <td className="p-3" style={{position:'relative'}}>
-                    <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
-                    <Link to={{ pathname : '/edit_barang_pembelian',state : list }} className="btn btn-outline-success mx-1">Detail</Link>
-                </td>
+                {
+                    status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? null : 
+                    <td className="p-3" style={{position:'relative'}}>
+                        <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
+                        <Link to={{ pathname : '/edit_barang_pembelian',state : list }} className="btn btn-outline-success mx-1">Detail</Link>
+                    </td>
+                }
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.Barang_Header.merek_barang}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
@@ -94,7 +108,7 @@ const Index = (props) => {
             setMetodePembayaran(value);
             alert('Perubahan berhasil di simpan');
         }else{
-            if(value > tanggalPemesanan){
+            if(value > tanggalPembelian){
                 const data = {tanggal_jatuh_tempo : value};
                 await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,data);
                 setTanggalJatuhTempo(value);
@@ -113,37 +127,63 @@ const Index = (props) => {
     }
 
     const handleSaveDetail = async () => {
-        console.log(metodePembayaran)
-            if(metodePembayaran == 0 && tanggalJatuhTempo > tanggalPemesanan  || metodePembayaran == 1){ // => metode pembayaran kredit dan jatuh tempo lebih besar dari pembelian
-                if(dataBarangDetail.length > 0 ){ // => menggecek jika ada barang yang dimasukan
-                    const dataTambah = {
-                        metode_pembayaran : metodePembayaran == "1" ? 1 : 0,
-                        tanggal_jatuh_tempo : metodePembayaran == "1" ? '' : tanggalJatuhTempo,
-                        grand_total : totalBarang,
-                        status : metodePembayaran == '1' ? 'Selesai' : 'Proses'
-                    }
-                    try{
-                        for(var a = 0;a < dataBarangDetail.length; a++){
-                            const dataBarang = {
-                                stok : dataBarangDetail[a].Barang_Header.Barang_Detail.stok + dataBarangDetail[a].jumlah
-                            }
-                            await axios.put(`http://localhost:5001/barang_detail/update/${dataBarangDetail[a].id_barang}`,dataBarang);
-                        }
-                        await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
-                        alert('Pembelian berhasil di tambahkan');
-                        props.history.goBack();
-                    }catch(error){
-                        console.log(error);
-                    }
-                    
-                }else{
-                    alert('Barang masih kosong');
+        if(metodePembayaran == 0 && tanggalJatuhTempo > tanggalPembelian  || metodePembayaran == 1){ // => metode pembayaran kredit dan jatuh tempo lebih besar dari pembelian
+            if(dataBarangDetail.length > 0 ){ // => menggecek jika ada barang yang dimasukan
+                const dataTambah = {
+                    metode_pembayaran : metodePembayaran == "1" ? 1 : 0,
+                    tanggal_pembelian : tanggalPembelian,
+                    tanggal_jatuh_tempo : metodePembayaran == "1" ? '' : tanggalJatuhTempo,
+                    id_supplier : idSupplier,
+                    grand_total : totalBarang,
+                    status : metodePembayaran == '1' ? 'Selesai' : 'Proses'
                 }
+                try{
+                    for(var a = 0;a < dataBarangDetail.length; a++){
+                        const dataBarang = {
+                            stok : dataBarangDetail[a].Barang_Header.Barang_Detail.stok + dataBarangDetail[a].jumlah
+                        }
+                        await axios.put(`http://localhost:5001/barang_detail/update/${dataBarangDetail[a].id_barang}`,dataBarang);
+                    }
+                    await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
+                    alert('Pembelian berhasil di ubah');
+                    props.history.goBack();
+                }catch(error){
+                    console.log(error);
+                }
+                
             }else{
-                alert('Tanggal jatuh tempo harus lebih besar');
+                alert('Barang masih kosong');
             }
-        
- 
+        }else{
+            alert('Tanggal jatuh tempo harus lebih besar');
+        }
+    }
+
+    const handleCancel = async () => {
+        try{
+            if(checkHutang || checkRetur){
+                alert('Tidak bisa dibatalkan karena data sedang digunakan');
+            }else{
+                await axios.delete(`http://localhost:5001/pembelian_detail/delete_pembelian/${idPembelian}`);
+                await axios.delete(`http://localhost:5001/pembelian_header/delete/${idPembelian}`);
+                alert('Pembelian berhasil dibatalkan');
+                props.history.goBack();
+            }
+        }catch(error){
+            console.log(error);
+        }
+    }
+
+    const handleEdit = async () => {
+        const dataUpdate = {
+            status : 'Proses'
+        }
+        try{
+            await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataUpdate);
+            setRefresh(!refresh);
+        }catch(error){
+            console.log(error);
+        }
     }
     
     return (
@@ -158,26 +198,34 @@ const Index = (props) => {
             
             {/* Header Isi */}
             <div className="row">
+                <div class="form-floating mb-3 px-0 mx-1 col">
+                    <input type="text" class="form-control" value={idPembelian} disabled/>
+                    <label for="floatingInput">ID Pembelian</label>
+                </div>
+                <div class="form-floating mb-3 px-0 mx-1 col">
+                    <input type="text" class="form-control" value={idPesananPembelian ? idPesananPembelian : '-'} disabled/>
+                    <label for="floatingInput">ID Pesanan Pembelian</label>
+                </div>
                 <div className="col">
                     <label>Supplier</label>
-                        <select class="form-select" aria-label="Default select example" onChange = {(e) => handleSave("supplier",e.target.value)} disabled={ status == "Tolak" || status == "Selesai" ? true : false }>
+                        <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)} disabled={status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? true : false }>
                         <option value="" selected>Tidak Ada</option>
                         {viewSupplier}
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col">
-                    <input type="date" class="form-control" value={tanggalPemesanan} onChange = {(e) => handleSave("tanggal_pemesanan",e.target.value)} disabled={ status == "Tolak" || status == "Selesai" ? true : false }/>
+                    <input type="date" class="form-control" value={tanggalPembelian} onChange = {(e) => settanggalPembelian(e.target.value)} disabled={status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? true : false }/>
                     <label for="floatingInput">Tangal Pembelian</label>
                 </div>
                 <div className="col">
                     <label>Metode Pembayaran</label>
-                        <select class="form-select" aria-label="Default select example" onChange = {(e) => setMetodePembayaran(e.target.value)}>
+                        <select class="form-select" aria-label="Default select example" onChange = {(e) => setMetodePembayaran(e.target.value)} disabled = {status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? true : false}>
                         <option value="1" selected = {metodePembayaran ? true : false}>Tunai</option>
                         <option value="0" selected = {!metodePembayaran ? true : false}>Kredit</option>
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col">
-                    <input type="date" class="form-control" value={tanggalJatuhTempo} onChange = {(e) => setTanggalJatuhTempo(e.target.value)} disabled={metodePembayaran == 1 ? true : false}/>
+                    <input type="date" class="form-control" value={tanggalJatuhTempo} onChange = {(e) => setTanggalJatuhTempo(e.target.value)} disabled={metodePembayaran == 1 || status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? true : false}/>
                     <label for="floatingInput">Tanggal Jatuh Tempo</label>
                 </div>
             </div>
@@ -188,7 +236,10 @@ const Index = (props) => {
                     <table class="table table-hover">
                         <thead>
                             <tr>
-                                <th className="p-3"></th>
+                                {
+                                    status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ?  null : 
+                                    <th className="p-3"></th>
+                                }
                                 <th className="p-3">Nama</th>
                                 <th className="p-3">Merek</th>
                                 <th className="p-3">Harga Beli</th>
@@ -200,10 +251,12 @@ const Index = (props) => {
                             {viewData}
                         </tbody>
                     </table>
-
-                    <div className="row">
-                        <Link to={{ pathname : '/tambah_barang_pembelian',state : idPembelian }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
-                    </div> 
+                    {
+                        status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? null : 
+                        <div className="row">
+                            <Link to={{ pathname : '/tambah_barang_pembelian',state : idPembelian }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
+                        </div> 
+                    }
                 </div>
                 <div className="col-3">
                     <table>
@@ -215,8 +268,42 @@ const Index = (props) => {
                     </table>
 
                     <div className="mt-3">
-                        <p>Status Pembelian : {status == 'Selesai' ? <p className="text-success">Pembelian Sudah Lunas</p> : <p className="text-danger">Pembelian Belum Lunas</p>}</p>
-                        <button className="btn btn-success w-100" onClick={handleSaveDetail}>Simpan</button>
+                        {
+                            status == 'Proses' ? null : 
+                            <p>Status Pembelian : {status == 'Selesai' ? 
+                                <ul>
+                                    <li>Pembelian Sudah Lunas</li>
+                                    {
+                                        checkRetur ? 
+                                        <li>Data Telah Digunakan Pada Modul Retur</li> : null
+                                    }
+                                </ul> :
+                                <ul>
+                                    {
+                                        checkHutang ? 
+                                        <li>Data Telah Digunakan Pada Modul Hutang</li> : null,
+                                        checkRetur ? 
+                                        <li>Data Telah Digunakan Pada Modul Retur</li> : null
+                                    }
+                                </ul>
+                            }</p>
+                        }
+                        
+                        <div className="row">
+                            {
+                                !dataContext.hapus_pembelian || checkRetur || checkHutang || status == "Selesai" ? null : 
+                                <button className="btn btn-danger col mx-1 w-100" onClick={handleCancel}>Batal</button>
+                            }
+                            {
+                                !dataContext.edit_pembelian || checkRetur || checkHutang || status == "Selesai" ? null : 
+                                <button className="btn btn-success col mx-1 w-100" onClick={handleSaveDetail}>Simpan</button>
+                            }
+                            {
+                                !dataContext.edit_pembelian || checkRetur || status == 'Proses' ? null : 
+                                <button className="btn btn-success col mx-1 w-100" onClick={handleEdit}>Ubah</button>
+                            }
+                        </div>
+                        
                     </div>
                 </div>
             </div>

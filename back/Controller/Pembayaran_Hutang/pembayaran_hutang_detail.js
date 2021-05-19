@@ -40,3 +40,19 @@ exports.update = (req,res) => {
         res.status(400).end();
     });
 }
+
+exports.delete = (req,res) => {
+    const {id} = req.params;
+    Pembayaran_Hutang_Detail.destroy({
+        where : {
+            id_pembayaran : id
+        }
+    })
+    .then((result) => {
+        res.status(200).json(result);
+
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
