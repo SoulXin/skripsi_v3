@@ -8,6 +8,10 @@ router.delete('/delete/:id',penyesuaian_header_Controller.delete);
 router.put('/update/:id',penyesuaian_header_Controller.update);
 // router.get('/show_detail/:id',penyesuaian_header_Controller.show_detail);
 // router.post('/search',penyesuaian_header_Controller.search);
-router.get('/fix',penyesuaian_header_Controller.fix);
+router.post('/search_date',penyesuaian_header_Controller.search_date);
+
+// Laporan
+router.post('/laporan_per_item',penyesuaian_header_Controller.laporan_per_item);
+
 
 module.exports = router;

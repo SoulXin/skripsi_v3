@@ -7,6 +7,7 @@ const Index = () => {
     const [refresh,setRefresh] = useState(false);
     const [error,setError] = useState(false);
     const [searchSupplier,setSearchSupplier] = useState('');
+    const [aktif,setAktif] = useState('1');
 
     useEffect(() => {
         const loadData = async () => {
@@ -34,6 +35,7 @@ const Index = () => {
                 <td className="p-3">{list.bank_supplier}</td>
                 <td className="p-3">{list.no_rek_supplier}</td>
                 <td className="p-3">{list.keterangan}</td>
+                <td className="p-3">{list.aktif ? "Aktif" : "Tidak Aktif"}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/form_supplier',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
                 </td>
@@ -45,7 +47,8 @@ const Index = () => {
         e.preventDefault();
         try{
             const dataSearch = {
-                nama_supplier : searchSupplier
+                nama_supplier : searchSupplier,
+                aktif : aktif
             }
             const response = await axios.post('http://localhost:5001/supplier/search',dataSearch);
             setData(response.data);
@@ -55,6 +58,7 @@ const Index = () => {
     }
 
     const handleStatus = async (e) => {
+        setAktif(e);
         if(e){
             const response = await axios.post(`http://localhost:5001/supplier/show_status/${e}`);
             setData(response.data);
@@ -75,6 +79,14 @@ const Index = () => {
                         </Link>
                     </div>
                 </div>
+                <div className="col-2">
+                    <label>Status Supplier</label>
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => handleStatus(e.target.value)}>
+                        <option value="1" selected>Aktif</option>
+                        <option value="0">Tidak Aktif</option>
+                        
+                    </select>
+                </div>
                 <div className="col-3">
                     <label>Pencarian Supplier</label>
                     <form className="form-group row" style={{position:'relative'}} onSubmit={handleSearch}>
@@ -82,14 +94,7 @@ const Index = () => {
                         <button type="submit" className="btn btn-success col-2 mx-1" >Cari</button>
                     </form>
                 </div>
-                <div className="col-2">
-                    <label>Status Supplier</label>
-                    <select class="form-select" aria-label="Default select example" onChange = {(e) => handleStatus(e.target.value)}>
-                        <option value="1">Aktif</option>
-                        <option value="0">Tidak Aktif</option>
-                        
-                    </select>
-                </div>
+                
             </div>
             
             {/* List */}
@@ -105,6 +110,7 @@ const Index = () => {
                             <th className="p-3">Bank</th>
                             <th className="p-3">No Rekening</th>
                             <th className="p-3">Keterangan</th>
+                            <th className="p-3">Status</th>
                             <th></th>
                         </tr>
                     </thead>

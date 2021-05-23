@@ -11,5 +11,6 @@ router.get('/show_all_hutang_lunas',pembayaran_hutang_header_Controller.show_all
 router.get('/show_all_pembayaran',pembayaran_hutang_header_Controller.show_all_pembayaran);
 router.put('/update_lunas/:id',pembayaran_hutang_header_Controller.update_lunas);
 router.delete("/delete/:id",pembayaran_hutang_header_Controller.delete);
+router.post('/search',pembayaran_hutang_header_Controller.search);
 
 module.exports = router;

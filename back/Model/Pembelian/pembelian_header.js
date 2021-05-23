@@ -42,9 +42,8 @@ const Pembelian_Header = db.sequelize.define('pembelian_header',{
     }
 });
 
-
 // pembelian detail
-Pembelian_Header.hasOne(Pembelian_Detail,{as : 'Pembelian_Detail', foreignKey : 'id_pembelian'});
+Pembelian_Header.hasMany(Pembelian_Detail,{as : 'Pembelian_Detail', foreignKey : 'id_pembelian'});
 Pembelian_Detail.belongsTo(Pembelian_Header,{as : 'Pembelian_Header', foreignKey : 'id_pembelian'});
 
 // hutang detail

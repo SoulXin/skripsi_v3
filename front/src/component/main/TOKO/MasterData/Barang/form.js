@@ -55,24 +55,26 @@ const Add = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
+                const response = await axios.get(`http://localhost:5001/barang_header/show_detail/${tempDetail.id_barang}`);
+
                 setIdBarang(tempDetail.id_barang);
-                setNama(tempDetail.nama_barang);
-                setMerek(tempDetail.merek_barang);
-                setKereta(tempDetail.jenis_kereta);
-                setHargaBeli(tempDetail.harga_beli);
-                setHargaJual(tempDetail.harga_jual);
-                setGambar(tempDetail.gambar); // => Gambar langsung tampilkan ke div container
-                setKeterangan(tempDetail.keterangan);
-                setStokMin(tempDetail.Barang_Detail.stok_minimal);
-                setStok(tempDetail.Barang_Detail.stok);
-                setSelectedKategori(tempDetail.Barang_Detail.Kategori);
-                setAktif(tempDetail.aktif);
+                setNama(response.data.nama_barang);
+                setMerek(response.data.merek_barang);
+                setKereta(response.data.jenis_kereta);
+                setHargaBeli(response.data.harga_beli);
+                setHargaJual(response.data.harga_jual);
+                setGambar(response.data.gambar); // => Gambar langsung tampilkan ke div container
+                setKeterangan(response.data.keterangan);
+                setStokMin(response.data.Barang_Detail.stok_minimal);
+                setStok(response.data.Barang_Detail.stok);
+                setSelectedKategori(response.data.Barang_Detail.Kategori);
+                setAktif(response.data.aktif);
             }
 
             try{
                 const responseBarang = await axios.get('http://localhost:5001/barang_header/show_all');
                 const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
-                setIdBarang(props.location.state ? props.location.state.id_barang : responseBarang.data.length > 0 ? responseBarang.data[responseBarang.data.length - 1].id_barang + 1 : '');
+                setIdBarang(props.location.state ? props.location.state.id_barang : responseBarang.data.length > 0 ? responseBarang.data[responseBarang.data.length - 1].id_barang + 1 : '-');
                 setKategori(responseKategori.data);
             }catch(error){
                 setError(true);
@@ -136,21 +138,26 @@ const Add = (props) => {
                 await axios.put(`http://localhost:5001/barang_header/update/${idBarang}`,data);
                 await axios.put(`http://localhost:5001/barang_detail/update/${idBarang}`,dataBarangDetail);
                 alert('Data barang berhasil diupdate');
+                setRefresh(!refresh);
             }catch(error){
                 setError(error);
             }
         }else{ // => tambah
             try{
-                const responseBarangHeader = await axios.post('http://localhost:5001/barang_header/register',data);
-                const dataBarangDetail  = {
-                    id_barang : responseBarangHeader.data.id_barang,
-                    id_kategori : selectedKategori.id_kategori,
-                    stok_minimal : stokMin,
-                    stok : stok
+                if(nama && merek && kereta && hargaBeli && hargaJual && stokMin && stok){
+                    const responseBarangHeader = await axios.post('http://localhost:5001/barang_header/register',data);
+                    const dataBarangDetail  = {
+                        id_barang : responseBarangHeader.data.id_barang,
+                        id_kategori : selectedKategori.id_kategori,
+                        stok_minimal : stokMin,
+                        stok : stok
+                    }
+                    await axios.post('http://localhost:5001/barang_detail/register',dataBarangDetail);
+                    alert('Data barang berhasil ditambah');
+                    props.history.goBack();
+                } else{
+                    alert('Data Tidak Boleh Kosong');
                 }
-                await axios.post('http://localhost:5001/barang_detail/register',dataBarangDetail);
-                alert('Data barang berhasil ditambah');
-                props.history.goBack();
             }catch(error){
                 setError(true);
             }
@@ -163,7 +170,7 @@ const Add = (props) => {
             <div className="row" style={{position:'relative'}}>
                 <Link to="/index_barang" className="btn btn-outline-secondary col-1" style={{position:'absolute',top:'15px'}}>Kembali</Link>
                 <h1 className="text-center border-bottom pt-2 pb-2 fw-bold col">{ detail ? 'Detail Barang' : 'Tambah Barang' }</h1>
-                <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button>
+                {/* <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button> */}
             </div>
 
             <form className="row" onSubmit={handleSubmit}>
@@ -174,27 +181,27 @@ const Add = (props) => {
                         <label htmlFor="id_barang" className="form-label">Id Barang</label>
                     </div>
                     <div className="form-floating mb-3">
-                        <input type="text" value={nama} className="form-control" id="nama_barang" placeholder="Nama Barang" onChange = {(e) => setNama(e.target.value)}/>
+                        <input type="text" value={nama} className="form-control" id="nama_barang" placeholder="Nama Barang" onChange = {(e) => setNama(e.target.value)} required/>
                         <label htmlFor="nama_barang">Nama Barang</label>
                     </div>
                     <div className="form-floating mb-3">
-                        <input type="text" value={merek} className="form-control" id="merek_barang" placeholder="Merek Barang" onChange = {(e) => setMerek(e.target.value)}/>
+                        <input type="text" value={merek} className="form-control" id="merek_barang" placeholder="Merek Barang" onChange = {(e) => setMerek(e.target.value)} required/>
                         <label htmlFor="merek_barang">Merek Barang</label>
                     </div>
                     <div className="form-floating mb-3">
-                        <input type="text" value={kereta} className="form-control" id="jenis_kereta" placeholder="Jenis Kereta" onChange = {(e) => setKereta(e.target.value)}/>
+                        <input type="text" value={kereta} className="form-control" id="jenis_kereta" placeholder="Jenis Kereta" onChange = {(e) => setKereta(e.target.value)} required/>
                         <label htmlFor="jenis_kereta">Jenis Kereta</label>
                     </div>
                     <div className="row">
                         <div className="col">
                             <div className="form-floating mb-3">
-                                <input type="text" value={hargaBeli} className="form-control" id="harga_beli" placeholder="Harga Beli" onChange = {(e) => setHargaBeli(e.target.value)}/>
+                                <input type="text" value={hargaBeli} className="form-control" id="harga_beli" placeholder="Harga Beli" onChange = {(e) => setHargaBeli(e.target.value)} required/>
                                 <label htmlFor="harga_beli">Harga Beli</label>
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-floating mb-3">
-                                <input type="text" value={hargaJual} className="form-control" id="harga_jual" placeholder="Harga Jual" onChange = {(e) => setHargaJual(e.target.value)}/>
+                                <input type="text" value={hargaJual} className="form-control" id="harga_jual" placeholder="Harga Jual" onChange = {(e) => setHargaJual(e.target.value)} required/>
                                 <label htmlFor="harga_jual">Harga Jual</label>
                             </div>
                         </div>
@@ -203,7 +210,7 @@ const Add = (props) => {
                     <div className="row">
                         <div className="col">
                             <div className="dropdown">
-                            <button style={{width : '100%', height : '100%', paddingTop : '15px'}} className="btn btn-secondary dropdown-toggle" href="#" role="button" id="id_kategori" data-bs-toggle="dropdown" aria-expanded="false">
+                            <button style={{width : '100%', height : '100%', paddingTop : '15px'}} className="btn btn-secondary dropdown-toggle" role="button" id="id_kategori" data-bs-toggle="dropdown" aria-expanded="false">
                                 {selectedKategori ? selectedKategori.nama_kategori : 'Pilih Kategori'}
                             </button>
                             
@@ -214,13 +221,13 @@ const Add = (props) => {
                         </div>
                         <div className="col">
                             <div className="form-floating mb-3">
-                                <input type="text" value={stokMin} className="form-control" id="stok_minimal" placeholder="Stok Minimal" onChange = {(e) => setStokMin(e.target.value)}/>
+                                <input type="text" value={stokMin} className="form-control" id="stok_minimal" placeholder="Stok Minimal" onChange = {(e) => setStokMin(e.target.value)} required/>
                                 <label htmlFor="stok_minimal">Stok Minimal</label>
                             </div>
                         </div>
                         <div className="col">
                             <div className="form-floating mb-3">
-                                <input type="text" value={stok} className="form-control" id="stok" placeholder="Stok" onChange = {(e) => setStok(e.target.value)}/>
+                                <input type="text" value={stok} className="form-control" id="stok" placeholder="Stok" onChange = {(e) => setStok(e.target.value)} required/>
                                 <label htmlFor="stok">Stok</label>
                             </div>
                         </div>

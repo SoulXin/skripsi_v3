@@ -26,7 +26,8 @@ const Mekanik_Header = db.sequelize.define('mekanik_header',{
     }
 });
 
-Mekanik_Header.hasOne(Mekanik_Detail, {as : 'Mekanik_Detail', foreignKey : 'id_mekanik'});
-Mekanik_Detail.belongsTo(Mekanik_Header, {as : 'Mekanik_Header', foreignKey : 'id_mekanik'});
+
+Mekanik_Header.hasOne(Mekanik_Header,{as : 'Mekanik_Detail', foreignKey : 'id_mekanik'});
+Mekanik_Detail.belongsTo(Mekanik_Header,{as : 'Mekanik_Header', foreignKey : 'id_mekanik'});
 
 module.exports = Mekanik_Header

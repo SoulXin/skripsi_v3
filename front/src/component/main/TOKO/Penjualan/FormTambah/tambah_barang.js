@@ -50,30 +50,41 @@ const Index = (props) => {
 
     const handleAdd = async (e) => {
         const checkKetersediaan = dataPenjualanDetail.filter((list) => list.id_barang === e.id_barang && list.id_penjualan === idPenjualan);
+        const checkJumlah = dataPenjualanDetail.filter((list) => list.id_barang === e.id_barang);
 
         try{
-            if(!checkKetersediaan.length){ // => tidak ada di pesanan, maka tambah
+            if(!checkKetersediaan.length && !checkJumlah.length){ // => tidak ada di pesanan, maka tambah
                 var jumlah = prompt("Masukan jumlah barang"); // => prompt input jumlah
-                if(jumlah){
-                    const dataTambah = {
-                        id_penjualan : idPenjualan,
-                        id_barang : e.id_barang,
-                        harga_jual : e.harga_jual,
-                        jumlah : jumlah,
-                        total : e.harga_jual * jumlah
+                if(jumlah != '' && jumlah != 0){
+                    if(jumlah <= e.Barang_Detail.stok){
+                        const dataTambah = {
+                            id_penjualan : idPenjualan,
+                            id_barang : e.id_barang,
+                            harga_jual : e.harga_jual,
+                            jumlah : jumlah,
+                            total : e.harga_jual * jumlah
+                        }
+                        await axios.post(`http://localhost:5001/penjualan_detail/register`, dataTambah);
+                        setRefresh(!refresh);
+                        alert('Barang berhasil di tambahkan');
+                    }else{
+                        alert('Stok barang tidak cukup!');
                     }
-                    await axios.post(`http://localhost:5001/penjualan_detail/register`, dataTambah);
-                    setRefresh(!refresh);
-                    alert('Barang berhasil di tambahkan');
+                }else{
+                    alert('Jumlah tidak boleh kosong!');
                 }
             }else{ // => ada di pesanan, update saja
-                const dataUpdate = {
-                    jumlah : checkKetersediaan[0].jumlah + 1,
-                    total : checkKetersediaan[0].harga_jual * parseInt (checkKetersediaan[0].jumlah + 1)
+                if(checkJumlah[0].jumlah < e.Barang_Detail.stok){
+                    const dataUpdate = {
+                        jumlah : checkKetersediaan[0].jumlah + 1,
+                        total : checkKetersediaan[0].harga_jual * parseInt (checkKetersediaan[0].jumlah + 1)
+                    }
+                    await axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${e.id_barang}`, dataUpdate);
+                    setRefresh(!refresh);
+                    alert('Barang berhasil di tambahkan');
+                }else{
+                    alert('Stok barang tidak cukup!');
                 }
-                await axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${e.id_barang}`, dataUpdate);
-                setRefresh(!refresh);
-                alert('Barang berhasil di tambahkan');
             }
         }catch(error){
             console.log(error)

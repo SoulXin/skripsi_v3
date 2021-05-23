@@ -1,11 +1,11 @@
-import React,{useEffect, useState} from 'react'
-import { Link,useHistory } from 'react-router-dom'
+import React,{useEffect, useState,useContext} from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../global/function'
+import {Context} from '../../../state_management/context'
 
 const Index = (props) => {
-    let history = useHistory();
-
+    const {dataContext,dispatch} = useContext(Context);
     const [data,setData] = useState([]);
     const [error,setError] = useState(false);
     const [refresh,setRefresh] = useState(false);
@@ -16,11 +16,7 @@ const Index = (props) => {
     // Data header
     const [idPembelian,setIdPembelian] = useState('');
     const [idPesananPembelian,setIdPesananPembelian] = useState('');
-    const [tanggalPembelian,setTanggalPembelian] = useState('');
-    const [metodePembayaran,setMetodePembayaran] = useState('1'); // => default 1 yakni tunai
-    const [tanggalJatuhTempo,setTanggalJatuhTempo] = useState('');
 
-    const [idSupplier,setIdSupplier] = useState('');
     const [totalBarang,setTotalBarang] = useState(0);
 
     useEffect(() => {
@@ -34,9 +30,6 @@ const Index = (props) => {
                 setDataSupplier(responseSupplier.data);
                 setIdPembelian(props.location.state.id_pembelian);
                 setIdPesananPembelian(responseHeader.data.id_pesanan_pembelian);
-                setTanggalPembelian(responseHeader.data.tanggal_pembelian);
-                setTanggalJatuhTempo(responseHeader.data.tanggal_jatuh_tempo);
-                setIdSupplier(responseHeader.data.id_supplier);
 
                 var totalBarang = 0;
                 // Barang
@@ -73,15 +66,9 @@ const Index = (props) => {
     }) : null;
 
     const viewSupplier = dataSupplier ? dataSupplier.map((list,index) => {
-        if(idSupplier === list.id_supplier){
-            return (
-                <option value = {list.id_supplier} key={index} selected>{list.nama_supplier}</option>
-            )
-        }else{
-            return (
-                <option value = {list.id_supplier} key={index}>{list.nama_supplier}</option>
-            )
-        }
+        return (
+            <option value = {list.id_supplier} key={index} selected = {dataContext.id_supplier == list.id_supplier ? true : false}>{list.nama_supplier}</option>
+        )
     }) : null;
 
     const handleBack = async () => {
@@ -89,23 +76,23 @@ const Index = (props) => {
             await axios.delete(`http://localhost:5001/pembelian_detail/delete_pembelian/${idPembelian}`);
             await axios.delete(`http://localhost:5001/pembelian_header/delete/${idPembelian}`);
             await props.history.goBack();
+            dispatch({type : 'RESET_PEMBELIAN'});
         }catch(error){
             console.log(error);
         }
     }
 
     const handleSave = async () => {
-        console.log(metodePembayaran)
-        if(idSupplier != '' && tanggalPembelian != '0000-00-00'){ // => supplier dan tanggal pembelian tidak kosong
-            if(metodePembayaran == 0 && tanggalJatuhTempo > tanggalPembelian || metodePembayaran == 1){ // => metode pembayaran kredit dan jatuh tempo lebih besar dari pembelian
+        if(dataContext.id_supplier != '' && dataContext.tanggal_pembelian != '0000-00-00'){ // => supplier dan tanggal pembelian tidak kosong
+            if(dataContext.metode_pembayaran == 0 && dataContext.tanggal_jatuh_tempo > dataContext.tanggal_pembelian || dataContext.metode_pembayaran == 1){ // => metode pembayaran kredit dan jatuh tempo lebih besar dari pembelian
                 if(data.length > 0 ){ // => menggecek jika ada barang yang dimasukan
                     const dataTambah = {
-                        tanggal_pembelian : tanggalPembelian,
-                        metode_pembayaran : metodePembayaran,
-                        tanggal_jatuh_tempo : metodePembayaran == 1 ? '' : tanggalJatuhTempo,
-                        id_supplier : idSupplier,
+                        tanggal_pembelian : dataContext.tanggal_pembelian,
+                        metode_pembayaran : dataContext.metode_pembayaran,
+                        tanggal_jatuh_tempo : dataContext.metode_pembayaran == 1 ? '' : dataContext.tanggal_jatuh_tempo,
+                        id_supplier : dataContext.id_supplier,
                         grand_total : totalBarang,
-                        status : metodePembayaran == 0 ? 'Proses' : 'Selesai'
+                        status : dataContext.metode_pembayaran == 0 ? 'Proses' : 'Selesai'
                     }
                     try{
                         for(var a = 0;a < data.length; a++){
@@ -114,7 +101,7 @@ const Index = (props) => {
                             }
                             await axios.put(`http://localhost:5001/barang_detail/update/${data[a].id_barang}`,dataBarang);
                         }
-                        if(metodePembayaran == 1){
+                        if(dataContext.metode_pembayaran == 1){
                             const dataPesananPembelianHeader = {
                                 status : 'Selesai'
                             }
@@ -123,6 +110,7 @@ const Index = (props) => {
                         await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
                         alert('Pembelian berhasil di tambahkan');
                         props.history.goBack();
+                        dispatch({type : 'RESET_PEMBELIAN'});
                     }catch(error){
                         console.log(error);
                     }
@@ -161,24 +149,24 @@ const Index = (props) => {
                 </div>
                 <div className="col">
                     <label>Supplier</label>
-                    <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)}>
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_SUPPLIER',data : e.target.value})}>
                         <option value="" selected>Tidak Ada</option>
                         {viewSupplier}
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col mx-1">
-                    <input type="date" class="form-control" id="floatingInput" value={tanggalPembelian} onChange = {(e) => setTanggalPembelian(e.target.value)}/>
+                    <input type="date" class="form-control" id="floatingInput" value={dataContext.tanggal_pembelian} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PEMBELIAN',data : e.target.value})}/>
                     <label for="floatingInput">Tangal Pembelian</label>
                 </div>
                 <div className="col">
                     <label>Metode Pembayaran</label>
-                    <select class="form-select" aria-label="Default select example" value = {metodePembayaran} onChange = {(e) => setMetodePembayaran(e.target.value)}>
-                        <option value="1" selected>Tunai</option>
-                        <option value="0">Kredit</option>
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_METODE_PEMBAYARAN',data : e.target.value})}>
+                        <option value="1" selected = {dataContext.metode_pembayaran == '1' ? true : false}>Tunai</option>
+                        <option value="0" selected = {dataContext.metode_pembayaran == '0' ? true : false}>Kredit</option>
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col mx-1">
-                    <input type="date" class="form-control" id="floatingInput" value={tanggalJatuhTempo} onChange = {(e) => setTanggalJatuhTempo(e.target.value)} disabled = {metodePembayaran == 1 ? true : false}/>
+                    <input type="date" class="form-control" id="floatingInput" value={dataContext.tanggal_jatuh_tempo} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_JATUH_TEMPO',data : e.target.value})} disabled = {dataContext.metode_pembayaran == "1" ? true : false}/>
                     <label for="floatingInput">Tanggal Jatuh Tempo</label>
                 </div>
 

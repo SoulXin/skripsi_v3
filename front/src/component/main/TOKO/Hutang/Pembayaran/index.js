@@ -8,6 +8,9 @@ const Index = () => {
     const [error,setError] = useState(false);
     const [refresh,setRefresh] = useState(false);
 
+    const [status,setStatus] = useState('2');
+    const [searchSupplier,setSearchSupplier] = useState('');
+
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -38,6 +41,19 @@ const Index = () => {
         )
     }) : null;
 
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        try{
+            const data = {
+                supplier : searchSupplier,
+                status : status
+            }
+            const response = await axios.post('http://localhost:5001/pembayaran_hutang_header/search',data);
+            setData(response.data);
+        }catch(error){
+
+        }
+    }
 
     return (
         <div className="container px-0 pt-5">
@@ -45,6 +61,22 @@ const Index = () => {
             <div className="row mb-3">
                 <div className="col">
                     <h2>List Pembayaran Supplier</h2>
+                </div>
+                <div className="col-2">
+                    <label>Status Pembayaran</label>
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => setStatus(e.target.value)}>
+                        <option value="2" selected = {status == '2' ? true : false}>Semua</option>
+                        <option value="1" selected = {status == '1' ? true : false}>Lunas</option>
+                        <option value="0" selected = {status == '' ? true : false}>Belum Lunas</option>
+                        
+                    </select>
+                </div>
+                <div className="col-3">
+                    <label>Nama Supplier</label>
+                    <form className="form-group row" style={{position:'relative'}} onSubmit = {handleSearch}>
+                        <input type = "text" className="form-control col mx-1" placeholder="Cari Nama Barang" onChange = {(e) => setSearchSupplier(e.target.value)} />
+                        <button type="submit" className="btn btn-success col-2 mx-1" >Cari</button>
+                    </form>
                 </div>
             </div>
             

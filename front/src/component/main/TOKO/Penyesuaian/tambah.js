@@ -99,7 +99,16 @@ const Index = (props) => {
 
             {/* List */}
             <div className="row">
-                <div className="col-9">
+                <div className="col-9 row">
+                    <div class="form-floating mb-3 px-0 col-2 mx-1">
+                        <input type="text" class="form-control" id="floatingInput" value={idPenyesuaian} disabled/>
+                        <label for="floatingInput">ID Penyesuaian</label>
+                    </div>
+                    <div class="form-floating mb-3 px-0 col-2 mx-1">
+                        <input type="text" class="form-control" id="floatingInput" value={dataPenyesuaianDetail.length} disabled/>
+                        <label for="floatingInput">Jumlah Barang</label>
+                    </div>
+
                     <table class="table table-hover">
                         <thead>
                             <tr>

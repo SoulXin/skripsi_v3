@@ -14,6 +14,7 @@ const Index = () => {
     useEffect(() => {
         showNavbar('header-toggle','nav-bar','body-pd','header')
         const loadData = async () => {
+            // await axios.get(`http://localhost:5001/fix/delete`);
             const response = await axios.get(`http://localhost:5001/hak_akses_user/show_detail/${JSON.parse(localStorage.getItem('userToken')).user_id}`);
             for(var a = 0;a < response.data.length;a++){
                 if(response.data[a].hak_akses_id == 1){ // => Master Barang
@@ -154,28 +155,12 @@ function colorLink(){
 }
 linkColor.forEach(l=> l.addEventListener('click', colorLink))
 
-    const handleDelete = async () => {
-        try{
-            await axios.get('http://localhost:5001/penjualan_header/fix');
-            await axios.get('http://localhost:5001/pesanan_pembelian_header/fix');
-            await axios.get('http://localhost:5001/pembelian_header/fix');
-            await axios.get('http://localhost:5001/penyesuaian_header/fix');
-            await axios.get('http://localhost:5001/retur_pembelian_header/fix');
-            await axios.get('http://localhost:5001/retur_penjualan_header/fix');
-        }catch(err){
-            console.log(err);
-        }
-    }
 
     return (
         <div id="body-pd">
             <header class="header" id="header">
                 <div class="header__toggle">
                     <i class='bx bx-menu' id="header-toggle"></i>
-                </div>
-
-                <div>
-                    <button className="btn btn-outline-info" onClick={handleDelete}>Fix</button>
                 </div>
             </header>
 

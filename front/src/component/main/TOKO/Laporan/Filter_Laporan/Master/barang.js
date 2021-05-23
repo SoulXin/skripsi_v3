@@ -3,7 +3,7 @@ import axios from 'axios'
 import ReactToPrint from 'react-to-print';
 import {Cetak_Barang} from '../../Hasil_Cetak/Master/barang'
 
-const Index = () => {
+const Index = (props) => {
     const componentRef = useRef();
 
     const [data,setData] = useState([]);
@@ -59,9 +59,10 @@ const Index = () => {
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
+            <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row border-bottom">
                 <div className="col row">
-                    <h2 className="col-12">List Barang</h2>
+                    <h2 className="col-12">Laporan Barang</h2>
                 </div>  
                 <div className="col-7">
                     <form className="form-group row" style={{position:'relative'}} onSubmit={handleSearch}>

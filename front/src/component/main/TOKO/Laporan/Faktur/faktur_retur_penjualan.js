@@ -28,8 +28,8 @@ export class Faktur_Retur_Penjualan extends React.PureComponent {
                             <td>{this.props.idRetur} </td>
                         </tr>
                         <tr>
-                            <td>Nama Pelanggan / Nomor Polisi</td>
-                            <td>{this.props.idPelanggan ? this.props.idPelanggan : this.props.nopol}</td>
+                            <td>ID Penjualan</td>
+                            <td>{this.props.idPenjualan} </td>
                         </tr>
                         <tr>
                             <td>Tanggal Retur</td>

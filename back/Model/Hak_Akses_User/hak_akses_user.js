@@ -15,15 +15,15 @@ const Hak_Akses_User = db.sequelize.define('hak_akses_user',{
     },
     lihat : {
         type : Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: true
     },
     ubah : {
         type : Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: true
     },
     hapus : {
         type : Sequelize.BOOLEAN,
-        defaultValue: false
+        defaultValue: true
     }
 });
 

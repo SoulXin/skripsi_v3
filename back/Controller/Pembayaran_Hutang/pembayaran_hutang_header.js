@@ -186,6 +186,16 @@ exports.show_all_hutang_lunas = (req,res) => {
             {
                 model : Supplier,
                 as : 'Supplier'
+            },
+            {
+                model : Pembayaran_Hutang_Detail,
+                as : 'Pembayaran_Hutang_Detail',
+                include : [
+                    {
+                        model : Pembayaran_Hutang_Header,
+                        as : 'Pembayaran_Hutang_Header'
+                    }
+                ]
             }
         ]
     })
@@ -232,4 +242,49 @@ exports.delete = (req,res) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
     });
+}
+
+exports.search = async (req,res) => {
+    const {supplier,status} = req.body;
+    try{
+        if(status != '2'){
+            const response = await Pembayaran_Hutang_Header.findAll({
+                where : {
+                    status_pembayaran : status
+                },
+                include : [
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : supplier
+                            }
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else{
+            const response = await Pembayaran_Hutang_Header.findAll({
+                include : [
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : supplier
+                            }
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
+        res.status(400).end();
+    }
+    
+
 }

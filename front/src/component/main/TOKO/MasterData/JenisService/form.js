@@ -30,14 +30,15 @@ const Form = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
-                setNama(tempDetail.nama);
-                setHarga(tempDetail.harga);
-                setAktif(tempDetail.aktif);
+                const response = await axios.get(`http://localhost:5001/jenis_service/show_detail/${tempDetail.id_service}`);
+                setNama(response.data.nama);
+                setHarga(response.data.harga);
+                setAktif(response.data.aktif);
             }
 
             try{
-                const response = await axios.get('http://localhost:5001/jenis_service/show_all');
-                setIdService(props.location.state ? props.location.state.id_service : response.data.length > 0 ? response.data[response.data.length - 1].id_service + 1 : '');
+                const responseJenisService = await axios.get('http://localhost:5001/jenis_service/show_all');
+                setIdService(props.location.state ? props.location.state.id_service : responseJenisService.data.length > 0 ? responseJenisService.data[responseJenisService.data.length - 1].id_service + 1 : '');
             }catch(error){
                 setError(true);
             }
@@ -73,6 +74,7 @@ const Form = (props) => {
             try{
                 await axios.put(`http://localhost:5001/jenis_service/update/${idService}`,data);
                 alert('Data service berhasil diupdate');
+                setRefresh(!refresh);
             }catch(error){
                 setError(error);
             }
@@ -93,7 +95,7 @@ const Form = (props) => {
             <div className="row" style={{position:'relative'}}>
                 <Link to="/index_jenis_service" className="btn btn-outline-secondary col-1" style={{position:'absolute',top:'15px'}}>Kembali</Link>
                 <h1 className="text-center border-bottom pt-2 pb-2 fw-bold col">{ detail ? 'Detail Service' : 'Tambah Service' }</h1>
-                <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button>
+                {/* <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button> */}
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -102,11 +104,11 @@ const Form = (props) => {
                     <label htmlFor="id_service" className="form-label">Id Service</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={nama} className="form-control" id="nama_service" placeholder="Nama Service" onChange = {(e) => setNama(e.target.value)}/>
+                    <input type="text" value={nama} className="form-control" id="nama_service" placeholder="Nama Service" onChange = {(e) => setNama(e.target.value)} required/>
                     <label htmlFor="nama_service">Nama Service</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={harga} className="form-control" id="harga" placeholder="Harga" onChange = {(e) => setHarga(e.target.value)}/>
+                    <input type="text" value={harga} className="form-control" id="harga" placeholder="Harga" onChange = {(e) => setHarga(e.target.value)} required/>
                     <label htmlFor="harga">Harga</label>
                 </div>
 

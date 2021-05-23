@@ -5,7 +5,7 @@ import { formatMoney } from '../../../../../global/function'
 import ReactToPrint from 'react-to-print';
 import {Cetak_Hutang} from '../../Hasil_Cetak/Lainnya/hutang'
 
-const Index = () => {
+const Index = (props) => {
     const componentRef = useRef();
 
     const [data,setData] = useState([]);
@@ -36,7 +36,9 @@ const Index = () => {
         if(list.Pembayaran_Hutang_Detail){
             return (
                 <tr key={index}>
+                    <td className="p-3" >{list.Pembayaran_Hutang_Detail.id_pembayaran}</td>
                     <td className="p-3" >{list.id_pembelian}</td>
+                    <td className="p-3" >{list.id_supplier}</td>
                     <td className="p-3" >{list.Pembayaran_Hutang_Detail.Pembayaran_Hutang_Header.tanggal_pembayaran}</td>
                     <td className="p-3" >{list.Supplier.nama_supplier}</td>
                     <td className="p-3" >Rp. {formatMoney(list.grand_total)}</td>
@@ -47,6 +49,7 @@ const Index = () => {
             return (
                 <tr key={index}>
                     <td className="p-3" >{list.id_pembelian}</td>
+                    <td className="p-3" >{list.id_supplier}</td>
                     <td className="p-3" >{list.tanggal_jatuh_tempo}</td>
                     <td className="p-3" >{list.Supplier.nama_supplier}</td>
                     <td className="p-3" >Rp. {formatMoney(list.grand_total)}</td>
@@ -62,6 +65,7 @@ const Index = () => {
             setRefresh(!refresh);
         }else{
             const response = await axios.get('http://localhost:5001/pembayaran_hutang_header/show_all_hutang_lunas');
+            console.log(response)
             setLunas(true);
             setData(response.data);
         }
@@ -70,9 +74,10 @@ const Index = () => {
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
+            <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row mb-3">
                 <div className="col">
-                    <h2>List Hutang</h2>
+                    <h2>Laporan Hutang</h2>
                 </div>
 
                 <div className="offset-1 col row">
@@ -108,7 +113,12 @@ const Index = () => {
                 <table class="table table-striped table-hover">
                     <thead>
                         <tr>
+                            {
+                                lunas ? 
+                                <th className="p-3">ID Pembayaran Hutang</th> : null
+                            }
                             <th className="p-3">ID Pembelian</th>
+                            <th className="p-3">ID Supplier</th>
                             <th className="p-3">{lunas ? 'Tanggal Pembayaran' : 'Tanggal Jatuh Tempo'}</th>
                             <th className="p-3">Nama Supplier</th>
                             <th className="p-3">Total</th>

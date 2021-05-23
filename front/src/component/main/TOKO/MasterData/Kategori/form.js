@@ -28,13 +28,14 @@ const Form = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
-                setNama(tempDetail.nama_kategori);
-                setAktif(tempDetail.aktif);
+                const response = await axios.get(`http://localhost:5001/kategori/show_detail/${tempDetail.id_kategori}`);
+                setNama(response.data.nama_kategori);
+                setAktif(response.data.aktif);
             }
 
             try{
-                const response = await axios.get('http://localhost:5001/kategori/show_all');
-                setIdKategori(props.location.state ? props.location.state.id_kategori : response.data.length > 0 ? response.data[response.data.length - 1].id_kategori + 1 : '');
+                const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
+                setIdKategori(props.location.state ? props.location.state.id_kategori : responseKategori.data.length > 0 ? responseKategori.data[responseKategori.data.length - 1].id_kategori + 1 : '-');
             }catch(error){
                 setError(true);
             }
@@ -69,6 +70,7 @@ const Form = (props) => {
             try{
                 await axios.put(`http://localhost:5001/kategori/update/${idKategori}`,data);
                 alert('Data kategori berhasil diupdate');
+                setRefresh(!refresh);
             }catch(error){
                 setError(error);
             }
@@ -98,7 +100,7 @@ const Form = (props) => {
                     <label htmlFor="id_kategori" className="form-label">Id Kategori</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={nama} className="form-control" id="nama_kategori" placeholder="Nama Kategori" onChange = {(e) => setNama(e.target.value)}/>
+                    <input type="text" value={nama} className="form-control" id="nama_kategori" placeholder="Nama Kategori" onChange = {(e) => setNama(e.target.value)} required/>
                     <label htmlFor="nama_kategori">Nama Kategori</label>
                 </div>
     

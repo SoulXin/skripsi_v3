@@ -16,7 +16,8 @@ const Index = (props) => {
         const loadData = async () => {
             try{
                 const detail = props.location.state;
-                const responseDataPenyesuaianDetail = await axios.get(`http://localhost:5001/penyesuaian_detail/show_detail/${detail.id_penyesuaian}`)
+                const responseDataPenyesuaianDetail = await axios.get(`http://localhost:5001/penyesuaian_detail/show_detail/${detail.id_penyesuaian}`);
+                console.log(responseDataPenyesuaianDetail)
                 setDataPenyesuaianDetail(responseDataPenyesuaianDetail.data);
                 setIdPenyesuaian(detail.id_penyesuaian);
                 setTanggalPenyesuaian(detail.tanggal_penyesuaian);
@@ -31,6 +32,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = dataPenyesuaianDetail ? dataPenyesuaianDetail.map((list,index) => {
+        console.log(list)
         return (
             <tr key={index}>
                 {
@@ -72,6 +74,12 @@ const Index = (props) => {
 
     const handleCancel = async () => {
         try{
+            for(var a = 0; a < dataPenyesuaianDetail.length; a++){
+                const data = {
+                    stok : dataPenyesuaianDetail[a].jumlah_sistem
+                }
+                await axios.put(`http://localhost:5001/barang_detail/update/${dataPenyesuaianDetail[a].id_barang}`,data); 
+            }
             await axios.delete(`http://localhost:5001/penyesuaian_detail/delete_penyesuaian/${idPenyesuaian}`); 
             await axios.delete(`http://localhost:5001/penyesuaian_header/delete/${idPenyesuaian}`);
             alert('Data Penyesuaian Berhasil Dihapus');

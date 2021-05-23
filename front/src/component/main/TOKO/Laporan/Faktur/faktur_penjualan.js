@@ -29,6 +29,10 @@ export class Faktur_Penjualan extends React.PureComponent {
                 <div className="col-6" style = {{borderLeft : '1px solid black'}}>
                     <table>
                         <tr>
+                            <td>ID Penjualan</td>
+                            <td>  {this.props.idPenjualan} </td>
+                        </tr>
+                        <tr>
                             <td>Tanggal Penjualan</td>
                             <td>  {moment(this.props.tanggal).utc().format('DD / MMMM / YYYY')} </td>
                         </tr>

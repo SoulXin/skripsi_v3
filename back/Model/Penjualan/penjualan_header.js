@@ -29,7 +29,7 @@ Penjualan_Header.hasMany(Penjualan_Detail,{as : 'Penjualan_Detail', foreignKey :
 Penjualan_Detail.belongsTo(Penjualan_Header,{as : 'Penjualan_Header', foreignKey : 'id_penjualan'});
 
 // Penjualan service
-Penjualan_Header.hasOne(Penjualan_Service,{as : 'Penjualan_Service', foreignKey : 'id_penjualan'});
+Penjualan_Header.hasMany(Penjualan_Service,{as : 'Penjualan_Service', foreignKey : 'id_penjualan'});
 Penjualan_Service.belongsTo(Penjualan_Header,{as : 'Penjualan_Header', foreignKey : 'id_penjualan'});
 
 // Penjualan pelanggan

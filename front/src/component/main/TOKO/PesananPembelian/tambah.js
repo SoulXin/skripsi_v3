@@ -1,10 +1,10 @@
-import React,{useEffect, useState} from 'react'
-import { Link,useHistory } from 'react-router-dom'
+import React,{useEffect, useState,useContext} from 'react'
+import { Link } from 'react-router-dom'
 import axios from 'axios'
 import { formatMoney } from '../../../global/function'
-
+import {Context} from '../../../state_management/context'
 const Index = (props) => {
-    let history = useHistory();
+    const {dataContext,dispatch} = useContext(Context);
 
     const [data,setData] = useState([]);
     const [error,setError] = useState(false);
@@ -14,8 +14,6 @@ const Index = (props) => {
     const [dataSupplier,setDataSupplier] = useState([]);
 
     const [idPesananPembelian,setIdPesananPembelian] = useState('');
-    const [idSupplier,setIdSupplier] = useState('');
-    const [tanggalPemesanan,setTanggalPemesanan] = useState('');
     const [totalBarang,setTotalBarang] = useState(0);
 
     useEffect(() => {
@@ -63,7 +61,7 @@ const Index = (props) => {
 
     const viewSupplier = dataSupplier ? dataSupplier.map((list,index) => {
         return (
-            <option value = {list.id_supplier} key={index}>{list.nama_supplier}</option>
+            <option value = {list.id_supplier} key={index} selected = {list.id_supplier == dataContext.id_supplier ? true : false}>{list.nama_supplier}</option>
         )
     }) : null;
 
@@ -78,16 +76,17 @@ const Index = (props) => {
     }
 
     const handleSave = () => {
-        if(idSupplier !== '' && tanggalPemesanan !== ''){
+        if(dataContext.id_supplier !== '' && dataContext.tanggal_pemesanan !== '' && data.length > 0){
             const data = {
-                tanggal_pemesanan : tanggalPemesanan,
-                id_supplier : idSupplier,
+                tanggal_pemesanan : dataContext.tanggal_pemesanan,
+                id_supplier : dataContext.id_supplier,
                 grand_total : totalBarang,
                 status : 'Proses'
             }
             axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,data)
             .then((res) => {
                 alert('Pesanan pembelian berhasil di tambahkan');
+                dispatch({type : 'RESET_PESANAN_PEMBELIAN'});
                 props.history.goBack();
             })
             .catch((error) => {
@@ -121,17 +120,17 @@ const Index = (props) => {
                 </div>
                 <div className="col-3">
                     <label>Supplier</label>
-                    <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)}>
+                    <select class="form-select" aria-label="Default select example"  onChange = {(e) => dispatch({type : 'SIMPAN_ID_SUPPLIER',data : e.target.value})}>
                         <option value="" selected>Tidak Ada</option>
                         {viewSupplier}
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col-2">
-                    <input type="date" class="form-control" id="floatingInput" placeholder="name@example.com" onChange = {(e) => setTanggalPemesanan(e.target.value)}/>
+                    <input type="date" class="form-control" value = {dataContext.tanggal_pemesanan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PEMESANAN',data : e.target.value})}/>
                     <label for="floatingInput">Tangal Pemesanan</label>
                 </div>
                 <div className="col-2 offset-3 ml-auto">
-                    <button className="btn btn-success w-100" onClick={handleSave}>Simpan</button>
+                    <button className="btn btn-success w-100" onClick={handleSave} disabled = {dataContext.id_supplier && dataContext.tanggal_pemesanan && data.length > 0 ? false : true}>Simpan</button>
                 </div>
             </div>
 

@@ -21,8 +21,8 @@ const Index = (props) => {
     const [tanggalPembayaran,setTanggalPembayara] = useState('');
     const [statusPembayaran,setStatusPembayaran] = useState('');
 
-    const [total,setTotal] = useState(''); // => dari database
-    const [tempTotal,setTempTotal] = useState(''); // => diinput
+    const [total,setTotal] = useState(0); // => dari database
+    const [tempTotal,setTempTotal] = useState(0); // => diinput
     
     useEffect(() => {
         const loadData = async () => {
@@ -39,6 +39,11 @@ const Index = (props) => {
                 setTanggalPembayara(response.data.tanggal_pembayaran);
                 setStatusPembayaran(response.data.status_pembayaran);
                 setTotal(response.data.total);
+
+                if(response.data.status_pembayaran){
+                    setTempTotal(temp_detail.total);
+                }
+                
 
             }catch(error){
                 setError(true);
@@ -62,7 +67,7 @@ const Index = (props) => {
 
     const handleSave = async () => {
         if(tempTotal == detail.total){
-            if(tanggalPembayaran){
+            if(tanggalPembayaran != '0000-00-00'){
                 try{
                     const dataHeader = {
                         tanggal_pembayaran : tanggalPembayaran,
@@ -87,6 +92,7 @@ const Index = (props) => {
                     }
                     setRefresh(!refresh);
                     alert('Hutang berhasil di bayarkan');
+                    props.history.goBack();
                 }catch(error){
                     console.log(error)
                 }
@@ -157,7 +163,7 @@ const Index = (props) => {
                     <h3>Rincian</h3>
                     <div className="form-group mb-2">
                         <label>Jenis Pembayaran</label>
-                        <select class="form-select" onChange = { (e) => setJenisPembayaran(e.target.value)} disabled = {!dataContext.edit_hutang}>
+                        <select class="form-select" onChange = { (e) => setJenisPembayaran(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran}>
                             <option value = "1" selected = {jenisPembayaran ? true : false}>Tunai</option>
                             <option value = "0" selected = {!jenisPembayaran ? true : false}>Transfer Bank</option>
                         </select>
@@ -170,7 +176,7 @@ const Index = (props) => {
                                 <label htmlFor="id_barang" className="form-label px-4">Bank</label>
                             </div>
                             <div className="form-floating mb-2 col">
-                                <input type="text" className="form-control" value={noRek} disabled/>
+                                <input type="text" className="form-control" value="782738122" disabled/>
                                 <label htmlFor="id_barang" className="form-label px-4">No.Rekening</label>
                             </div>
                         </div> : null
@@ -185,12 +191,12 @@ const Index = (props) => {
                     </div>
 
                     <div className="form-floating mb-2">
-                        <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang} />
+                        <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran} />
                         <label className="form-label">Tanggal Pembayaran</label>
                     </div>
 
                     <div className="form-floating mb-2">
-                        <input type="text" className="form-control" value = {statusPembayaran ? total : tempTotal} onChange = {(e) => setTempTotal(e.target.value)} disabled = {!dataContext.edit_hutang}/>
+                        <input type="text" className="form-control" value = {statusPembayaran ? total : tempTotal} onChange = {(e) => setTempTotal(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran}/>
                         <label className="form-label">Konfirmasi Total</label>
                     </div>
                     <div className="row">

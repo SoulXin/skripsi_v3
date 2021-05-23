@@ -12,4 +12,7 @@ router.delete('/delete/:id',pembelian_header_Controller.delete);
 router.post('/search_date',pembelian_header_Controller.search_date);
 router.get('/fix',pembelian_header_Controller.fix);
 
+// Laporan
+router.post('/laporan_per_item',pembelian_header_Controller.laporan_per_item);
+
 module.exports = router;

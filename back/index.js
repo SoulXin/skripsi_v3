@@ -34,6 +34,9 @@ app.use('/gambar_mekanik', express.static(__dirname + '/Gambar/Mekanik/'))
 app.use('/gambar_bukti_pembayaran', express.static(__dirname + '/Gambar/PesananPelanggan/'))
 app.use('/gambar_pelanggan', express.static(__dirname + '/Gambar/Pelanggan/'))
 
+// Delete temp data
+app.use('/fix',require("./Router/Fix/index"));
+
 //Routers
 
 // Barang

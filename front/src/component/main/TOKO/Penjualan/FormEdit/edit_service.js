@@ -37,18 +37,14 @@ const Index = (props) => {
         }
 
         if(harga){
-            if(harga > hargaSistem){
-                axios.put(`http://localhost:5001/penjualan_service/update/${idPenjualan}/${idService}`, data)
-                .then((res) => {
-                    alert('Harga service berrhasil di ubah');
-                    props.history.goBack();
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
-            }else{
-                alert('Harga yang ditentukan tidak boleh lebih kecil dari harga sistem');
-            }
+            axios.put(`http://localhost:5001/penjualan_service/update/${idPenjualan}/${idService}`, data)
+            .then((res) => {
+                alert('Harga service berrhasil di ubah');
+                props.history.goBack();
+            })
+            .catch((err) => {
+                console.log(err);
+            })
         }else{
             alert('Harga tidak boleh kosong');
         }
@@ -60,7 +56,7 @@ const Index = (props) => {
             <div className="row mb-3">
                 <div className="col-5 row">
                     <button className = "col-2 mb-3 row btn btn-outline-secondary" onClick = {props.history.goBack}>Kembali</button>
-                    <h1>Perubahan Edit Barang</h1>
+                    <h1>Perubahan Edit Service</h1>
                     <i>Perubahan Service Untuk Penjualan - {idPenjualan}</i>
                 </div>
              </div>

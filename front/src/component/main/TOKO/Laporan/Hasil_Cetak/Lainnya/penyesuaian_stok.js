@@ -29,13 +29,22 @@ export class Cetak_Penyesuaian_Stok extends React.PureComponent {
                 </thead>
                     {
                         this.props.dataTable.map((list,index) => {
+                            var totalFisik = 0;
+                            var totalSistem = 0;
+                            var totalPenyesuaian = 0;
+                            
+                            list.Penyesuaian_Detail.map((list_detail) => {
+                                totalFisik += list_detail.jumlah_fisik
+                                totalSistem += list_detail.jumlah_sistem
+                                totalPenyesuaian += list_detail.penyesuaian
+                            });
                             return (
                                 <tr key={index}>
                                     <td>{list.id_penyesuaian}</td>
                                     <td>{list.tanggal_penyesuaian}</td>
-                                    <td>{list.Penyesuaian_Detail.jumlah_fisik}</td>
-                                    <td>{list.Penyesuaian_Detail.jumlah_sistem}</td>
-                                    <td>{list.Penyesuaian_Detail.penyesuaian}</td>
+                                    <td>{totalFisik}</td>
+                                    <td>{totalSistem}</td>
+                                    <td>{totalPenyesuaian}</td>
                                 </tr>
                             )
                         })

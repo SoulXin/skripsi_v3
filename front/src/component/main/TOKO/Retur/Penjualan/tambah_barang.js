@@ -58,35 +58,38 @@ const Index = (props) => {
             if(!checkKetersediaan.length){ // => tidak ada di pesanan, maka tambah
                 var jumlah = prompt("Masukan jumlah yang ingin direturkan"); // => prompt input jumlah
                 if(jumlah && jumlah <= e.jumlah){
-                    const dataTambah = {
-                        id_retur_penjualan : idRetur,
-                        id_penjualan : idPenjualan,
-                        id_barang : e.id_barang,
-                        max : e.jumlah,
-                        harga_jual : e.harga_jual,
-                        jumlah : jumlah,
-                        total : e.harga_jual * jumlah 
+                    if(jumlah != '' && jumlah != 0){
+                        const dataTambah = {
+                            id_retur_penjualan : idRetur,
+                            id_penjualan : idPenjualan,
+                            id_barang : e.id_barang,
+                            max : e.jumlah,
+                            harga_jual : e.harga_jual,
+                            jumlah : jumlah,
+                            total : e.harga_jual * jumlah 
+                        }
+                        await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
+                        await axios.post(`http://localhost:5001/retur_penjualan_detail/register`, dataTambah);
+                        setRefresh(!refresh);
+                        alert('Barang berhasil di tambahkan');
+                    }else{
+                        alert('Jumlah tidak boleh kosong!');
                     }
-                    await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
-                    await axios.post(`http://localhost:5001/retur_penjualan_detail/register`, dataTambah);
-                    setRefresh(!refresh);
-                    alert('Barang berhasil di tambahkan');
                 }else{
-                    alert('Jumlah tidak boleh kosong atau tidak boleh lebih dari yang dipesan');
+                    alert('Jumlah barang tidak boleh lebih dari yang dijual');
                 }
             }else{ // => ada di pesanan, update saja
-                var jumlah = prompt("Masukan jumlah yang ingin direturkan"); // => prompt input jumlah
-                if(jumlah <= e.jumlah){
+                if(e.jumlah + 1 <= e.jumlah){
                     const dataUpdate = {
-                        jumlah : jumlah,
+                        jumlah : e.jumlah + 1,
                         total : e.harga_jual * jumlah 
                     }
     
                     await axios.put(`http://localhost:5001/retur_penjualan_detail/update/${idRetur}/${e.id_barang}`, dataUpdate);
                     setRefresh(!refresh);
-                    alert('Penyesuaian berhasil di ubah');
+                    alert('Barang berhasil di ubah');
                 }else{
-                    alert('Jumlah tidak boleh kosong atau tidak boleh lebih dari yang dipesan');
+                    alert('Jumlah barang tidak boleh lebih dari yang dijual');
                 }
             }
         }catch(error){

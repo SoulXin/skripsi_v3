@@ -27,21 +27,43 @@ export class Cetak_Hutang extends React.PureComponent {
             <div className="row mx-auto" style={{border : '2px solid black'}}>
                 <table className="">
                 <thead>
-                    <th>ID Pembelian</th>
-                    <th>{this.props.status_lunas ? 'Tanggal Pembayaran' : 'Tanggal Jatuh Tempo'}</th>
-                    <th>Nama Supplier</th>
-                    <th>Total</th>
+                    {
+                        this.props.status_lunas ? 
+                        <th className="p-3">ID Pembayaran Hutang</th> : null
+                    }
+                    <th className="p-3">ID Pembelian</th>
+                    <th className="p-3">ID Supplier</th>
+                    <th className="p-3">{this.props.status_lunas ? 'Tanggal Pembayaran' : 'Tanggal Jatuh Tempo'}</th>
+                    <th className="p-3">Nama Supplier</th>
+                    <th className="p-3">Total</th>
+                    <th className="p-3">Status</th>
                 </thead>
                     {
                         this.props.dataTable.map((list,index) => {
-                            return (
-                                <tr key={index}>
-                                    <td >{list.id_pembelian}</td>
-                                    <td>{list.tanggal_jatuh_tempo}</td>
-                                    <td>{list.Supplier.nama_supplier}</td>
-                                    <td>Rp. {formatMoney(list.grand_total)}</td>
-                                </tr>
-                            )
+                            if(list.Pembayaran_Hutang_Detail){
+                                return (
+                                    <tr key={index}>
+                                        <td className="p-3" >{list.Pembayaran_Hutang_Detail.id_pembayaran}</td>
+                                        <td className="p-3" >{list.id_pembelian}</td>
+                                        <td className="p-3" >{list.id_supplier}</td>
+                                        <td className="p-3" >{list.Pembayaran_Hutang_Detail.Pembayaran_Hutang_Header.tanggal_pembayaran}</td>
+                                        <td className="p-3" >{list.Supplier.nama_supplier}</td>
+                                        <td className="p-3" >Rp. {formatMoney(list.grand_total)}</td>
+                                        <td className="p-3">{list.status === 'Proses' ? 'Belum Lunas' : 'Lunas'}</td>
+                                    </tr>
+                                )
+                            }else{
+                                return (
+                                    <tr key={index}>
+                                        <td className="p-3" >{list.id_pembelian}</td>
+                                        <td className="p-3" >{list.id_supplier}</td>
+                                        <td className="p-3" >{list.tanggal_jatuh_tempo}</td>
+                                        <td className="p-3" >{list.Supplier.nama_supplier}</td>
+                                        <td className="p-3" >Rp. {formatMoney(list.grand_total)}</td>
+                                        <td className="p-3">{list.status === 'Proses' ? 'Belum Lunas' : 'Lunas'}</td>
+                                    </tr>
+                                )
+                            }
                         })
                     }
 

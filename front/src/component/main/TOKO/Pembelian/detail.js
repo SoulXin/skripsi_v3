@@ -145,6 +145,7 @@ const Index = (props) => {
                         await axios.put(`http://localhost:5001/barang_detail/update/${dataBarangDetail[a].id_barang}`,dataBarang);
                     }
                     await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
+                    await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,dataTambah);
                     alert('Pembelian berhasil di ubah');
                     props.history.goBack();
                 }catch(error){
@@ -180,6 +181,7 @@ const Index = (props) => {
         }
         try{
             await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataUpdate);
+            await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,dataUpdate);
             setRefresh(!refresh);
         }catch(error){
             console.log(error);

@@ -70,7 +70,7 @@ exports.delete = (req,res) => {
 
 exports.delete_penjualan = (req,res) => {
     const {id,id_penjualan} = req.params;
-    Mekanik_Header.destroy({
+    Mekanik_Detail.destroy({
         where : {
             [Op.and] : [
                 {id_mekanik : id},
@@ -79,7 +79,7 @@ exports.delete_penjualan = (req,res) => {
         }
     })
     .then((result) => {
-        res.status(200);
+        res.status(200).send();
     }).catch((err) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();

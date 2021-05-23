@@ -22,25 +22,28 @@ export class Cetak_Service extends React.PureComponent {
             <div className="row mx-auto" style={{border : '2px solid black'}}>
                 <table className="">
                 <thead>
-                    <th>ID Penjualan</th>
-                    <th>Tanggal</th>
-                    <th>Nama Mekanik</th>
-                    <th>Service</th>
-                    <th>Harga</th>
+                    <th className="p-3">ID Penjualan</th>
+                    <th className="p-3">ID Service</th>
+                    <th className="p-3">ID Mekanik</th>
+                    <th className="p-3">Tanggal</th>
+                    <th className="p-3">Nama Mekanik</th>
+                    <th className="p-3">Service</th>
+                    <th className="p-3">Harga</th>
                 </thead>
                     {
                         this.props.dataTable.map((list,index) => {
-                            if(list.Mekanik_Header){
-                                return (
-                                    <tr key={index}>
-                                        <td>{list.id_penjualan}</td>
-                                        <td>{list.tanggal_penjualan}</td>
-                                        <td>{list.Mekanik_Header.nama}</td>
-                                        <td>{list.Penjualan_Service.Jenis_Service.nama}</td>
-                                        <td>Rp. {formatMoney(list.Penjualan_Service.Jenis_Service.harga)}</td>
-                                    </tr>
-                                )
-                            }
+                            return (
+                                <tr key={index}>
+                                    <td className="p-3">{list.id_penjualan}</td>
+                                    <td className="p-3">{list.id_service}</td>
+                                    <td className="p-3">{list.id_mekanik}</td>
+                                    <td className="p-3">{list.tanggal_penjualan}</td>
+                                    <td className="p-3">{list.nama_mekanik}</td>
+                                    <td className="p-3">{list.service}</td>
+                                    <td className="p-3">Rp. {formatMoney(list.harga)}</td>
+                                </tr>
+                            )
+                            
                         })
                     }
 

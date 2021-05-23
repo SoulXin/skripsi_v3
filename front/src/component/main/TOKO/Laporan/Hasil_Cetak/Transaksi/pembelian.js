@@ -28,6 +28,10 @@ export class Cetak_Pembelian extends React.PureComponent {
                             <td>{this.props.sampai ? this.props.sampai : '-'}</td>
                         </tr>
                         <tr>
+                            <td>Supplier</td>
+                            <td>{this.props.supplier ? this.props.supplier : '-'}</td>
+                        </tr>
+                        <tr>
                             <td>Tanggal Cetak</td>
                             <td>  {moment(this.props.tanggal).utc().format('DD / MMMM / YYYY')} </td>
                         </tr>
@@ -38,7 +42,7 @@ export class Cetak_Pembelian extends React.PureComponent {
                 <table className="">
                 <thead>
                     <th>ID Pembelian</th>
-                    <th>Tanggal Pemesanan</th>
+                    <th>Tanggal Pembelian</th>
                     <th>Nama Supplier</th>
                     <th>Status</th>
                     <th>Total</th>

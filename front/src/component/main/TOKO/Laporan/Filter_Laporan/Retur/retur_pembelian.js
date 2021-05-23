@@ -1,22 +1,30 @@
 import React,{useEffect, useState,useRef} from 'react'
 import axios from 'axios'
+import { formatMoney } from '../../../../../global/function'
 import ReactToPrint from 'react-to-print';
 import {Cetak_Retur_Pembelian} from '../../Hasil_Cetak/Retur/retur_pembelian'
+import {Cetak_Retur_Pembelian_Per_Item} from '../../Hasil_Cetak/Retur/Per Item/retur_pembelian'
 
-const Index = () => {
+const Index = (props) => {
     const componentRef = useRef();
+    const componentRef2 = useRef();
 
-    const [data,setData] = useState([]);
+    const [dataLaporan,setdataLaporan] = useState([]);
+    const [dataLaporanPerItem,setDataLaporanPerItem] = useState([]);
     const [error,setError] = useState(false);
-    const [refresh,setRefresh] = useState(false);
 
     const [dari,setDari] = useState('');
     const [sampai,setSampai] = useState('');
+    const [namaSupplier,setNamaSupplier] = useState('');
+    const [searchSupplier,setSearchSupplier] = useState('');
     useEffect(() => {
         const loadData = async () => {
             try{
-                const response = await axios.get('http://localhost:5001/retur_pembelian_header/show_all');
-                setData(response.data);
+                const responseDataLaporan = await axios.get('http://localhost:5001/retur_pembelian_header/show_all_laporan');
+                const responseDataLaporanPerItem = await axios.post('http://localhost:5001/retur_pembelian_header/laporan_per_item');
+                console.log(responseDataLaporanPerItem)
+                setdataLaporan(responseDataLaporan.data);
+                setDataLaporanPerItem(responseDataLaporanPerItem.data);
             }catch(error){
                 setError(true);
             }
@@ -25,39 +33,38 @@ const Index = () => {
 
         return () => {
         }
-    }, [refresh]);
-
-    const viewData = data ? data.map((list,index) => {
-        return (
-            <tr key={index}>
-                <td className="p-3">{list.Retur_Pembelian_Detail[0].id_pembelian}</td>
-                <td className="p-3">{list.id_retur_pembelian}</td>
-                <td className="p-3">{list.tanggal_retur}</td>
-                <td className="p-3">{list.grand_total}</td>
-                <td className="p-3">{list.alasan_retur ? list.alasan_retur : 'Tidak Ada'}</td>
-            </tr>
-        )
-    }) : null;
+    }, []);
 
     const handleSearch = async () => {
         const data = {
             dari : dari,
-            sampai : sampai
+            sampai : sampai,
+            nama : searchSupplier
         }
 
         try{
-            const response = await axios.post('http://localhost:5001/retur_pembelian_header/search_date',data);
-            setData(response.data);
+            const responseDataLaporan = await axios.post('http://localhost:5001/retur_pembelian_header/search_date',data);
+            console.log(responseDataLaporan);
+            const responseDataLaporanPerItem = await axios.post('http://localhost:5001/retur_pembelian_header/laporan_per_item',data);
+            setdataLaporan(responseDataLaporan.data);
+            setDataLaporanPerItem(responseDataLaporanPerItem.data);
+            setNamaSupplier(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Supplier.nama_supplier : '');
         }catch(error){
-
+            console.log(error);
         }
     }
+
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
-            <div className="row mb-3">
-                <h2 className="col-3">List Retur Pembelian</h2>
-                <div className="col-7 row">
+            <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
+            <div className="row mb-3 border-bottom">
+                <h2 className="col-4">Laporan Retur Pembelian</h2>
+                <div className="offset-3 col-5 row">
+                    <div class="form-floating mb-3 px-0 col mx-1">
+                        <input type="text" class="form-control" onChange = {(e) => setSearchSupplier(e.target.value)}/>
+                        <label>Supplier</label>
+                    </div>
                     <div class="form-floating mb-3 px-0 col mx-1">
                         <input type="date" class="form-control" onChange = {(e) => setDari(e.target.value)}/>
                         <label>Dari Tanggal</label>
@@ -66,38 +73,29 @@ const Index = () => {
                         <input type="date" class="form-control" onChange = {(e) => setSampai(e.target.value)}/>
                         <label>Sampai Tanggal</label>
                     </div>
-                    <div className="col-2">
-                        <button className="btn btn-success w-100" onClick = {handleSearch}>Cari</button>
+                    <div className="col">
+                        <button className="btn btn-success w-100" onClick = {handleSearch}>Terapkan</button>
                     </div>
                 </div>
-                <div className="col-2">
+            </div>
+            <div className="row">
+                <div className="col-3">
                     <ReactToPrint
-                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan</button>}
+                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Retur</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Cetak_Retur_Pembelian ref={componentRef}  dataTable = {data} dari = {dari} sampai = {sampai}/></div>
+                    <div style={{ display: "none" }}><Cetak_Retur_Pembelian ref={componentRef} dataTable = {dataLaporan} dari = {dari} sampai = {sampai} supplier = {namaSupplier}/></div>
+                </div>
+
+                <div className="col-3">
+                    <ReactToPrint
+                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Retur Barang</button>}
+                        content={() => componentRef2.current}
+                    />
+                    <div style={{ display: "none" }}><Cetak_Retur_Pembelian_Per_Item ref={componentRef2}  dataTable = {dataLaporanPerItem} dari = {dari} sampai = {sampai} supplier = {namaSupplier}/></div>
                 </div>
             </div>
             
-               
-            
-            {/* List */}
-            <div className="row">
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th className="p-3">ID Pembelian</th>
-                            <th className="p-3">ID Retur Pembelian</th>
-                            <th className="p-3">Tanggal Retur</th>
-                            <th className="p-3">Total</th>
-                            <th className="p-3">Alasan</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {viewData}
-                    </tbody>
-                </table>
-            </div>
         </div>
     )
 }

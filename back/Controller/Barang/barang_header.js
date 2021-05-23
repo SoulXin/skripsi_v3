@@ -7,21 +7,38 @@ const { Sequelize } = require('../../Database/db');
 
 exports.register = (req,res) => {
     const {nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual} = req.body;
-    Barang_Header.create({
-        nama_barang : nama_barang,
-        merek_barang : merek_barang,
-        jenis_kereta : jenis_kereta,
-        keterangan : keterangan,
-        harga_beli : harga_beli,
-        harga_jual : harga_jual,
-        gambar : req.file.filename
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
-        res.status(400).end();
-    });
+    if(req.file){
+        Barang_Header.create({
+            nama_barang : nama_barang,
+            merek_barang : merek_barang,
+            jenis_kereta : jenis_kereta,
+            keterangan : keterangan,
+            harga_beli : harga_beli,
+            harga_jual : harga_jual,
+            gambar : req.file.filename
+        })
+        .then((result) => {
+            res.status(200).json(result);
+        }).catch((err) => {
+            res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+            res.status(400).end();
+        });
+    }else{
+        Barang_Header.create({
+            nama_barang : nama_barang,
+            merek_barang : merek_barang,
+            jenis_kereta : jenis_kereta,
+            keterangan : keterangan,
+            harga_beli : harga_beli,
+            harga_jual : harga_jual,
+        })
+        .then((result) => {
+            res.status(200).json(result);
+        }).catch((err) => {
+            res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+            res.status(400).end();
+        });
+    }
 }
 
 exports.show_all = (req,res) => {
@@ -33,11 +50,6 @@ exports.show_all = (req,res) => {
             {
                 model : Barang_Detail,
                 as : 'Barang_Detail',
-                where : {
-                    stok : {
-                        [Op.gt] : 1
-                    }
-                },
                 include : [{ model : Kategori, as : 'Kategori' }]
             }
         ]
@@ -59,8 +71,14 @@ exports.show_detail = (req,res) => {
         include : [
             {
                 model : Barang_Detail,
-                as : 'Barang_Detail'
-            }
+                as : 'Barang_Detail',
+                include : [
+                    {
+                        model : Kategori,
+                        as : 'Kategori'
+                    }
+                ]
+            },
         ]
     })
     .then((result) => {
@@ -72,7 +90,7 @@ exports.show_detail = (req,res) => {
 }
 
 exports.search = (req,res) => {
-    const {nama_barang,merek_barang,jenis_kereta} = req.body;
+    const {nama_barang,jenis_kereta,aktif} = req.body;
     Barang_Header.findAll({
         where : {
             [Op.and] : [{
@@ -80,14 +98,11 @@ exports.search = (req,res) => {
                     nama_barang : {
                         [Op.substring] : nama_barang
                     },
-                    merek_barang : {
-                        [Op.substring] : merek_barang
-                    },
                     jenis_kereta : {
                         [Op.substring] : jenis_kereta
                     }
                 }],
-                aktif : 1
+                aktif : aktif
             }]
         },
         include : [

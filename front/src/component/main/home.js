@@ -1,7 +1,4 @@
 import React,{useEffect,useState} from 'react';
-import {Link} from 'react-router-dom';
-import { checkLogin,formatMoney,getUser } from '../global/function';
-import axios from 'axios';
 
 const Index = () => {
     const [refresh,setRefresh] = useState(false);

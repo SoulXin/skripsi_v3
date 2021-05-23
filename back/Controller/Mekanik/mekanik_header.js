@@ -3,11 +3,39 @@ const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
     const {nama,no_telp,alamat} = req.body;
-    Mekanik_Header.create({
-        nama : nama,
-        no_telp : no_telp,
-        alamat : alamat,
-        gambar : req.file.filename
+    if(req.file){
+        Mekanik_Header.create({
+            nama : nama,
+            no_telp : no_telp,
+            alamat : alamat,
+            gambar : req.file.filename
+        })
+        .then((result) => {
+            res.status(200).json(result);
+        }).catch((err) => {
+            res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+            res.status(400).end();
+        });
+    }else{
+        Mekanik_Header.create({
+            nama : nama,
+            no_telp : no_telp,
+            alamat : alamat
+        })
+        .then((result) => {
+            res.status(200).json(result);
+        }).catch((err) => {
+            res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+            res.status(400).end();
+        });
+    }
+}
+
+exports.show_all = (req,res) => {
+    Mekanik_Header.findAll({
+        where : {
+            aktif : 1
+        }
     })
     .then((result) => {
         res.status(200).json(result);
@@ -17,10 +45,11 @@ exports.register = (req,res) => {
     });
 }
 
-exports.show_all = (req,res) => {
-    Mekanik_Header.findAll({
+exports.show_detail = (req,res) => {
+    const {id} = req.params;
+    Mekanik_Header.findOne({
         where : {
-            aktif : 1
+            id_mekanik : id
         }
     })
     .then((result) => {
@@ -89,25 +118,35 @@ exports.change_status = (req,res) => {
     });
 }
 
-exports.search = (req,res) => {
-    const {nama_mekanik} = req.body;
-    Mekanik_Header.findAll({
-        where : {
-            [Op.and] : [{
-                nama : {
-                    [Op.substring] : nama_mekanik
-                },
-                aktif : 1
-            }]
+exports.search = async (req,res) => {
+    const {nama_mekanik,aktif} = req.body;
+    try{
+        if(aktif){
+            const response = await Mekanik_Header.findAll({
+                where : {
+                    [Op.and] : [{
+                        nama : {
+                            [Op.substring] : nama_mekanik
+                        },
+                        aktif : aktif
+                    }]
+                }
+            })
+            res.status(200).json(response);
+        }else{
+            const response = await Mekanik_Header.findAll({
+                where : {
+                    nama : {
+                        [Op.substring] : nama_mekanik
+                    },
+                }
+            })
+            res.status(200).json(response);
         }
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    })
-    .catch((err) => {
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
-    })
+    }
 }
 
 exports.show_status = (req,res) => {

@@ -38,16 +38,16 @@ const Form = (props) => {
             // props.location.state
             if(props.location.state){
                 setDetail(true);
-
                 var tempDetail = props.location.state; // => variable detail
-                setNama(tempDetail.nama_supplier);
-                setTelepon(tempDetail.nomor_telepon_supplier);
-                setEmail(tempDetail.email_supplier);
-                setAlamat(tempDetail.alamat_supplier);
-                setBank(tempDetail.bank_supplier);
-                setNoRekening(tempDetail.no_rek_supplier);
-                setKeterangan(tempDetail.keterangan);
-                setAktif(tempDetail.aktif);
+                const response = await axios.get(`http://localhost:5001/supplier/show_detail/${tempDetail.id_supplier}`);
+                setNama(response.data.nama_supplier);
+                setTelepon(response.data.nomor_telepon_supplier);
+                setEmail(response.data.email_supplier);
+                setAlamat(response.data.alamat_supplier);
+                setBank(response.data.bank_supplier);
+                setNoRekening(response.data.no_rek_supplier);
+                setKeterangan(response.data.keterangan);
+                setAktif(response.data.aktif);
             }
 
             try{
@@ -93,12 +93,13 @@ const Form = (props) => {
             try{
                 await axios.put(`http://localhost:5001/supplier/update/${idSupplier}`,data);
                 alert('Data supplier berhasil diupdate');
+                setRefresh(!refresh);
             }catch(error){
                 setError(error);
             }
         }else{ // => tambah
             try{
-                const responseBarangHeader = await axios.post('http://localhost:5001/supplier/register',data);
+                await axios.post('http://localhost:5001/supplier/register',data);
                 alert('Data supplier berhasil ditambah');
                 props.history.goBack();
             }catch(error){
@@ -113,7 +114,7 @@ const Form = (props) => {
             <div className="row" style={{position:'relative'}}>
                 <Link to="/index_supplier" className="btn btn-outline-secondary col-1" style={{position:'absolute',top:'15px'}}>Kembali</Link>
                 <h1 className="text-center border-bottom pt-2 pb-2 fw-bold col">{ detail ? 'Detail Supplier' : 'Tambah Supplier' }</h1>
-                <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button>
+                {/* <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button> */}
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -122,31 +123,31 @@ const Form = (props) => {
                     <label htmlFor="id_supplier" className="form-label">Id Supplier</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={nama} className="form-control" id="nama_supplier" placeholder="Nama Supplier" onChange = {(e) => setNama(e.target.value)}/>
+                    <input type="text" value={nama} className="form-control" id="nama_supplier" placeholder="Nama Supplier" onChange = {(e) => setNama(e.target.value)} required/>
                     <label htmlFor="nama_supplier">Nama Supplier</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={telepon} className="form-control" id="no_telepon" placeholder="Nomor Telepon" onChange = {(e) => setTelepon(e.target.value)}/>
+                    <input type="text" value={telepon} className="form-control" id="no_telepon" placeholder="Nomor Telepon" onChange = {(e) => setTelepon(e.target.value)} required/>
                     <label htmlFor="no_telepon">Nomor Telepon</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="email" value={email} className="form-control" id="email" placeholder="Email" onChange = {(e) => setEmail(e.target.value)}/>
+                    <input type="email" value={email} className="form-control" id="email" placeholder="Email" onChange = {(e) => setEmail(e.target.value)} required/>
                     <label htmlFor="email">Email</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={alamat} className="form-control" id="alamat" placeholder="alamat" onChange = {(e) => setAlamat(e.target.value)}/>
+                    <input type="text" value={alamat} className="form-control" id="alamat" placeholder="alamat" onChange = {(e) => setAlamat(e.target.value)} required/>
                     <label htmlFor="alamat">Alamat</label>
                 </div>
                 <div className="row">
                     <div className="col">
                         <div className="form-floating mb-3">
-                            <input type="text" value={bank} className="form-control" id="bank" placeholder="Bank" onChange = {(e) => setBank(e.target.value)}/>
+                            <input type="text" value={bank} className="form-control" id="bank" placeholder="Bank" onChange = {(e) => setBank(e.target.value)} required/>
                             <label htmlFor="bank">Nama Bank</label>
                         </div>
                     </div>
                     <div className="col">
                         <div className="form-floating mb-3">
-                            <input type="text" value={noRekening} className="form-control" id="no_rekening" placeholder="Nomor Rekning" onChange = {(e) => setNoRekening(e.target.value)}/>
+                            <input type="text" value={noRekening} className="form-control" id="no_rekening" placeholder="Nomor Rekning" onChange = {(e) => setNoRekening(e.target.value)} required/>
                             <label htmlFor="no_rekening">Nomor Rekning</label>
                         </div>
                     </div>

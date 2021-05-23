@@ -2,6 +2,7 @@ const Pembelian_Header = require('../../Model/Pembelian/pembelian_header');
 const Retur_Pembelian_Detail = require('../../Model/Retur_Pembelian/retur_pembelian_detail');
 const Retur_Pembelian_Header = require('../../Model/Retur_Pembelian/retur_pembelian_header');
 const Supplier = require('../../Model/Supplier/supplier');
+const Barang_Header = require('../../Model/Barang/barang_header');
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
@@ -136,14 +137,94 @@ exports.show_retur = async (req,res) => {
     }
 }
 
-exports.search_date = (req,res) => {
-    const {dari, sampai} = req.body;
+exports.search_date = async (req,res) => {
+    const {dari, sampai,nama} = req.body;
+    try{
+        if(dari && sampai && nama){
+            const response = await Retur_Pembelian_Header.findAll({
+                where : {
+                    tanggal_retur : {
+                        [Op.between] : [dari,sampai]
+                    }
+                },
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail'
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else if(dari && sampai){
+            const response = await Retur_Pembelian_Header.findAll({
+                where : {
+                    tanggal_retur : {
+                        [Op.between] : [dari,sampai]
+                    }
+                },
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail'
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else if(nama){
+            const response = await Retur_Pembelian_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail'
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else{
+            const response = await Retur_Pembelian_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail'
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
+        res.status(400).end();
+    }
+}
+
+exports.show_all_laporan = (req,res) => {
     Retur_Pembelian_Header.findAll({
-        where : {
-            tanggal_retur : {
-                [Op.between] : [dari,sampai]
-            }
-        },
         include : [
             {
                 model : Retur_Pembelian_Detail,
@@ -163,24 +244,183 @@ exports.search_date = (req,res) => {
     });
 }
 
-exports.fix = async (req,res) => {
+exports.laporan_per_item = async (req,res) => {
+    const {dari,sampai,nama} = req.body;
+    const temp_array = [];
+
     try{
-        const response = await Retur_Pembelian_Header.findAll({where : {tanggal_Retur : '0000-00-00'}});
-        for(var a = 0;a < response.length;a++){
-            await Retur_Pembelian_Detail.destroy({
+        if(dari && sampai && nama){
+            const retur_pembelian_header = await Retur_Pembelian_Header.findAll({
                 where : {
-                    id_retur_pembelian  : response[a].id_retur_pembelian 
-                }
-            });
-            await Retur_Pembelian_Header.destroy({
-                where : {
-                    id_retur_pembelian  : response[a].id_retur_pembelian 
-                } 
+                    [Op.and] : [
+                        {
+                            tanggal_retur : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
             })
+            for(var a = 0;a < retur_pembelian_header.length;a++){
+                for(var b = 0; b < retur_pembelian_header[a].Retur_Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_pembelian : retur_pembelian_header[a].id_retur_pembelian,
+                        id_pembelian : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_pembelian,
+                        id_supplier : retur_pembelian_header[a].Supplier.id_supplier,
+                        id_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_barang,
+                        tanggal_retur : retur_pembelian_header[a].tanggal_retur,
+                        nama_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_pembelian_header[a].Retur_Pembelian_Detail[b].harga_beli,
+                        jumlah : retur_pembelian_header[a].Retur_Pembelian_Detail[b].jumlah,
+                        total : retur_pembelian_header[a].Retur_Pembelian_Detail[b].total
+                    })
+                }
+            }
+    
+            res.status(200).json(temp_array);
+        }else if(dari && sampai){
+            const retur_pembelian_header = await Retur_Pembelian_Header.findAll({
+                where : {
+                    [Op.and] : [
+                        {
+                            tanggal_retur : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            for(var a = 0;a < retur_pembelian_header.length;a++){
+                for(var b = 0; b < retur_pembelian_header[a].Retur_Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_pembelian : retur_pembelian_header[a].id_retur_pembelian,
+                        id_pembelian : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_pembelian,
+                        id_supplier : retur_pembelian_header[a].Supplier.id_supplier,
+                        id_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_barang,
+                        tanggal_retur : retur_pembelian_header[a].tanggal_retur,
+                        nama_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_pembelian_header[a].Retur_Pembelian_Detail[b].harga_beli,
+                        jumlah : retur_pembelian_header[a].Retur_Pembelian_Detail[b].jumlah,
+                        total : retur_pembelian_header[a].Retur_Pembelian_Detail[b].total
+                    })
+                }
+            }
+            res.status(200).json(temp_array);
+        }else if(nama){
+            const retur_pembelian_header = await Retur_Pembelian_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            for(var a = 0;a < retur_pembelian_header.length;a++){
+                for(var b = 0; b < retur_pembelian_header[a].Retur_Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_pembelian : retur_pembelian_header[a].id_retur_pembelian,
+                        id_pembelian : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_pembelian,
+                        id_supplier : retur_pembelian_header[a].Supplier.id_supplier,
+                        id_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_barang,
+                        tanggal_retur : retur_pembelian_header[a].tanggal_retur,
+                        nama_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_pembelian_header[a].Retur_Pembelian_Detail[b].harga_beli,
+                        jumlah : retur_pembelian_header[a].Retur_Pembelian_Detail[b].jumlah,
+                        total : retur_pembelian_header[a].Retur_Pembelian_Detail[b].total
+                    })
+                }
+            }
+            res.status(200).json(temp_array);
+        }else{
+            const retur_pembelian_header = await Retur_Pembelian_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Pembelian_Detail,
+                        as : 'Retur_Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            for(var a = 0;a < retur_pembelian_header.length;a++){
+                for(var b = 0; b < retur_pembelian_header[a].Retur_Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_pembelian : retur_pembelian_header[a].id_retur_pembelian,
+                        id_pembelian : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_pembelian,
+                        id_supplier : retur_pembelian_header[a].Supplier.id_supplier,
+                        id_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].id_barang,
+                        tanggal_retur : retur_pembelian_header[a].tanggal_retur,
+                        nama_barang : retur_pembelian_header[a].Retur_Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_pembelian_header[a].Retur_Pembelian_Detail[b].harga_beli,
+                        jumlah : retur_pembelian_header[a].Retur_Pembelian_Detail[b].jumlah,
+                        total : retur_pembelian_header[a].Retur_Pembelian_Detail[b].total
+                    })
+                }
+            }
+            res.status(200).json(temp_array);
         }
-        res.status(200).send("Selesai");
     }catch(error){
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
     }
 }

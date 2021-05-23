@@ -54,7 +54,7 @@ const Index = (props) => {
         try{
             if(!checkKetersediaan.length){ // => tidak ada di pesanan, maka tambah
                 var jumlah = prompt("Masukan jumlah barang"); // => prompt input jumlah
-                if(jumlah){
+                if(jumlah != '' && jumlah != 0){
                     const dataTambah = {
                         id_pesanan_pembelian : idPesananPembelian,
                         id_barang : e.id_barang,
@@ -65,6 +65,8 @@ const Index = (props) => {
                     await axios.post(`http://localhost:5001/pesanan_pembelian_detail/register`, dataTambah);
                     setRefresh(!refresh);
                     alert('Barang berhasil di tambahkan');
+                }else{
+                    alert('Jumlah tidak boleh kosong!');
                 }
             }else{ // => ada di pesanan, update saja
                 const dataUpdate = {

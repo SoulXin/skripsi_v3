@@ -9,6 +9,9 @@ router.get('/show_detail/:id',pesanan_pembelian_header_Controller.show_detail);
 router.post('/search',pesanan_pembelian_header_Controller.search);
 router.put('/update/:id',pesanan_pembelian_header_Controller.update);
 router.delete('/delete/:id',pesanan_pembelian_header_Controller.delete);
-router.get('/fix',pesanan_pembelian_header_Controller.fix);
+router.post('/search_date',pesanan_pembelian_header_Controller.search_date);
+
+// Laporan
+router.post('/laporan_per_item',pesanan_pembelian_header_Controller.laporan_per_item);
 
 module.exports = router;

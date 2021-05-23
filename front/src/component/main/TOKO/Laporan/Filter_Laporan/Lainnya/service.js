@@ -4,7 +4,7 @@ import { formatMoney } from '../../../../../global/function'
 import ReactToPrint from 'react-to-print';
 import {Cetak_Service} from '../../Hasil_Cetak/Lainnya/service'
 
-const Index = () => {
+const Index = (props) => {
     const componentRef = useRef();
 
     const [data,setData] = useState([]);
@@ -19,7 +19,7 @@ const Index = () => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responsePendapatanMekanik = await axios.get('http://localhost:5001/penjualan_header/show_all_service');
+                const responsePendapatanMekanik = await axios.post('http://localhost:5001/penjualan_header/show_all_service');
                 const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_all');
 
                 setData(responsePendapatanMekanik.data);
@@ -35,17 +35,17 @@ const Index = () => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
-        if(list.Mekanik_Detail){
-            return (
-                <tr key={index}>
-                    <td className="p-3">{list.id_penjualan}</td>
-                    <td className="p-3">{list.tanggal_penjualan}</td>
-                    <td className="p-3">{list.Mekanik_Detail.Mekanik_Header.nama}</td>
-                    <td className="p-3">{list.Penjualan_Service.Jenis_Service.nama}</td>
-                    <td className="p-3">Rp. {formatMoney(list.Penjualan_Service.Jenis_Service.harga)}</td>
-                </tr>
-            )
-        }
+        return (
+            <tr key={index}>
+                <td className="p-3">{list.id_penjualan}</td>
+                <td className="p-3">{list.id_service}</td>
+                <td className="p-3">{list.id_mekanik}</td>
+                <td className="p-3">{list.tanggal_penjualan}</td>
+                <td className="p-3">{list.nama_mekanik}</td>
+                <td className="p-3">{list.service}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga)}</td>
+            </tr>
+        )
     }) : null;
 
     const viewMekanik = dataMekanik ? dataMekanik.map((list,index) => {
@@ -62,8 +62,8 @@ const Index = () => {
         }
 
         try{
-            const response = await axios.post('http://localhost:5001/penjualan_header/searching_service',data);
-            setData(response.data);
+            const responsePendapatanMekanik = await axios.post('http://localhost:5001/penjualan_header/show_all_service',data);
+            setData(responsePendapatanMekanik.data);
         }catch(error){
             console.log(error);
         }
@@ -72,9 +72,10 @@ const Index = () => {
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
+            <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row mb-3">
                 <div className="col">
-                    <h2>List Service</h2>
+                    <h2>Laporan Service</h2>
                     <i>Harga yang tercantum sudah dikurangi persen toko ( 20 % )</i>
                 </div>
 
@@ -113,6 +114,8 @@ const Index = () => {
                     <thead>
                         <tr>
                             <th className="p-3">ID Penjualan</th>
+                            <th className="p-3">ID Service</th>
+                            <th className="p-3">ID Mekanik</th>
                             <th className="p-3">Tanggal</th>
                             <th className="p-3">Nama Mekanik</th>
                             <th className="p-3">Service</th>

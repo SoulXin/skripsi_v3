@@ -78,7 +78,29 @@ const ContextProvider = (props) => {
         lihat_laporan_retur_penjualan : false,
         lihat_laporan_service : false,
         lihat_laporan_hutang : false,
-        lihat_laporan_penyesuaian_stok : false
+        lihat_laporan_penyesuaian_stok : false,
+
+        // Penjualan
+        tanggal_penjualan : '',
+        nama_pelanggan : '',
+        nomor_polisi : '',
+        id_mekanik : '',
+
+        // Pesanan Pembelian
+        id_supplier : '',
+        tanggal_pemesanan : '',
+
+        // Pembelian
+        tanggal_pembelian : '',
+        metode_pembayaran : '1',
+        tanggal_jatuh_tempo : '',
+
+
+        // Retur
+        jenis_penggembalian : '',
+        tanggal_retur : '',
+        alasan_retur : '',
+
     };
     const [dataContext,dispatch] = useReducer(Reducer,initialState);
 

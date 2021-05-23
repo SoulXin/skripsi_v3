@@ -15,7 +15,7 @@ export class Faktur_Retur_Penjualan extends React.PureComponent {
         <div style = {{border : '5px solid black'}}>
             <div className="row col-12 mx-auto pt-3 pb-3" style={{borderBottom : '2px solid black'}}>
                 <div className="col-6 text-center" style={{textAlign:'center',borderRight : '1px solid black'}}>
-                    <h1 className = "pb-2" style = {{borderBottom : '1px solid black'}}>Faktur Pesanan Pembelian</h1>
+                    <h1 className = "pb-2" style = {{borderBottom : '1px solid black'}}>Pesanan Pembelian</h1>
                     <img src="/logo.png" alt="image" style = {{width : '100%'}}/>
                     <small>Jalan Ar. Hakim No.8</small><br/>
                     <small>085362023957</small>

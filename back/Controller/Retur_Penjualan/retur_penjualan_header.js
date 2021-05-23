@@ -3,6 +3,8 @@ const Retur_Penjualan_Header = require('../../Model/Retur_Penjualan/retur_penjua
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const Penjualan_Header = require('../../Model/Penjualan/penjualan_header');
 const Penjualan_Pelanggan = require('../../Model/Penjualan/penjualan_pelanggan');
+const Barang_Header = require('../../Model/Barang/barang_header');
+
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
@@ -152,47 +154,334 @@ exports.show_retur = async (req,res) => {
     }
 }
 
-exports.search_date = (req,res) => {
-    const {dari, sampai} = req.body;
-    Retur_Penjualan_Header.findAll({
-        where : {
-            tanggal_retur : {
-                [Op.between] : [dari,sampai]
-            }
-        },
-        include : [
-            {
-                model : Retur_Penjualan_Detail,
-                as : 'Retur_Penjualan_Detail'
-            }
-        ]
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+exports.search_date = async (req,res) => {
+    const {dari, sampai,nama} = req.body;
+    try {
+        if(dari && sampai && nama){
+            const response = await Retur_Penjualan_Header.findAll({
+                where : {
+                    tanggal_retur : {
+                        [Op.between] : [dari,sampai]
+                    }
+                },
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Penjualan_Header,
+                                as : 'Penjualan_Header',
+                                include : [
+                                    {
+                                        model : Penjualan_Pelanggan,
+                                        as : 'Penjualan_Pelanggan',
+                                        where : {
+                                            [Op.or] : [
+                                                {
+                                                    nama_pelanggan : {
+                                                        [Op.substring] : nama
+                                                    },
+                                                    nomor_polisi : {
+                                                        [Op.substring] : nama
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else if(dari && sampai){
+            const response = await Retur_Penjualan_Header.findAll({
+                where : {
+                    tanggal_retur : {
+                        [Op.between] : [dari,sampai]
+                    }
+                },
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Penjualan_Header,
+                                as : 'Penjualan_Header',
+                                include : [
+                                    {
+                                        model : Penjualan_Pelanggan,
+                                        as : 'Penjualan_Pelanggan'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else if(nama){
+            console.log("NAMAMAMAMAM")
+            const response = await Retur_Penjualan_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Penjualan_Header,
+                                as : 'Penjualan_Header',
+                                include : [
+                                    {
+                                        model : Penjualan_Pelanggan,
+                                        as : 'Penjualan_Pelanggan',
+                                        where : {
+                                            [Op.or] : [
+                                                {
+                                                    nama_pelanggan : {
+                                                        [Op.substring] : nama
+                                                    },
+                                                    nomor_polisi : {
+                                                        [Op.substring] : nama
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else{
+            const response = await Retur_Penjualan_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Penjualan_Header,
+                                as : 'Penjualan_Header',
+                                include : [
+                                    {
+                                        model : Penjualan_Pelanggan,
+                                        as : 'Penjualan_Pelanggan'
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
-    });
+    }
 }
 
-exports.fix = async (req,res) => {
+
+exports.laporan_per_item = async (req,res) => {
+    const {dari,sampai,nama} = req.body;
+    const temp_array = [];
+
     try{
-        const response = await Retur_Penjualan_Header.findAll({where : {tanggal_Retur : '0000-00-00'}});
-        for(var a = 0;a < response.length;a++){
-            await Retur_Penjualan_Detail.destroy({
+        if(dari && sampai && nama){
+            const retur_penjualan_header = await Retur_Penjualan_Header.findAll({
                 where : {
-                    id_retur_penjualan  : response[a].id_retur_penjualan 
-                }
-            });
-            await Retur_Penjualan_Header.destroy({
-                where : {
-                    id_retur_penjualan  : response[a].id_retur_penjualan 
-                } 
+                    [Op.and] : [
+                        {
+                            tanggal_retur : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            },
+                            {
+                                model : Penjualan_Header,
+                                as : 'Penjualan_Header',
+                                include : [
+                                    {
+                                        model : Penjualan_Pelanggan,
+                                        as : 'Penjualan_Pelanggan',
+                                        where : {
+                                            [Op.or] : [
+                                                {
+                                                    nama_pelanggan : {
+                                                        [Op.substring] : nama
+                                                    },
+                                                    nomor_polisi : {
+                                                        [Op.substring] : nama
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
             })
+            for(var a = 0;a < retur_penjualan_header.length;a++){
+                for(var b = 0; b < retur_penjualan_header[a].Retur_Penjualan_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_penjualan : retur_penjualan_header[a].id_retur_penjualan,
+                        id_penjualan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_penjualan,
+                        id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
+                        tanggal_retur : retur_penjualan_header[a].tanggal_retur,
+                        nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
+                        total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
+                    })
+                }
+            }
+    
+            res.status(200).json(temp_array);
+        }else if(dari && sampai){
+            const retur_penjualan_header = await Retur_Penjualan_Header.findAll({
+                where : {
+                    [Op.and] : [
+                        {
+                            tanggal_retur : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    }
+                ]
+            })
+            for(var a = 0;a < retur_penjualan_header.length;a++){
+                for(var b = 0; b < retur_penjualan_header[a].Retur_Penjualan_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_penjualan : retur_penjualan_header[a].id_retur_penjualan,
+                        id_penjualan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_penjualan,
+                        id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
+                        tanggal_retur : retur_penjualan_header[a].tanggal_retur,
+                        nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
+                        total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
+                    })
+                }
+            }
+    
+            res.status(200).json(temp_array);
+        }else if(nama){
+            const retur_penjualan_header = await Retur_Penjualan_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            },
+                            {
+                                model : Penjualan_Header,
+                                as : 'Penjualan_Header',
+                                include : [
+                                    {
+                                        model : Penjualan_Pelanggan,
+                                        as : 'Penjualan_Pelanggan',
+                                        where : {
+                                            [Op.or] : [
+                                                {
+                                                    nama_pelanggan : {
+                                                        [Op.substring] : nama
+                                                    },
+                                                    nomor_polisi : {
+                                                        [Op.substring] : nama
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            })
+            for(var a = 0;a < retur_penjualan_header.length;a++){
+                for(var b = 0; b < retur_penjualan_header[a].Retur_Penjualan_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_penjualan : retur_penjualan_header[a].id_retur_penjualan,
+                        id_penjualan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_penjualan,
+                        id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
+                        tanggal_retur : retur_penjualan_header[a].tanggal_retur,
+                        nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
+                        total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
+                    })
+                }
+            }
+    
+            res.status(200).json(temp_array);
+        }else{
+            const retur_penjualan_header = await Retur_Penjualan_Header.findAll({
+                include : [
+                    {
+                        model : Retur_Penjualan_Detail,
+                        as : 'Retur_Penjualan_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    }
+                ]
+            })
+            for(var a = 0;a < retur_penjualan_header.length;a++){
+                for(var b = 0; b < retur_penjualan_header[a].Retur_Penjualan_Detail.length ;b++){
+                    temp_array.push({
+                        id_retur_penjualan : retur_penjualan_header[a].id_retur_penjualan,
+                        id_penjualan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_penjualan,
+                        id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
+                        tanggal_retur : retur_penjualan_header[a].tanggal_retur,
+                        nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
+                        total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
+                    })
+                }
+            }
+    
+            res.status(200).json(temp_array);
         }
-        res.status(200).send("Selesai");
     }catch(error){
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
     }
 }

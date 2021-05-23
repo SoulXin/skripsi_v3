@@ -20,7 +20,7 @@ export class Cetak_Penjualan extends React.PureComponent {
                 <div className="col-6">
                     <table>
                         <tr>
-                            <td>Dari Tanggal</td>
+                            <td>Dari Tanggalxxx</td>
                             <td>{this.props.dari ? this.props.dari : '-'}</td>
                         </tr>
                         <tr>
@@ -46,7 +46,7 @@ export class Cetak_Penjualan extends React.PureComponent {
                     {
                         this.props.dataTableOffline.map((list,index) => {
                             return (
-                                <tr>
+                                <tr key = {index}>
                                     <td>{list.id_penjualan}</td>
                                     <td>{list.tanggal_penjualan}</td>
                                     <td>{list.Penjualan_Pelanggan.nama_pelanggan}</td>

@@ -30,25 +30,50 @@ exports.show_all = (req,res) => {
     });
 }
 
-exports.search = (req,res) => {
-    const {nama} = req.body;
-    Jenis_Service.findAll({
+exports.show_detail = (req,res) => {
+    const {id} = req.params;
+    Jenis_Service.findOne({
         where : {
-            [Op.and] : [{
-                nama : {
-                    [Op.substring] : nama
-                },
-                aktif : 1
-            }]
+            id_service : id
         }
     })
     .then((result) => {
         res.status(200).json(result);
-    })
-    .catch((err) => {
+    }).catch((err) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    })
+    });
+}
+
+exports.search = async (req,res) => {
+    const {nama,aktif} = req.body;
+    try{
+        if(aktif){
+            const response = await Jenis_Service.findAll({
+                where : {
+                    [Op.and] : [{
+                        nama : {
+                            [Op.substring] : nama
+                        },
+                        aktif : aktif
+                    }]
+                }
+            })
+            res.status(200).json(response);
+        }else{
+            const response = await Jenis_Service.findAll({
+                where : {
+                    nama : {
+                        [Op.substring] : nama
+                    } 
+                }
+            })
+            res.status(200).json(response);
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
+        res.status(400).end();
+    }
 }
 
 exports.update = (req,res) => {

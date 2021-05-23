@@ -147,7 +147,7 @@ const Index = (props) => {
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataRetur} idRetur = {idRetur} idPelanggan = {idPelanggan} nopol = {nomorPolisi} tanggal_retur = {tanggalRetur}/></div>
+                    <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataRetur} idRetur = {idRetur} idPenjualan = {idPenjualan}   tanggal_retur = {tanggalRetur}/></div>
                 </div>
             </div>
             

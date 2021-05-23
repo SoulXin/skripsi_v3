@@ -14,7 +14,7 @@ const Penyesuaian_Header = db.sequelize.define('penyesuaian_header',{
 });
 
 // Penyesuaian 
-Penyesuaian_Header.hasOne(Penyesuaian_Detail,{as : 'Penyesuaian_Detail', foreignKey : 'id_penyesuaian'});
+Penyesuaian_Header.hasMany(Penyesuaian_Detail,{as : 'Penyesuaian_Detail', foreignKey : 'id_penyesuaian'});
 Penyesuaian_Detail.belongsTo(Penyesuaian_Header,{as : 'Penyesuaian_Header', foreignKey : 'id_penyesuaian'});
 
 module.exports = Penyesuaian_Header

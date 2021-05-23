@@ -17,11 +17,12 @@ const Index = (props) => {
     const [hargaJualSistem,setHargaJualSistem] = useState('');
     const [hargaJual,setHargaJual] = useState('');
     const [jumlah,setJumlah] = useState('');
-
+    const [stok,setStok] = useState('');
     useEffect(() => { 
         const loadData = async () => {
             try{
                 const detail = props.location.state;
+
                 setDetail(detail);
                 setIdBarang(detail.id_barang);
                 setIdPenjualan(detail.id_penjualan);
@@ -31,6 +32,7 @@ const Index = (props) => {
                 setHargaJualSistem(detail.Barang_Header.harga_jual);
                 setHargaJual(detail.harga_jual);
                 setJumlah(detail.jumlah);
+                setStok(detail.Barang_Header.Barang_Detail.stok);
             }catch(error){
                 setError(true);
             }
@@ -50,13 +52,17 @@ const Index = (props) => {
 
         if(jumlah && jumlah != 0){
             if(hargaJual >= hargaJualSistem){
-                axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${idBarang}`, data)
-                .then((res) => {
-                    alert('berhasil di ubah');
-                })
-                .catch((err) => {
-                    console.log(err);
-                })
+                if(jumlah <= stok){
+                    axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${idBarang}`, data)
+                    .then((res) => {
+                        alert('berhasil di ubah');
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    })
+                }else{
+                    alert('Stok barang tidak cukup!');
+                }
             }else{
                 alert('harga tidak boleh lebih rendah dari sistem');
             }
@@ -99,14 +105,21 @@ const Index = (props) => {
                     </div>
                 </div>
 
-                <div class="mb-3 col-6 mt-2">
+                <div class="mb-3 col-4 mt-2">
+                    <div className="form-floating px-0">
+                        <input type="text" class="form-control" id="nama_barang" value={stok} disabled/>
+                        <label for="nama_barang">Stok</label>
+                    </div>
+                </div>
+
+                <div class="mb-3 col-4 mt-2">
                     <div className="form-floating px-0">
                         <input type="text" class="form-control" id="nama_barang" value={hargaJualSistem} disabled/>
                         <label for="nama_barang">Harga Jual ( Sistem )</label>
                     </div>
                 </div>
 
-                <div class="mb-3 col-6 mt-2">
+                <div class="mb-3 col-4 mt-2">
                     <div className="form-floating px-0">
                         <input type="text" class="form-control" id="nama_barang" value={hargaJual} onChange = {(e) => setHargaJual(e.target.value)}/>
                         <label for="nama_barang">Harga Jual</label>

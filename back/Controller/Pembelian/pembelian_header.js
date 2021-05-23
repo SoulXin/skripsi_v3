@@ -4,6 +4,7 @@ const Supplier = require('../../Model/Supplier/supplier');
 const { Op } = require("sequelize");
 const Pembayaran_Hutang_Detail = require('../../Model/Pembayaran_Hutang/pembayaran_hutang_detail');
 const Retur_Pembelian_Detail = require('../../Model/Retur_Pembelian/retur_pembelian_detail');
+const Barang_Header = require('../../Model/Barang/barang_header');
 
 exports.register = (req,res) => {
     const {id_pesanan_pembelian,tanggal_pembelian,metode_pembayaran,tanggal_jatuh_tempo,id_supplier,grand_total} = req.body;
@@ -146,34 +147,94 @@ exports.delete = (req,res) => {
     });
 }
 
-exports.search_date = (req,res) => {
-    const {dari, sampai} = req.body;
-    Pembelian_Header.findAll({
-        where : {
-            [Op.and] : [
-                {
-                    tanggal_pembelian : {
-                        [Op.between] : [dari,sampai]
-                    }
+exports.search_date = async (req,res) => {
+    const {dari, sampai,nama} = req.body;
+    try{
+        if(dari && sampai && nama){
+            const response = await Pembelian_Header.findAll({
+                where : {
+                    [Op.and] : [
+                        {
+                            tanggal_pembelian : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        },
+                        {
+                            status : 'Selesai'
+                        }
+                    ]
                 },
-                {
+                include : [
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else if(nama){
+            const response = await Pembelian_Header.findAll({
+                where : {  
                     status : 'Selesai'
-                }
-            ]
-        },
-        include : [
-            {
-                model : Supplier,
-                as : 'Supplier'
-            }
-        ]
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
-        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+                },
+                include : [
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else if(dari && sampai){
+            const response = await Pembelian_Header.findAll({
+                where : {
+                    [Op.and] : [
+                        {
+                            tanggal_pembelian : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        },
+                        {
+                            status : 'Selesai'
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }else{
+            const response = await Pembelian_Header.findAll({
+                where : {  
+                    status : 'Selesai'
+                },
+                include : [
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            res.status(200).json(response);
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.fix = async (req,res) => {
@@ -207,6 +268,183 @@ exports.fix = async (req,res) => {
         res.status(200).send("Selesai");
     }catch(error){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    }
+}
+
+exports.laporan_per_item = async (req,res) => {
+    const {dari,sampai,nama} = req.body;
+    const temp_array = [];
+
+    try{
+        if(dari && sampai && nama){
+            const pembelian_header = await Pembelian_Header.findAll({
+                where : {
+                    [Op.and] : [
+                        {
+                            tanggal_pembelian : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Pembelian_Detail,
+                        as : 'Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            for(var a = 0;a < pembelian_header.length;a++){
+                for(var b = 0; b < pembelian_header[a].Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_pembelian : pembelian_header[a].id_pembelian,
+                        id_pesanan_pembelian : pembelian_header[a].id_pesanan_pembelian ? pembelian_header[a].id_pesanan_pembelian : '-' ,
+                        id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
+                        tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
+                        nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
+                        total : pembelian_header[a].Pembelian_Detail[b].total
+                    })
+                }
+            }
+    
+            res.status(200).json(temp_array);
+        }else if(nama){
+            const pembelian_header = await Pembelian_Header.findAll({
+                include : [
+                    {
+                        model : Pembelian_Detail,
+                        as : 'Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier',
+                        where : {
+                            nama_supplier : {
+                                [Op.substring] : nama
+                            }
+                        }
+                    }
+                ]
+            })
+            for(var a = 0;a < pembelian_header.length;a++){
+                for(var b = 0; b < pembelian_header[a].Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_pembelian : pembelian_header[a].id_pembelian,
+                        id_pesanan_pembelian : pembelian_header[a].id_pesanan_pembelian ? pembelian_header[a].id_pesanan_pembelian : '-' ,
+                        id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
+                        tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
+                        nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
+                        total : pembelian_header[a].Pembelian_Detail[b].total
+                    })
+                }
+            }
+            res.status(200).json(temp_array);
+        }else if(dari && nama){
+            const pembelian_header = await Pembelian_Header.findAll({
+                where : {
+                    [Op.and] : [
+                        {
+                            tanggal_pembelian : {
+                                [Op.between] : [dari,sampai]
+                            }
+                        }
+                    ]
+                },
+                include : [
+                    {
+                        model : Pembelian_Detail,
+                        as : 'Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            for(var a = 0;a < pembelian_header.length;a++){
+                for(var b = 0; b < pembelian_header[a].Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_pembelian : pembelian_header[a].id_pembelian,
+                        id_pesanan_pembelian : pembelian_header[a].id_pesanan_pembelian ? pembelian_header[a].id_pesanan_pembelian : '-' ,
+                        id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
+                        tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
+                        nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
+                        total : pembelian_header[a].Pembelian_Detail[b].total
+                    })
+                }
+            }
+            res.status(200).json(temp_array);
+        }else{
+            const pembelian_header = await Pembelian_Header.findAll({
+                include : [
+                    {
+                        model : Pembelian_Detail,
+                        as : 'Pembelian_Detail',
+                        include : [
+                            {
+                                model : Barang_Header,
+                                as : 'Barang_Header'
+                            }
+                        ]
+                    },
+                    {
+                        model : Supplier,
+                        as : 'Supplier'
+                    }
+                ]
+            })
+            for(var a = 0;a < pembelian_header.length;a++){
+                for(var b = 0; b < pembelian_header[a].Pembelian_Detail.length ;b++){
+                    temp_array.push({
+                        id_pembelian : pembelian_header[a].id_pembelian,
+                        id_pesanan_pembelian : pembelian_header[a].id_pesanan_pembelian ? pembelian_header[a].id_pesanan_pembelian : '-' ,
+                        id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
+                        tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
+                        nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
+                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
+                        total : pembelian_header[a].Pembelian_Detail[b].total
+                    })
+                }
+            }
+            res.status(200).json(temp_array);
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
     }
 }

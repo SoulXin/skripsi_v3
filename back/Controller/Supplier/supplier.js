@@ -35,14 +35,14 @@ exports.show_all = (req,res) => {
 }
 
 exports.search = (req,res) => {
-    const {nama_supplier} = req.body;
+    const {nama_supplier,aktif} = req.body;
     Supplier.findAll({
         where : {
             [Op.and] : [{
                 nama_supplier : {
                     [Op.substring] : nama_supplier
                 },
-                aktif : 1
+                aktif : aktif
             }]
         }
     })
@@ -103,6 +103,21 @@ exports.show_status = (req,res) => {
     Supplier.findAll({
         where : {
             aktif : status
+        }
+    })
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
+
+exports.show_detail = (req,res) => {
+    const {id} = req.params;
+    Supplier.findOne({
+        where : {
+            id_supplier : id
         }
     })
     .then((result) => {

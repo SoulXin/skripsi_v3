@@ -1,8 +1,12 @@
 const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
-const Mekanik_Header = require('./mekanik_header');
 
 const Mekanik_Detail = db.sequelize.define('mekanik_detail',{
+    id : {
+        type : Sequelize.INTEGER,
+        primaryKey : true,
+        autoIncrement : true
+    },
     id_mekanik : {
         type : Sequelize.INTEGER
     },

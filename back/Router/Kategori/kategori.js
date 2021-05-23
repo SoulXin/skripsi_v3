@@ -8,6 +8,7 @@ router.post('/search',kategori_Controller.search);
 router.put('/update/:id',kategori_Controller.update);
 router.put('/change_status/:id',kategori_Controller.change_status);
 router.post('/show_status/:status',kategori_Controller.show_status);
+router.get("/show_detail/:id",kategori_Controller.show_detail);
 
 
 module.exports = router;

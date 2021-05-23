@@ -8,7 +8,7 @@ import {Context} from '../../../state_management/context'
 
 const Index = (props) => {
     const componentRef = useRef();
-    const {dataContext} = useContext(Context);
+    const {dataContext,dispatch} = useContext(Context);
 
     const [data,setData] = useState([]);
     const [error,setError] = useState(false);
@@ -23,16 +23,11 @@ const Index = (props) => {
     const [dataService,setDataService] = useState([]);
 
     const [status,setStatus] = useState('');
-    const [tanggalPemesanan,setTanggalPemesanan] = useState('');
 
     // Biaya
     const [totalBarang,setTotalBarang] = useState('');
     const [totalService,setTotalService] = useState('');
 
-    // Mekanik dan nopol
-    const [idMekanik,setIdMekanik] = useState('');
-    const [nomorPolisi,setNomorPolisi] = useState('');
-    const [namaPelanggan,setNamaPelanggan] = useState('');
     
     const [checkRetur,setCheckRetur] = useState('');
 
@@ -56,12 +51,13 @@ const Index = (props) => {
                 setDataBarang(responseBarang.data);
                 setDataService(responseService.data);
                 setIdPenjualan(responsePenjualan.data.id_penjualan);
-                setNomorPolisi(responsePenjualanPelanggan.data.nomor_polisi);
-                setNamaPelanggan(responsePenjualanPelanggan.data.nama_pelanggan);
-                setTanggalPemesanan(responsePenjualan.data.tanggal_penjualan);
                 setStatus(responsePenjualan.data.status);
-                setIdMekanik(responsePenjualan.data.Mekanik_Detail ? responsePenjualan.data.Mekanik_Detail.id_mekanik : '');
                 
+                dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : responsePenjualan.data.tanggal_penjualan});
+                dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : responsePenjualanPelanggan.data.nama_pelanggan});
+                dispatch({type : 'SIMPAN_NOMOR_POLISI',data : responsePenjualanPelanggan.data.nomor_polisi});
+                dispatch({type : 'SIMPAN_ID_MEKANIK',data : responsePenjualan.data.Mekanik_Detail ? responsePenjualan.data.Mekanik_Detail.id_mekanik : ''});
+
                 var totalBarang = 0;
                 var totalService = 0;
                 // Barang
@@ -71,7 +67,7 @@ const Index = (props) => {
                 
                 // Service
                 responseService.data.map((list,index) => {
-                    totalService += list.Jenis_Service.harga;
+                    totalService += list.harga;
                 });
 
                 setTotalBarang(totalBarang);
@@ -99,9 +95,9 @@ const Index = (props) => {
                 }
                 <td>Barang</td>
                 <td>{list.Barang_Header.nama_barang}</td>
-                <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
+                <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
-                <td>Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
+                <td>Rp. {formatMoney(list.harga_jual * list.jumlah)}</td>
             </tr>
         )
     }) : null;
@@ -117,15 +113,15 @@ const Index = (props) => {
                 }
                 <td>Service</td>
                 <td>{list.Jenis_Service.nama}</td>
-                <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                <td>Rp. {formatMoney(list.harga)}</td>
                 <td>1</td>
-                <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                <td>Rp. {formatMoney(list.harga)}</td>
             </tr>
         )
     }) : null;
 
     const viewMekanik = dataMekanik ? dataMekanik.map((list,index) => {
-        if(list.id_mekanik == idMekanik){ 
+        if(list.id_mekanik == dataContext.id_mekanik){ 
             return <option value={list.id_mekanik} key={index} selected>{list.nama}</option>
         }else{
             return <option value={list.id_mekanik} key={index}>{list.nama}</option>
@@ -142,8 +138,8 @@ const Index = (props) => {
                 await axios.delete(`http://localhost:5001/penjualan_pelanggan/delete_detail/${idRowPelanggan}/${idPenjualan}`);
     
                 // Mekanik
-                if(idMekanik){
-                    await axios.delete(`http://localhost:5001/mekanik_detail/delete_penjualan/${idMekanik}/${idPenjualan}`);
+                if(dataContext.id_mekanik){
+                    await axios.delete(`http://localhost:5001/mekanik_detail/delete_penjualan/${dataContext.id_mekanik}/${idPenjualan}`);
                 }
     
                 // Service
@@ -167,16 +163,16 @@ const Index = (props) => {
 
     const handleSave = async () => {
         const dataPenjualanHeader = {
-            tanggal_penjualan : tanggalPemesanan
+            tanggal_penjualan : dataContext.tanggal_penjualan
         }
 
         const dataPenjualanPelanggan = {
-            nomor_polisi : nomorPolisi,
-            nama_pelanggan : namaPelanggan
+            nomor_polisi : dataContext.nomor_polisi,
+            nama_pelanggan : dataContext.nama_pelanggan
         }
 
         const dataPenjualanMekanik = {
-            id_mekanik : idMekanik
+            id_mekanik : dataContext.id_mekanik
         }
 
         try{
@@ -208,6 +204,7 @@ const Index = (props) => {
             }
             await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataUpdate);
             alert('Data Penjualan Berhasil Diubah');
+            dispatch({type : 'RESET_PENJUALAN'});
             props.history.goBack();
         }catch(error){
             console.log(error)
@@ -239,7 +236,7 @@ const Index = (props) => {
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} nopol = {nomorPolisi}/></div>
+                    <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} idPenjualan = {idPenjualan} nopol = {dataContext.nomor_polisi}/></div>
                 </div>
             </div>
 
@@ -255,22 +252,22 @@ const Index = (props) => {
                             <label for="id_penjualan">ID Penjualan</label>
                         </div>
                         <div class="col-3 form-floating mb-3 px-0 mx-auto">
-                            <input type="date" class="form-control" id="tanggal_pemesanan" placeholder={tanggalPemesanan} value={tanggalPemesanan} onChange = {(e) => setTanggalPemesanan(e.target.value)} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
+                            <input type="date" class="form-control" id="tanggal_pemesanan" placeholder={dataContext.tanggal_penjualan} value={dataContext.tanggal_penjualan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value})} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
                             <label for="tanggal_pemesanan">Tanggal Penjualan</label>
                         </div>
 
                         <div class="form-floating mb-3 col-2 px-0 mx-auto">
-                            <input type="text" class="form-control" id="nama_pelanggan" onChange = {(e) => setNamaPelanggan(e.target.value)} value = {namaPelanggan} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
+                            <input type="text" class="form-control" id="nama_pelanggan" onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} value = {dataContext.nama_pelanggan} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
                             <label for="nomor_polisi">Nama Pelanggan</label>
                         </div>
 
                         <div class="form-floating mb-3 col-2 px-0 mx-auto">
-                            <input type="text" class="form-control" id="nomor_polisi" onChange = {(e) => setNomorPolisi(e.target.value)} value = {nomorPolisi} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'} />
+                            <input type="text" class="form-control" id="nomor_polisi" onChange = {(e) => dispatch({type : 'SIMPAN_NOMOR_POLISI',data : e.target.value})} value = {dataContext.nomor_polisi} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'} />
                             <label for="nomor_polisi">Nomor Polisi</label>
                         </div>
      
                         <div class="col-2 form-floating mb-3 px-0 mx-auto">
-                            <select class="form-select" aria-label="Default select example" onChange = {(e => setIdMekanik(e.target.value))}  disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}>
+                            <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_MEKANIK',data : e.target.value})}  disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}>
                                 <option value='' selected>Tidak ada</option>
                                 {viewMekanik}
                             </select>
