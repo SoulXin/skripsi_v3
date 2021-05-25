@@ -74,9 +74,12 @@ exports.search = async (req,res) => {
         }else{
             const response = await Jenis_Service.findAll({
                 where : {
-                    nama : {
-                        [Op.substring] : nama
-                    } 
+                    [Op.and] : [{
+                        nama : {
+                            [Op.substring] : nama
+                        },
+                        aktif : 1
+                    }]
                 }
             })
             res.status(200).json(response);

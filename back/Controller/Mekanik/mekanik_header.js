@@ -147,9 +147,15 @@ exports.search = async (req,res) => {
         }else{
             const response = await Mekanik_Header.findAll({
                 where : {
-                    nama : {
-                        [Op.substring] : nama_mekanik
-                    },
+                    [Op.and] : [
+                        {
+                            nama : {
+                                [Op.substring] : nama_mekanik
+                            },
+                            aktif : 1
+                        },
+                        
+                    ]
                 }
             })
             res.status(200).json(response);

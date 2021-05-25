@@ -72,9 +72,12 @@ exports.search = async (req,res) => {
         }else{
             const response = await Kategori.findAll({
                 where : {
-                    nama_kategori : {
-                        [Op.substring] : nama_kategori
-                    }
+                    [Op.and] : [{
+                        nama_kategori : {
+                            [Op.substring] : nama_kategori
+                        },
+                        aktif : 1
+                    }]
                 }
             })
             res.status(200).json(response);

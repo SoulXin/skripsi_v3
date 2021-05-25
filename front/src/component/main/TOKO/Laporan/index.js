@@ -92,19 +92,19 @@ const Index = () => {
             <div className="row mb-4">
                 <h3 className="border-bottom">Lainnya : </h3>
                 {
-                    !dataContext.lihat_laporan_service ? null : 
+                    // !dataContext.lihat_laporan_service ? null : 
                     <div className="col-2">
                         <Link to = "/laporan_service" className="btn btn-outline-success mx-1 w-100">Service</Link>
                     </div>
                 }
                 {
-                    !dataContext.lihat_laporan_hutang ? null : 
+                    // !dataContext.lihat_laporan_hutang ? null : 
                     <div className="col-2">
                         <Link to = "/laporan_hutang" className="btn btn-outline-success mx-1 w-100">Hutang</Link>
                     </div>
                 }
                 {
-                    !dataContext.lihat_laporan_penyesuaian_stok ? null : 
+                    // !dataContext.lihat_laporan_penyesuaian_stok ? null : 
                     <div className="col-2">
                         <Link to = "/laporan_penyesuaian_stok" className="btn btn-outline-success mx-1 w-100">Penyesuaian</Link>
                     </div>
