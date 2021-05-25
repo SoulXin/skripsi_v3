@@ -63,7 +63,7 @@ const Index = () => {
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
             <div className="row mb-3">
-                <h2 className="col-4">List Peneysuaian Stok</h2>
+                <h2 className="col-4">List Penyesuaian</h2>
                 <button className="btn btn-outline-success col-2" onClick={handleAdd}>Tambah Penyesuaian</button>
             </div>
             

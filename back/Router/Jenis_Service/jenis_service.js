@@ -9,6 +9,7 @@ router.put('/update/:id',jenis_service_Controller.update);
 router.put('/change_status/:id',jenis_service_Controller.change_status);
 router.post('/show_status/:status',jenis_service_Controller.show_status);
 router.get('/show_detail/:id',jenis_service_Controller.show_detail)
+router.get('/show_total_data',jenis_service_Controller.show_total_data)
 
 // Keranjang pelanggan
 router.get('/show_all_service_keranjang/:id',jenis_service_Controller.show_all_service_keranjang);

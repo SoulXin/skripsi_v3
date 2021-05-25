@@ -33,6 +33,15 @@ exports.show_all = (req,res) => {
         res.status(400).end();
     });
 }
+exports.show_total_data = (req,res) => {
+    Supplier.findAll({})
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
 
 exports.search = (req,res) => {
     const {nama_supplier,aktif} = req.body;

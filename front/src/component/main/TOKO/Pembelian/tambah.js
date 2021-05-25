@@ -108,9 +108,9 @@ const Index = (props) => {
                             await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,dataPesananPembelianHeader);
                         }
                         await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
+                        await dispatch({type : 'RESET_PEMBELIAN'});
                         alert('Pembelian berhasil di tambahkan');
                         props.history.goBack();
-                        dispatch({type : 'RESET_PEMBELIAN'});
                     }catch(error){
                         console.log(error);
                     }

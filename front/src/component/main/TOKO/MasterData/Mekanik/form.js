@@ -38,21 +38,26 @@ const Form = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
-                const response = await axios.get(`http://localhost:5001/mekanik_header/show_detail/${tempDetail.id_mekanik}`);
-                console.log(response)
-                setNama(response.data.nama);
-                setNoTelp(response.data.no_telp);
-                setAlamat(response.data.alamat);
-                setGambar(response.data.gambar);
-                setAktif(response.data.aktif);
+                try{
+                    const response = await axios.get(`http://localhost:5001/mekanik_header/show_detail/${tempDetail.id_mekanik}`);
+                    setIdMekanik(response.data.id_mekanik);
+                    setNama(response.data.nama);
+                    setNoTelp(response.data.no_telp);
+                    setAlamat(response.data.alamat);
+                    setGambar(response.data.gambar);
+                    setAktif(response.data.aktif);
+                }catch(error){
+                    console.log(error);
+                }
+            }else{
+                try{
+                    const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_total_data');
+                    setIdMekanik(responseMekanik.data.length > 0 ? responseMekanik.data[responseMekanik.data.length - 1].id_mekanik + 1 : '');
+                }catch(error){
+                    setError(true);
+                }
             }
 
-            try{
-                const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_all');
-                setIdMekanik(props.location.state ? props.location.state.id_mekanik : responseMekanik.data.length > 0 ? responseMekanik.data[responseMekanik.data.length - 1].id_mekanik + 1 : '');
-            }catch(error){
-                setError(true);
-            }
         }
         loadData();
 

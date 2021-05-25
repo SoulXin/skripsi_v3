@@ -175,7 +175,7 @@ const Index = (props) => {
 
             // Header
             await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
-            dispatch({type : 'RESET_PENJUALAN'});
+            await dispatch({type : 'RESET_PENJUALAN'});
             alert('Penjualan berhasil ditambahkan');
             props.history.goBack();
         }catch(error){

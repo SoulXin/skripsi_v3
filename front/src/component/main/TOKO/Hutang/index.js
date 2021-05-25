@@ -16,7 +16,6 @@ const Index = (props) => {
 
     // Variable temp untuk pembayaran hutang
     const [tempPembelian,setTempPembelian] = useState([]);
-    const [tempTotal,setTempTotal] = useState('');
 
     useEffect(() => {
         const loadData = async () => {
@@ -42,7 +41,7 @@ const Index = (props) => {
         )
     }) : null;
 
-    const viewData = data && search ? data.map((list,index) => {
+    const viewData = data ? data.map((list,index) => {
          return (
             <tr key={index}>
                 <td className="p-3" >{list.id_pembelian}</td>
@@ -57,12 +56,13 @@ const Index = (props) => {
     }) : null;
 
     const handleSearch = async () => {
-        if(idSupplier){
+        if(idSupplier != '0'){
             const response = await axios.get(`http://localhost:5001/pembayaran_hutang_header/show_all_hutang_supplier/${idSupplier}`);
             setSearch(true);
             setData(response.data);
         }else{
             setSearch(false);
+            setRefresh(!refresh);
         }
     }
 
@@ -126,7 +126,7 @@ const Index = (props) => {
                     <div className="col">
                         <label>Supplier</label>
                         <select class="form-select" onChange={(e) => setIdSupplier(e.target.value)}>
-                            <option value = "0">Tidak Ada</option>
+                            <option value = "0">Semua</option>
                             {viewSupplier}
                         </select>
                     </div>

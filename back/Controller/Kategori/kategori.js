@@ -28,6 +28,17 @@ exports.show_all = (req,res) => {
     });
 }
 
+exports.show_total_data = (req,res) => {
+    Kategori.findAll({})
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
+
+
 exports.show_detail = (req,res) => {
     const {id} = req.params;
     Kategori.findOne({

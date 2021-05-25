@@ -55,30 +55,34 @@ const Add = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
-                const response = await axios.get(`http://localhost:5001/barang_header/show_detail/${tempDetail.id_barang}`);
-
-                setIdBarang(tempDetail.id_barang);
-                setNama(response.data.nama_barang);
-                setMerek(response.data.merek_barang);
-                setKereta(response.data.jenis_kereta);
-                setHargaBeli(response.data.harga_beli);
-                setHargaJual(response.data.harga_jual);
-                setGambar(response.data.gambar); // => Gambar langsung tampilkan ke div container
-                setKeterangan(response.data.keterangan);
-                setStokMin(response.data.Barang_Detail.stok_minimal);
-                setStok(response.data.Barang_Detail.stok);
-                setSelectedKategori(response.data.Barang_Detail.Kategori);
-                setAktif(response.data.aktif);
+                try{
+                    const response = await axios.get(`http://localhost:5001/barang_header/show_detail/${tempDetail.id_barang}`);
+                    setIdBarang(tempDetail.id_barang);
+                    setNama(response.data.nama_barang);
+                    setMerek(response.data.merek_barang);
+                    setKereta(response.data.jenis_kereta);
+                    setHargaBeli(response.data.harga_beli);
+                    setHargaJual(response.data.harga_jual);
+                    setGambar(response.data.gambar); // => Gambar langsung tampilkan ke div container
+                    setKeterangan(response.data.keterangan);
+                    setStokMin(response.data.Barang_Detail.stok_minimal);
+                    setStok(response.data.Barang_Detail.stok);
+                    setSelectedKategori(response.data.Barang_Detail.Kategori);
+                    setAktif(response.data.aktif);
+                }catch(error){
+                    console.log(error);
+                }
+            }else{
+                try{
+                    const responseTotalData = await axios.get('http://localhost:5001/barang_header/show_total_data');
+                    const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
+                    setIdBarang(responseTotalData.data.length > 0 ? responseTotalData.data[responseTotalData.data.length - 1].id_barang + 1 : '-');
+                    setKategori(responseKategori.data);
+                }catch(error){
+                    setError(true);
+                }
             }
 
-            try{
-                const responseBarang = await axios.get('http://localhost:5001/barang_header/show_all');
-                const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
-                setIdBarang(props.location.state ? props.location.state.id_barang : responseBarang.data.length > 0 ? responseBarang.data[responseBarang.data.length - 1].id_barang + 1 : '-');
-                setKategori(responseKategori.data);
-            }catch(error){
-                setError(true);
-            }
         }
         loadData();
 

@@ -22,7 +22,7 @@ router.put('/change_status/:id',barang_header_Controller.change_status);
 router.get('/show_all_limit',barang_header_Controller.show_all_limit);
 router.post('/search_limit',barang_header_Controller.search_limit);
 router.post('/show_status/:status',barang_header_Controller.show_status);
-
+router.get('/show_total_data',barang_header_Controller.show_total_data);
 
 // Keranjang pelanggan
 router.get('/show_all_barang_keranjang/:id',barang_header_Controller.show_all_barang_keranjang);

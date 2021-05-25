@@ -20,5 +20,6 @@ router.put('/change_status/:id',mekanik_header_Controller.change_status);
 router.post('/search',mekanik_header_Controller.search);
 router.post('/show_status/:status',mekanik_header_Controller.show_status);
 router.get('/show_detail/:id',mekanik_header_Controller.show_detail)
+router.get('/show_total_data',mekanik_header_Controller.show_total_data)
 
 module.exports = router;

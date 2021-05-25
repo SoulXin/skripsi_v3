@@ -39,23 +39,29 @@ const Form = (props) => {
             if(props.location.state){
                 setDetail(true);
                 var tempDetail = props.location.state; // => variable detail
-                const response = await axios.get(`http://localhost:5001/supplier/show_detail/${tempDetail.id_supplier}`);
-                setNama(response.data.nama_supplier);
-                setTelepon(response.data.nomor_telepon_supplier);
-                setEmail(response.data.email_supplier);
-                setAlamat(response.data.alamat_supplier);
-                setBank(response.data.bank_supplier);
-                setNoRekening(response.data.no_rek_supplier);
-                setKeterangan(response.data.keterangan);
-                setAktif(response.data.aktif);
+                try{
+                    const response = await axios.get(`http://localhost:5001/supplier/show_detail/${tempDetail.id_supplier}`);
+                    setIdSupplier(response.data.id_supplier);
+                    setNama(response.data.nama_supplier);
+                    setTelepon(response.data.nomor_telepon_supplier);
+                    setEmail(response.data.email_supplier);
+                    setAlamat(response.data.alamat_supplier);
+                    setBank(response.data.bank_supplier);
+                    setNoRekening(response.data.no_rek_supplier);
+                    setKeterangan(response.data.keterangan);
+                    setAktif(response.data.aktif);
+                }catch(error){
+                    console.log(error);
+                }
+            }else{
+                try{
+                    const responseSupplier = await axios.get('http://localhost:5001/supplier/show_total_data');
+                    setIdSupplier(responseSupplier.data.length > 0 ? responseSupplier.data[responseSupplier.data.length - 1].id_supplier + 1 : '');
+                }catch(error){
+                    setError(true);
+                }
             }
 
-            try{
-                const responseSupplier = await axios.get('http://localhost:5001/supplier/show_all');
-                setIdSupplier(props.location.state ? props.location.state.id_supplier : responseSupplier.data.length > 0 ? responseSupplier.data[responseSupplier.data.length - 1].id_supplier + 1 : '');
-            }catch(error){
-                setError(true);
-            }
         }
         loadData();
 

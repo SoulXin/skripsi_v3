@@ -9,6 +9,7 @@ router.put('/update/:id',kategori_Controller.update);
 router.put('/change_status/:id',kategori_Controller.change_status);
 router.post('/show_status/:status',kategori_Controller.show_status);
 router.get("/show_detail/:id",kategori_Controller.show_detail);
+router.get("/show_total_data",kategori_Controller.show_total_data);
 
 
 module.exports = router;

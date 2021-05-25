@@ -30,18 +30,24 @@ const Form = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
-                const response = await axios.get(`http://localhost:5001/jenis_service/show_detail/${tempDetail.id_service}`);
-                setNama(response.data.nama);
-                setHarga(response.data.harga);
-                setAktif(response.data.aktif);
+                try{
+                    const response = await axios.get(`http://localhost:5001/jenis_service/show_detail/${tempDetail.id_service}`);
+                    setIdService(response.data.id_service);
+                    setNama(response.data.nama);
+                    setHarga(response.data.harga);
+                    setAktif(response.data.aktif);
+                }catch(error){
+                    console.log(error);
+                }
+            }else{
+                try{
+                    const responseJenisService = await axios.get('http://localhost:5001/jenis_service/show_total_data');
+                    setIdService(responseJenisService.data.length > 0 ? responseJenisService.data[responseJenisService.data.length - 1].id_service + 1 : '');
+                }catch(error){
+                    setError(true);
+                }
             }
 
-            try{
-                const responseJenisService = await axios.get('http://localhost:5001/jenis_service/show_all');
-                setIdService(props.location.state ? props.location.state.id_service : responseJenisService.data.length > 0 ? responseJenisService.data[responseJenisService.data.length - 1].id_service + 1 : '');
-            }catch(error){
-                setError(true);
-            }
         }
         loadData();
 

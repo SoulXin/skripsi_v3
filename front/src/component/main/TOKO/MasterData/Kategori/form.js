@@ -28,17 +28,23 @@ const Form = (props) => {
                 setDetail(true);
 
                 var tempDetail = props.location.state; // => variable detail
-                const response = await axios.get(`http://localhost:5001/kategori/show_detail/${tempDetail.id_kategori}`);
-                setNama(response.data.nama_kategori);
-                setAktif(response.data.aktif);
+                try{
+                    const response = await axios.get(`http://localhost:5001/kategori/show_detail/${tempDetail.id_kategori}`);
+                    setIdKategori(response.data.id_kategori);
+                    setNama(response.data.nama_kategori);
+                    setAktif(response.data.aktif);
+                }catch(error){
+                    console.log(error);
+                }
+            }else{
+                try{
+                    const responseKategori = await axios.get('http://localhost:5001/kategori/show_total_data');
+                    setIdKategori(responseKategori.data.length > 0 ? responseKategori.data[responseKategori.data.length - 1].id_kategori + 1 : '-');
+                }catch(error){
+                    setError(true);
+                }
             }
 
-            try{
-                const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
-                setIdKategori(props.location.state ? props.location.state.id_kategori : responseKategori.data.length > 0 ? responseKategori.data[responseKategori.data.length - 1].id_kategori + 1 : '-');
-            }catch(error){
-                setError(true);
-            }
         }
         loadData();
 
