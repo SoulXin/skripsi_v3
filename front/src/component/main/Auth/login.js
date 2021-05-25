@@ -28,7 +28,7 @@ const Login = (props) => {
         <div class="container mt-5">
             <div class="row">
                 <div class = "col-md-6 col-lg-4 mx-auto">
-                    <h1>Login Pelanggan</h1>
+                    <h1>Login</h1>
                     <form style={{position: 'relative'}} onSubmit={handleSubmit}>
                         <div class="form-group">
                             <label for="username">Username</label>
@@ -38,9 +38,6 @@ const Login = (props) => {
                             <label for="password">Password</label>
                             <input type="password" class="form-control" id="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)}/>
                         </div>
-                        <a href="">
-                            Belum Punya Akun ? 
-                        </a>
                         <button type="submit" class="btn btn-primary mt-2" style={{position: 'absolute', right: '0'}}>Login</button>
                     </form>
                 </div>
