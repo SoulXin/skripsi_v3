@@ -14,7 +14,7 @@ const Index = () => {
     useEffect(() => {
         showNavbar('header-toggle','nav-bar','body-pd','header')
         const loadData = async () => {
-            // await axios.get(`http://localhost:5001/fix/delete`);
+            await axios.get(`http://localhost:5001/fix/delete`);
             const response = await axios.get(`http://localhost:5001/hak_akses_user/show_detail/${JSON.parse(localStorage.getItem('userToken')).user_id}`);
             for(var a = 0;a < response.data.length;a++){
                 if(response.data[a].hak_akses_id == 1){ // => Master Barang
