@@ -46,7 +46,7 @@ const Index = (props) => {
         try{
             const data = {
                 id_retur_pembelian : idRetur,
-                id_pembelian : e.id_pembelian
+                id_pembelian : e.id_pembelian,
             }
 
             const dataUpdate = {

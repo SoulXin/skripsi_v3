@@ -81,22 +81,34 @@ exports.update = (req,res) => {
     });
 }
 
-exports.delete = (req,res) => {
+exports.delete = async (req,res) => {
     const {id,id_barang} = req.params;
-    Retur_Penjualan_Detail.destroy({
-        where : {
-            [Op.and] : [
-                {id_retur_penjualan : id},
-                {id_barang : id_barang}
-            ]
-        }
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
+    try{
+        if(id_barang != '0'){
+            const result = await Retur_Penjualan_Detail.destroy({
+                where : {
+                    [Op.and] : [
+                        {id_retur_penjualan : id},
+                        {id_barang : id_barang}
+                    ]
+                }
+            })
+            res.status(200).json(result);
+        }else{
+            const result = await Retur_Penjualan_Detail.destroy({
+                where : {
+                    [Op.and] : [
+                        {id_retur_penjualan : id},
+                        {max : id_barang}
+                    ]
+                }
+            })
+            res.status(200).json(result);
+        }   
+    }catch(err){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.check_penjualan = (req,res) => {

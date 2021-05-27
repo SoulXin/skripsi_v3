@@ -2,16 +2,12 @@ const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
 
 const Penyesuaian_Detail = db.sequelize.define('penyesuaian_detail',{
-    id : {
+    id_penyesuaian : {
         type : Sequelize.INTEGER,
         primaryKey : true,
-        autoIncrement : true
-    },
-    id_penyesuaian : {
-        type : Sequelize.INTEGER
     },
     id_barang : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     jumlah_fisik: {
         type : Sequelize.INTEGER

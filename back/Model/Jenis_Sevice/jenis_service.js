@@ -5,9 +5,8 @@ const Penjualan_Service = require('../Penjualan/penjualan_service');
 
 const Jenis_Service = db.sequelize.define('jenis_service',{
     id_service: {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        type : Sequelize.STRING,
+        primaryKey : true
     },
     nama : {
         type : Sequelize.STRING

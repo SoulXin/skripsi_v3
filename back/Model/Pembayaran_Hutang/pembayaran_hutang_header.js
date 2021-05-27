@@ -12,7 +12,7 @@ const Pembayaran_Hutang_Header = db.sequelize.define('pembayaran_hutang_header',
         type : Sequelize.DATE
     },
     id_supplier  : {
-        type : Sequelize.INTEGER,
+        type : Sequelize.STRING,
         allowNull: true
     },
     jenis_pembayaran : {

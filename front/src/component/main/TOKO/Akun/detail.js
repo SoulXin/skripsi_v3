@@ -41,7 +41,7 @@ const Add = (props) => {
                         <input class="form-check-input" type="checkbox" value={list.hak_akses_id} onChange = {(e) => handleChange(e,"lihat")} checked = {list.Hak_Akses_User.lihat}/>
                     </td>
                     {
-                        list.akses.includes('Laporan') || list.akses.includes('Informasi') ? 
+                        list.akses.includes('Laporan') || list.akses.includes('Informasi') || list.akses.includes('Pengaturan') ? 
                         <>
                             <td className="p-3 text-center">
                             </td>

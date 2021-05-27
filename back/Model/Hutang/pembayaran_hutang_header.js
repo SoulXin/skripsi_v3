@@ -16,7 +16,7 @@ const Pembayaran_Hutang_Header = db.sequelize.define('pembayaran_hutang_header',
         defaultValue: true
     },
     id_supplier  : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     total: {
         type : Sequelize.INTEGER

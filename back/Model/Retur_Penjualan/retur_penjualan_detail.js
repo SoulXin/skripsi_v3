@@ -2,20 +2,15 @@ const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
 
 const Retur_Penjualan_Detail = db.sequelize.define('retur_penjualan_detail',{
-    id : {
+    id_retur_penjualan  : {
         type : Sequelize.INTEGER,
         primaryKey : true,
-        autoIncrement : true
-    },
-    id_retur_penjualan  : {
-        type : Sequelize.INTEGER
     },
     id_penjualan  : {
         type : Sequelize.INTEGER
     },
     id_barang : {
-        type : Sequelize.INTEGER,
-        defaultValue: true
+        type : Sequelize.STRING,
     },
     max : {
         type : Sequelize.INTEGER

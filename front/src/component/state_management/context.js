@@ -80,6 +80,9 @@ const ContextProvider = (props) => {
         lihat_laporan_hutang : false,
         lihat_laporan_penyesuaian_stok : false,
 
+        // Pengaturan
+        lihat_pengaturan : false,
+        
         // Penjualan
         tanggal_penjualan : '',
         nama_pelanggan : '',

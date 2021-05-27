@@ -7,9 +7,8 @@ const Retur_Pembelian_Header = require('../Retur_Pembelian/retur_pembelian_heade
 
 const Supplier = db.sequelize.define('supplier',{
     id_supplier: {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        type : Sequelize.STRING,
+        primaryKey : true
     },
     nama_supplier : {
         type : Sequelize.STRING

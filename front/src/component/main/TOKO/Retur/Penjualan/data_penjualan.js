@@ -62,7 +62,6 @@ const Index = (props) => {
             const data = {
                 id_retur_penjualan : idRetur,
                 id_penjualan : e.id_penjualan,
-                id_barang : e.Penjualan_Detail[0].id_barang
             }
 
             const dataUpdate = {

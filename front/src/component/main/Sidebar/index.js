@@ -73,6 +73,8 @@ const Index = () => {
                     response.data[a].lihat ? dispatch({type : 'LIHAT_MANAJEMEN_AKUN',data : true}) : dispatch({type : 'LIHAT_MANAJEMEN_AKUN',data : false});
                     response.data[a].ubah ? dispatch({type : 'EDIT_MANAJEMEN_AKUN',data : true}) : dispatch({type : 'EDIT_MANAJEMEN_AKUN',data : false});
                     response.data[a].hapus ? dispatch({type : 'HAPUS_MANAJEMEN_AKUN',data : true}) : dispatch({type : 'HAPUS_MANAJEMEN_AKUN',data : false}); 
+                }else if(response.data[a].hak_akses_id == 29){ // => Pengaturan
+                    response.data[a].lihat ? dispatch({type : 'LIHAT_PENGATURAN',data : true}) : dispatch({type : 'LIHAT_PENGATURAN',data : false});
                 }else if(response.data[a].Hak_Akses.akses == 'Laporan Barang'){
                     response.data[a].lihat ? dispatch({type : 'LIHAT_LAPORAN_BARANG',data : true}) : dispatch({type : 'LIHAT_LAPORAN_BARANG',data : false});
                     setLaporan(true);
@@ -271,6 +273,10 @@ linkColor.forEach(l=> l.addEventListener('click', colorLink))
                             <Link to="/index_laporan" class={laporan ? "nav__link" : "nav__link visually-hidden"}>
                                 <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
                                 <span class="nav__name">Laporan</span>
+                            </Link>
+                            <Link to="/pengaturan" class={dataContext.lihat_pengaturan ? "nav__link" : "nav__link visually-hidden"}>
+                                <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
+                                <span class="nav__name">Pengaturan</span>
                             </Link>
                         </div>
                     </div> 

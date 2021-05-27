@@ -69,6 +69,7 @@ const Index = (props) => {
                         <Link to={{ pathname : '/edit_barang_pesanan_pembelian',state : list }} className="btn btn-outline-success mx-1">Detail</Link>
                     </td>
                 }
+                <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.Barang_Header.merek_barang}</td>
                 <td className="p-3">{list.Barang_Header.harga_beli}</td>
@@ -191,6 +192,7 @@ const Index = (props) => {
                                     status == "Selesai" || checkPembelian || !dataContext.edit_pesanan_pembelian ? null :
                                     <th className="p-3"></th>
                                 }
+                                <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
                                 <th className="p-3">Merek</th>
                                 <th className="p-3">Harga Beli</th>

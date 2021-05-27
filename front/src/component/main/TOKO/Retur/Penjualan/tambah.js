@@ -110,6 +110,7 @@ const Index = (props) => {
                     await axios.put(`http://localhost:5001/retur_penjualan_header/update/${idRetur}`,dataUpdate);
                     await props.history.goBack();
                     setRefresh(!refresh);
+                    dispatch({type : 'RETSET_RETUR'});
                     alert('Retur penjualan berhasil disimpan');
                 }else{
                     alert('Barang tidak boleh kosong')

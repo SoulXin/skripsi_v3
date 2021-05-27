@@ -1,33 +1,40 @@
 const Mekanik_Header = require('../../Model/Mekanik/mekanik_header');
 const { Op } = require("sequelize");
 
-exports.register = (req,res) => {
-    const {nama,no_telp,alamat} = req.body;
-    if(req.file){
-        Mekanik_Header.create({
-            nama : nama,
-            no_telp : no_telp,
-            alamat : alamat,
-            gambar : req.file.filename
-        })
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
-            res.status(400).end();
-        });
-    }else{
-        Mekanik_Header.create({
-            nama : nama,
-            no_telp : no_telp,
-            alamat : alamat
-        })
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
-            res.status(400).end();
-        });
+exports.register = async (req,res) => {
+    const {id_mekanik,nama,no_telp,alamat} = req.body;
+    try{
+        if(req.file){
+            const search = await Mekanik_Header.findOne({ where : {id_mekanik : id_mekanik}});
+            if(!search){
+                const result = await Mekanik_Header.create({
+                    id_mekanik : id_mekanik,
+                    nama : nama,
+                    no_telp : no_telp,
+                    alamat : alamat,
+                    gambar : req.file.filename
+                })
+                res.status(200).json(result);
+            }else{
+                res.status(200).send("Id Mekanik Sudah Dipakai");
+            }
+        }else{
+            const search = await Mekanik_Header.findOne({ where : {id_mekanik : id_mekanik}});
+            if(!search){
+                const result = await Mekanik_Header.create({
+                    id_mekanik : id_mekanik,
+                    nama : nama,
+                    no_telp : no_telp,
+                    alamat : alamat
+                })
+                res.status(200).json(result);
+            }else{
+                res.status(200).send("Id Mekanik Sudah Dipakai");
+            }
+        }
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
     }
 }
 

@@ -2,13 +2,9 @@ const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
 
 const Mekanik_Detail = db.sequelize.define('mekanik_detail',{
-    id : {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
-    },
     id_mekanik : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING,
+        primaryKey : true
     },
     id_penjualan : {
         type : Sequelize.INTEGER

@@ -53,13 +53,6 @@ const Form = (props) => {
                 }catch(error){
                     console.log(error);
                 }
-            }else{
-                try{
-                    const responseSupplier = await axios.get('http://localhost:5001/supplier/show_total_data');
-                    setIdSupplier(responseSupplier.data.length > 0 ? responseSupplier.data[responseSupplier.data.length - 1].id_supplier + 1 : '');
-                }catch(error){
-                    setError(true);
-                }
             }
 
         }
@@ -85,6 +78,7 @@ const Form = (props) => {
         e.preventDefault();
 
         const data = {
+            id_supplier : idSupplier,
             nama_supplier : nama,
             nomor_telepon_supplier : telepon,
             email_supplier : email,
@@ -105,9 +99,13 @@ const Form = (props) => {
             }
         }else{ // => tambah
             try{
-                await axios.post('http://localhost:5001/supplier/register',data);
-                alert('Data supplier berhasil ditambah');
-                props.history.goBack();
+                const response = await axios.post('http://localhost:5001/supplier/register',data);
+                if(response.data != 'Id Supplier Sudah Dipakai'){
+                    alert('Data supplier berhasil ditambah');
+                    props.history.goBack();
+                }else{
+                    alert(response.data);
+                }
             }catch(error){
                 setError(true);
             }
@@ -125,7 +123,7 @@ const Form = (props) => {
 
             <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" id="id_supplier" value={idSupplier} disabled/>
+                    <input type="text" className="form-control" id="id_supplier" value={idSupplier} onChange = {(e)=>setIdSupplier(e.target.value)} disabled={detail ? true : false}/>
                     <label htmlFor="id_supplier" className="form-label">Id Supplier</label>
                 </div>
                 <div className="form-floating mb-3">

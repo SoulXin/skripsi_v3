@@ -39,13 +39,6 @@ const Form = (props) => {
                 }catch(error){
                     console.log(error);
                 }
-            }else{
-                try{
-                    const responseJenisService = await axios.get('http://localhost:5001/jenis_service/show_total_data');
-                    setIdService(responseJenisService.data.length > 0 ? responseJenisService.data[responseJenisService.data.length - 1].id_service + 1 : '');
-                }catch(error){
-                    setError(true);
-                }
             }
 
         }
@@ -71,6 +64,7 @@ const Form = (props) => {
         e.preventDefault();
 
         const data = {
+            id_service : idService,
             nama : nama,
             harga : harga
         }
@@ -86,9 +80,13 @@ const Form = (props) => {
             }
         }else{ // => tambah
             try{
-                await axios.post('http://localhost:5001/jenis_service/register',data);
-                alert('Data service berhasil ditambah');
-                props.history.goBack();
+                const response = await axios.post('http://localhost:5001/jenis_service/register',data);
+                if(response.data != 'Id Service Sudah Dipakai'){
+                    alert('Data service berhasil ditambah');
+                    props.history.goBack();
+                }else{
+                    alert(response.data);
+                }
             }catch(error){
                 setError(true);
             }
@@ -106,7 +104,7 @@ const Form = (props) => {
 
             <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" id="id_service" value={idService} disabled/>
+                    <input type="text" className="form-control" id="id_service" value={idService} onChange = {(e) => setIdService(e.target.value)} disabled = {detail ? true : false}/>
                     <label htmlFor="id_service" className="form-label">Id Service</label>
                 </div>
                 <div className="form-floating mb-3">

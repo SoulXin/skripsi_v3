@@ -4,9 +4,8 @@ const Mekanik_Detail = require('./mekanik_detail');
 
 const Mekanik_Header = db.sequelize.define('mekanik_header',{
     id_mekanik : {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        type : Sequelize.STRING,
+        primaryKey : true
     },
     nama : {
         type : Sequelize.STRING

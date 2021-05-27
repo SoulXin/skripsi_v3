@@ -92,6 +92,9 @@ app.use("/retur_pembelian_detail",require("./Router/Retur_Pembelian/retur_pembel
 app.use("/retur_penjualan_header",require("./Router/Retur_Penjualan/retur_penjualan_header"));
 app.use("/retur_penjualan_detail",require("./Router/Retur_Penjualan/retur_penjualan_detail"));
 
+// Penomoran
+app.use("/penomoran",require("./Router/Penomoran/index"));
+
 const port = process.env.PORT || 5001;
 app.listen(port, (error) => {
   if (error) throw error;

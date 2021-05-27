@@ -49,13 +49,6 @@ const Form = (props) => {
                 }catch(error){
                     console.log(error);
                 }
-            }else{
-                try{
-                    const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_total_data');
-                    setIdMekanik(responseMekanik.data.length > 0 ? responseMekanik.data[responseMekanik.data.length - 1].id_mekanik + 1 : '');
-                }catch(error){
-                    setError(true);
-                }
             }
 
         }
@@ -91,6 +84,7 @@ const Form = (props) => {
         e.preventDefault();
 
         const data = new FormData()
+        data.append('id_mekanik',idMekanik)
         data.append('nama',nama)
         data.append('no_telp',noTelp)
         data.append('alamat',alamat)
@@ -107,9 +101,13 @@ const Form = (props) => {
             }
         }else{ // => tambah
             try{
-                await axios.post('http://localhost:5001/mekanik_header/register',data);
-                alert('Data mekanik berhasil ditambah');
-                props.history.goBack();
+                const response = await axios.post('http://localhost:5001/mekanik_header/register',data);
+                if(response.data != 'Id Mekanik Sudah Dipakai'){
+                    alert('Data mekanik berhasil ditambah');
+                    props.history.goBack();
+                }else{
+                    alert(response.data);
+                }
             }catch(error){
                 setError(true);
             }
@@ -128,7 +126,7 @@ const Form = (props) => {
             <form className="row" onSubmit={handleSubmit}>
                 <div className="col-9">
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="id_mekanik" value={idMekanik} disabled/>
+                        <input type="text" className="form-control" id="id_mekanik" value={idMekanik} onChange = {(e)=> setIdMekanik(e.target.value)} disabled={detail ? true : false}/>
                         <label htmlFor="id_mekanik" className="form-label">Id Mekanik</label>
                     </div>
                     <div className="form-floating mb-3">

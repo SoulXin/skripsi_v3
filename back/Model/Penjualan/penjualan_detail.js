@@ -3,15 +3,12 @@ const db = require ('../../Database/db');
 const Penjualan_Service = require('./penjualan_service');
 
 const Penjualan_Detail = db.sequelize.define('penjualan_detail',{
-    id : {
+    id_penjualan : {
         type : Sequelize.INTEGER,
         primaryKey : true,
     },
-    id_penjualan : {
-        type : Sequelize.INTEGER,
-    },
     id_barang : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     harga_jual: {
         type : Sequelize.INTEGER

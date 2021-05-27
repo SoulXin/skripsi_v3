@@ -1,23 +1,29 @@
 const Supplier = require('../../Model/Supplier/supplier');
 const { Op } = require("sequelize");
 
-exports.register = (req,res) => {
-    const {nama_supplier,nomor_telepon_supplier,email_supplier,alamat_supplier,bank_supplier,no_rek_supplier,keterangan} = req.body;
-    Supplier.create({
-        nama_supplier : nama_supplier,
-        nomor_telepon_supplier : nomor_telepon_supplier,
-        email_supplier : email_supplier,
-        alamat_supplier : alamat_supplier,
-        bank_supplier : bank_supplier,
-        no_rek_supplier : no_rek_supplier,
-        keterangan : keterangan
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
+exports.register = async (req,res) => {
+    const {id_supplier,nama_supplier,nomor_telepon_supplier,email_supplier,alamat_supplier,bank_supplier,no_rek_supplier,keterangan} = req.body;
+    try{
+        const search = await Supplier.findOne({ where : {id_supplier : id_supplier}});
+        if(!search){
+            const result = await Supplier.create({
+                id_supplier : id_supplier,
+                nama_supplier : nama_supplier,
+                nomor_telepon_supplier : nomor_telepon_supplier,
+                email_supplier : email_supplier,
+                alamat_supplier : alamat_supplier,
+                bank_supplier : bank_supplier,
+                no_rek_supplier : no_rek_supplier,
+                keterangan : keterangan
+            });
+            res.status(200).json(result);
+        }else{
+            res.status(200).send("Id Supplier Sudah Dipakai");
+        }
+    }catch(error){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.show_all = (req,res) => {
@@ -66,8 +72,9 @@ exports.search = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {nama_supplier,nomor_telepon_supplier,email_supplier,alamat_supplier,bank_supplier,no_rek_supplier,keterangan} = req.body;
+    const {id_supplier,nama_supplier,nomor_telepon_supplier,email_supplier,alamat_supplier,bank_supplier,no_rek_supplier,keterangan} = req.body;
     Supplier.update({
+        id_supplier : id_supplier,
         nama_supplier : nama_supplier,
         nomor_telepon_supplier : nomor_telepon_supplier,
         email_supplier : email_supplier,

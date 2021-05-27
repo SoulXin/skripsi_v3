@@ -69,6 +69,7 @@ const Index = (props) => {
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Barang',list.id_penjualan,list.id_barang)}>Hapus</button>
                 </td>
                 <td>Barang</td>
+                <td>{list.Barang_Header.id_barang}</td>
                 <td>{list.Barang_Header.nama_barang}</td>
                 <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
@@ -85,6 +86,7 @@ const Index = (props) => {
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Service',list.id_penjualan,list.id_service)}>Hapus</button>
                 </td>
                 <td>Service</td>
+                <td>{list.Jenis_Service.id_service}</td>
                 <td>{list.Jenis_Service.nama}</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
                 <td>1</td>
@@ -246,6 +248,7 @@ const Index = (props) => {
                                 <tr>
                                     <th className="p-3"></th>
                                     <th className="p-3">Jenis</th>
+                                    <th className="p-3">ID Barang / Service</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
                                     <th className="p-3">Jumlah</th>

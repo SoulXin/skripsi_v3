@@ -11,9 +11,8 @@ const Pesanan_Pembelian_Detail = require('../Pesanan_Pembelian/pesanan_pembelian
 
 const Barang_Header = db.sequelize.define('barang_header',{
     id_barang : {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        type : Sequelize.STRING,
+        primaryKey : true
     },
     nama_barang : {
         type : Sequelize.STRING

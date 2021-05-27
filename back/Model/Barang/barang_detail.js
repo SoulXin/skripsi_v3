@@ -3,12 +3,11 @@ const db = require ('../../Database/db');
 
 const Barang_Detail = db.sequelize.define('barang_detail',{
     id_barang : {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
+        type : Sequelize.STRING,
+        primaryKey : true
     },
     id_kategori : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     stok_minimal : {
         type : Sequelize.INTEGER

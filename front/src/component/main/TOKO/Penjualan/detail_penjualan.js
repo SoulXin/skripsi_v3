@@ -94,6 +94,7 @@ const Index = (props) => {
                     </td>
                 }
                 <td>Barang</td>
+                <td>{list.Barang_Header.id_barang}</td>
                 <td>{list.Barang_Header.nama_barang}</td>
                 <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
@@ -112,6 +113,7 @@ const Index = (props) => {
                     </td>
                 }
                 <td>Service</td>
+                <td>{list.Jenis_Service.id_service}</td>
                 <td>{list.Jenis_Service.nama}</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
                 <td>1</td>
@@ -287,6 +289,7 @@ const Index = (props) => {
                                         null : <th className="p-3"></th>
                                     }
                                     <th className="p-3">Jenis</th>
+                                    <th className="p-3">ID Barang / Service</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
                                     <th className="p-3">Jumlah</th>

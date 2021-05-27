@@ -2,16 +2,12 @@ const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
 
 const Pesanan_Pembelian_Detail = db.sequelize.define('pesanan_pembelian_detail',{
-    id: {
-        type : Sequelize.INTEGER,
-        primaryKey : true,
-        autoIncrement : true
-    },
     id_pesanan_pembelian: {
         type : Sequelize.INTEGER,
+        primaryKey : true
     },
     id_barang : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     harga_beli  : {
         type : Sequelize.INTEGER

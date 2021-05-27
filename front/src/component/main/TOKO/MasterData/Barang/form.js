@@ -74,9 +74,7 @@ const Add = (props) => {
                 }
             }else{
                 try{
-                    const responseTotalData = await axios.get('http://localhost:5001/barang_header/show_total_data');
                     const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
-                    setIdBarang(responseTotalData.data.length > 0 ? responseTotalData.data[responseTotalData.data.length - 1].id_barang + 1 : '-');
                     setKategori(responseKategori.data);
                 }catch(error){
                     setError(true);
@@ -123,6 +121,7 @@ const Add = (props) => {
         e.preventDefault();
 
         const data = new FormData()
+        data.append('id_barang',idBarang)
         data.append('nama_barang',nama)
         data.append('merek_barang',merek)
         data.append('jenis_kereta',kereta)
@@ -149,16 +148,21 @@ const Add = (props) => {
         }else{ // => tambah
             try{
                 if(nama && merek && kereta && hargaBeli && hargaJual && stokMin && stok){
-                    const responseBarangHeader = await axios.post('http://localhost:5001/barang_header/register',data);
                     const dataBarangDetail  = {
-                        id_barang : responseBarangHeader.data.id_barang,
+                        id_barang : idBarang,
                         id_kategori : selectedKategori.id_kategori,
                         stok_minimal : stokMin,
                         stok : stok
                     }
-                    await axios.post('http://localhost:5001/barang_detail/register',dataBarangDetail);
-                    alert('Data barang berhasil ditambah');
-                    props.history.goBack();
+                    
+                    const responseHeader = await axios.post('http://localhost:5001/barang_header/register',data);
+                    if(responseHeader.data != 'Id Barang Sudah Dipakai'){
+                        await axios.post('http://localhost:5001/barang_detail/register',dataBarangDetail);
+                        alert('Data barang berhasil ditambah');
+                        props.history.goBack();
+                    }else{
+                        alert(responseHeader.data);
+                    }
                 } else{
                     alert('Data Tidak Boleh Kosong');
                 }
@@ -181,7 +185,7 @@ const Add = (props) => {
                 <div className="col-9">
 
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="id_barang" value={idBarang} disabled/>
+                        <input type="text" className="form-control" id="id_barang" value={idBarang} onChange = {(e) => setIdBarang(e.target.value)} disabled = {detail ? true : false}/>
                         <label htmlFor="id_barang" className="form-label">Id Barang</label>
                     </div>
                     <div className="form-floating mb-3">

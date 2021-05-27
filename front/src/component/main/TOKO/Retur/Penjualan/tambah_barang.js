@@ -51,7 +51,6 @@ const Index = (props) => {
     }) : null;
 
     const handleAdd = async (e) => {
-        console.log(e)
         const checkKetersediaan = dataPenyesuaianDetail.filter((list) => list.id_barang === e.id_barang && list.id_retur_penjualan === idRetur && list.total);
 
         try{
@@ -68,7 +67,6 @@ const Index = (props) => {
                             jumlah : jumlah,
                             total : e.harga_jual * jumlah 
                         }
-                        await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
                         await axios.post(`http://localhost:5001/retur_penjualan_detail/register`, dataTambah);
                         setRefresh(!refresh);
                         alert('Barang berhasil di tambahkan');

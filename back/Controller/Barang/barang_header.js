@@ -5,39 +5,51 @@ const { Op } = require("sequelize");
 const Keranjang_Barang = require('../../Model/Keranjang/keranjang_barang');
 const { Sequelize } = require('../../Database/db');
 
-exports.register = (req,res) => {
-    const {nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual} = req.body;
+exports.register = async (req,res) => {
+    const {id_barang,nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual} = req.body;
     if(req.file){
-        Barang_Header.create({
-            nama_barang : nama_barang,
-            merek_barang : merek_barang,
-            jenis_kereta : jenis_kereta,
-            keterangan : keterangan,
-            harga_beli : harga_beli,
-            harga_jual : harga_jual,
-            gambar : req.file.filename
-        })
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
+        try{
+            const search = await Barang_Header.findOne({ where : {id_barang : id_barang}});
+            if(!search){
+                const result = await Barang_Header.create({
+                    id_barang : id_barang,
+                    nama_barang : nama_barang,
+                    merek_barang : merek_barang,
+                    jenis_kereta : jenis_kereta,
+                    keterangan : keterangan,
+                    harga_beli : harga_beli,
+                    harga_jual : harga_jual,
+                    gambar : req.file.filename
+                });
+                res.status(200).json(result);
+            }else{
+                res.status(200).send("Id Barang Sudah Dipakai");
+            }
+        }catch(error){
             res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
             res.status(400).end();
-        });
+        }
     }else{
-        Barang_Header.create({
-            nama_barang : nama_barang,
-            merek_barang : merek_barang,
-            jenis_kereta : jenis_kereta,
-            keterangan : keterangan,
-            harga_beli : harga_beli,
-            harga_jual : harga_jual,
-        })
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
+        try{
+            const search = await Barang_Header.findOne({ where : {id_barang : id_barang}});
+            if(!search){
+                const result = await Barang_Header.create({
+                    id_barang : id_barang,
+                    nama_barang : nama_barang,
+                    merek_barang : merek_barang,
+                    jenis_kereta : jenis_kereta,
+                    keterangan : keterangan,
+                    harga_beli : harga_beli,
+                    harga_jual : harga_jual,
+                })
+                res.status(200).json(result);
+            }else{
+                res.status(200).send("Id Barang Sudah Dipakai");
+            }
+        }catch(error){
             res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
             res.status(400).end();
-        });
+        }
     }
 }
 

@@ -2,18 +2,24 @@ const Jenis_Service = require('../../Model/Jenis_Sevice/jenis_service');
 const { Op } = require("sequelize");
 const Keranjang_Service = require('../../Model/Keranjang/keranjang_service');
 
-exports.register = (req,res) => {
-    const {nama,harga} = req.body;
-    Jenis_Service.create({
-        nama : nama,
-        harga : harga
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
+exports.register = async (req,res) => {
+    const {id_service,nama,harga} = req.body;
+    try{
+        const search = await Jenis_Service.findOne({ where : {id_service : id_service}});
+        if(!search){
+            const result = await Jenis_Service.create({
+                id_service : id_service,
+                nama : nama,
+                harga : harga
+            })
+            res.status(200).json(result);
+        }else{
+            res.status(200).send("Id Service Sudah Dipakai");
+        }
+    }catch(error){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.show_all = (req,res) => {

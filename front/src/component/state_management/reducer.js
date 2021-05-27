@@ -306,7 +306,12 @@ const Reducer = (state,action) => {
                 ...state,
                 lihat_laporan_penyesuaian_stok : action.data
             }
-
+            // Pengaturan
+            case 'LIHAT_PENGATURAN' :
+            return {
+                ...state,
+                lihat_pengaturan : action.data
+            } 
             // Penjualan
             case 'SIMPAN_TANGGAL_PENJUALAN' :
             return {

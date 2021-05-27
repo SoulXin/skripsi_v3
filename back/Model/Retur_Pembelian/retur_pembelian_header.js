@@ -12,7 +12,8 @@ const Retur_Pembelian_Header = db.sequelize.define('retur_pembelian_header',{
         type : Sequelize.DATE
     },
     id_supplier  : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING,
+        allowNull: true
     },
     jenis_penggembalian : {
         type : Sequelize.STRING

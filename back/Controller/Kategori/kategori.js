@@ -1,17 +1,23 @@
 const Kategori = require('../../Model/Kategori/kategori');
 const { Op } = require("sequelize");
 
-exports.register = (req,res) => {
-    const {nama_kategori} = req.body;
-    Kategori.create({
-        nama_kategori : nama_kategori,
-    })
-    .then((result) => {
-        res.status(200).json(result);
-    }).catch((err) => {
+exports.register = async (req,res) => {
+    const {id_kategori,nama_kategori} = req.body;
+    try{
+        const search = await Kategori.findOne({ where : {id_kategori : id_kategori}});
+        if(!search){
+            const result = await Kategori.create({
+                id_kategori : id_kategori,
+                nama_kategori : nama_kategori,
+            })
+            res.status(200).json(result);
+        }else{
+            res.status(200).send("Id Kategori Sudah Dipakai");
+        }
+    }catch(error){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();
-    });
+    }
 }
 
 exports.show_all = (req,res) => {
