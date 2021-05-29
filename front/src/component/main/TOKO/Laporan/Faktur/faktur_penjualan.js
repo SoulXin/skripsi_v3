@@ -37,8 +37,12 @@ export class Faktur_Penjualan extends React.PureComponent {
                             <td>  {moment(this.props.tanggal).utc().format('DD / MMMM / YYYY')} </td>
                         </tr>
                         <tr>
-                            <td>Nama Pelanggan / Nomor Polisi</td>
-                            <td>{this.props.nopol}</td>
+                            <td>Nama Pelanggan</td>
+                            <td>{this.props.nama_pelanggan ? this.props.nama_pelanggan : '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>Nomor Polisi</td>
+                            <td>{this.props.nopol ? this.props.nopol : '-'}</td>
                         </tr>
                     </table>
                 </div>
@@ -47,6 +51,7 @@ export class Faktur_Penjualan extends React.PureComponent {
             <div className="row mx-auto">
                 <table className="table_anak">
                 <thead style={{borderBottom : '2px solid black'}}>
+                    <th>ID</th>
                     <th>Jenis</th>
                     <th>Nama</th>
                     <th>Harga</th>
@@ -57,6 +62,7 @@ export class Faktur_Penjualan extends React.PureComponent {
                         this.props.dataTableBarang.map((list,index) => {
                             return (
                                 <tr>
+                                    <td>{list.Barang_Header.id_barang}</td>
                                     <td>Barang</td>
                                     <td>{list.Barang_Header.nama_barang}</td>
                                     <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
@@ -71,8 +77,9 @@ export class Faktur_Penjualan extends React.PureComponent {
                         this.props.dataTableService.map((list,index) => {
                             return (
                                 <tr>
+                                    <td>{list.Jenis_Service.id_service}</td>
                                     <td>Service</td>
-                                    <td>{list.Jenis_Service.nama}</td>
+                                    <td>{list.Jenis_Service.nama_service}</td>
                                     <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
                                     <td>1</td>
                                     <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
@@ -83,6 +90,7 @@ export class Faktur_Penjualan extends React.PureComponent {
                     <tr style={{borderTop : '2px solid black',background : 'white'}}>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
+                        <td >&nbsp;</td>
                         <td >&nbsp;</td>
                         <td style = {{borderBottom : '2px solid black'}}>Grand Total : </td>
                         <td style = {{borderBottom : '2px solid black'}}>Rp. {formatMoney(this.state.totalBarang + this.state.totalService)}</td>

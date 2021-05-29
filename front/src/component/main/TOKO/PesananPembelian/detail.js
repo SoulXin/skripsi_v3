@@ -156,7 +156,7 @@ const Index = (props) => {
                 </div>
                 <div className="col-2 row">
                     <ReactToPrint
-                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan</button>}
+                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Faktur</button>}
                         content={() => componentRef.current}
                     />
                     <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataBarangDetail} id_pesanan_pembelian = {idPesananPembelian} tanggal_pemesanan = {tanggalPemesanan} nama_supplier = {namaSupplier}  /></div>
@@ -213,13 +213,10 @@ const Index = (props) => {
                     }
                 </div>
                 <div className="col-3">
-                    <table>
-                        <tr>
-                            <td>Grand Total</td>
-                            <td> : </td>
-                            <td>Rp. {formatMoney(totalBarang)}</td>
-                        </tr>
-                    </table>
+                    <div class="form-floating mb-3 px-0">
+                        <input type="text" class="form-control" value = {"Rp. " + formatMoney(totalBarang)} id="floatingInput" disabled/>
+                        <label for="floatingInput">Grand Total</label>
+                    </div>
                     {
                         checkPembelian || status == 'Selesai' ? 
                         <p>Status Pesanan : { status == 'Selesai' ? 

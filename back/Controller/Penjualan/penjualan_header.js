@@ -123,8 +123,8 @@ exports.show_all_service = async (req,res) => {
                         id_service : penjualan_header[a].Penjualan_Service[b].id_service,
                         id_mekanik : penjualan_header[a].Mekanik_Detail.id_mekanik,
                         tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
-                        nama_mekanik : penjualan_header[a].Mekanik_Detail.Mekanik_Header.nama,
-                        service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama,
+                        nama_mekanik : penjualan_header[a].Mekanik_Detail.Mekanik_Header.nama_mekanik,
+                        service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
                         harga : penjualan_header[a].Penjualan_Service[b].harga
                     })
                 }
@@ -165,8 +165,8 @@ exports.show_all_service = async (req,res) => {
                         id_service : penjualan_header[a].Penjualan_Service[b].id_service,
                         id_mekanik : penjualan_header[a].Mekanik_Detail.id_mekanik,
                         tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
-                        nama_mekanik : penjualan_header[a].Mekanik_Detail.Mekanik_Header.nama,
-                        service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama,
+                        nama_mekanik : penjualan_header[a].Mekanik_Detail.Mekanik_Header.nama_mekanik,
+                        service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
                         harga : penjualan_header[a].Penjualan_Service[b].harga
                     })
                 }

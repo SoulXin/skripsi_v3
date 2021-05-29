@@ -7,7 +7,7 @@ export class Cetak_Mekanik extends React.PureComponent {
         <div>
             <div className="row col-12 mx-auto pt-3 pb-3" style={{border : '2px solid black'}}>
                 <div className="col-6">
-                    <h1 style={{textAlign:'center'}}>Laporan Persediaan Barang</h1>
+                    <h1 style={{textAlign:'center'}}>Laporan Mekanik</h1>
                 </div>
                 <div className="col-6">
                     <table>
@@ -32,7 +32,7 @@ export class Cetak_Mekanik extends React.PureComponent {
                             return (
                                 <tr>
                                     <td>{list.id_mekanik}</td>
-                                    <td>{list.nama}</td>
+                                    <td>{list.nama_mekanik}</td>
                                     <td>{list.no_telp}</td>
                                     <td>{list.alamat}</td>
                                 </tr>

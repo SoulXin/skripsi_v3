@@ -154,7 +154,7 @@ const Index = (props) => {
                                 <th className="p-3"></th>
                                 <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
-                                <th className="p-3">Harga Beli</th>
+                                <th className="p-3">Harga Jual</th>
                                 <th className="p-3">Jumlah</th>
                                 <th className="p-3">Total</th>
                             </tr>
@@ -179,6 +179,13 @@ const Index = (props) => {
                         </div>
                         <div className="col-6 px-0">
                             <Link to={{ pathname : '/tambah_data_retur_penjualan',state: idRetur}} className=" btn btn-outline-success">Ambil Data Penjualan</Link>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div class="form-floating mb-3 px-0 mx-1">
+                            <input type="text" class="form-control" value={"Rp. " + formatMoney(grandTotal)} disabled = {true}/>
+                            <label for="floatingInput">Grand Total</label>
                         </div>
                     </div>
 

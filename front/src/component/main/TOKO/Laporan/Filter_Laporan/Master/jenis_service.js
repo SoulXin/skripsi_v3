@@ -30,7 +30,7 @@ const Index = (props) => {
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_service}</td>
-                <td className="p-3">{list.nama}</td>
+                <td className="p-3">{list.nama_service}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga)}</td>
             </tr>
         )

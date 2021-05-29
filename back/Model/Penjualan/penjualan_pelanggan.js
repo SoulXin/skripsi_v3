@@ -11,6 +11,9 @@ const Penjualan_Service = db.sequelize.define('penjualan_pelanggan',{
     },
     nomor_polisi: {
         type : Sequelize.STRING
+    },
+    no_antrian: {
+        type : Sequelize.INTEGER
     }
 });
 

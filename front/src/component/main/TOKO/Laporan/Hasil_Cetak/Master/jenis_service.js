@@ -31,7 +31,7 @@ export class Cetak_Jenis_Service extends React.PureComponent {
                             return (
                                 <tr>
                                     <td>{list.id_service}</td>
-                                    <td>{list.nama}</td>
+                                    <td>{list.nama_service}</td>
                                     <td>Rp. {formatMoney(list.harga)}</td>
                                 </tr>
                             )

@@ -53,8 +53,8 @@ const Index = (props) => {
             {/* Bagian Atas */}
             <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row mb-3 border-bottom">
-                <h2 className="col-3">Laporan Penyesuaian</h2>
-                <div className="offset-4 col-5 row">
+                <h2 className="col-4">Laporan Penyesuaian Barang</h2>
+                <div className="offset-3 col-5 row">
                     <div class="form-floating mb-3 px-0 col mx-1">
                         <input type="date" class="form-control" onChange = {(e) => setDari(e.target.value)}/>
                         <label>Dari Tanggal</label>

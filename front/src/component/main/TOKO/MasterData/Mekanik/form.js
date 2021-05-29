@@ -85,7 +85,7 @@ const Form = (props) => {
 
         const data = new FormData()
         data.append('id_mekanik',idMekanik)
-        data.append('nama',nama)
+        data.append('nama_mekanik',nama)
         data.append('no_telp',noTelp)
         data.append('alamat',alamat)
         data.append('gambar',gambar)

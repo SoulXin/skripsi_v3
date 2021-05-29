@@ -181,7 +181,12 @@ const Index = (props) => {
                             <Link to={{ pathname : '/tambah_data_retur_pembelian',state: idRetur}} className=" btn btn-outline-success">Ambil Data Pembelian</Link>
                         </div>
                     </div>
-
+                    <div className="row">
+                        <div class="form-floating mb-3 px-0 mx-1">
+                            <input type="text" class="form-control" value={"Rp. " + formatMoney(grandTotal)} disabled = {true}/>
+                            <label for="floatingInput">Grand Total</label>
+                        </div>
+                    </div>
                     <div className="row form-floating mb-2">
                         <select class="form-select" onChange = { (e) => dispatch({type : 'SIMPAN_JENIS_PENGGEMBALIAN_RETUR',data : e.target.value})}>
                             <option value = "1" selected = {dataContext.jenis_penggembalian == '1' ? true : false}>Tunai</option>

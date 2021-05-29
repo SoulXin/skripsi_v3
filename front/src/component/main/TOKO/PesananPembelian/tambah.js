@@ -130,33 +130,42 @@ const Index = (props) => {
                     <input type="date" class="form-control" value = {dataContext.tanggal_pemesanan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PEMESANAN',data : e.target.value})}/>
                     <label for="floatingInput">Tangal Pemesanan</label>
                 </div>
-                <div className="col-2 offset-3 ml-auto">
-                    <button className="btn btn-success w-100" onClick={handleSave} disabled = {dataContext.id_supplier && dataContext.tanggal_pemesanan && data.length > 0 ? false : true}>Simpan</button>
-                </div>
             </div>
 
-            {/* List Isi */}
+            {/* Body Isi */}
             <div className="row">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th className="p-3"></th>
-                            <th className="p-3">ID Barang</th>
-                            <th className="p-3">Nama</th>
-                            <th className="p-3">Merek</th>
-                            <th className="p-3">Harga Beli</th>
-                            <th className="p-3">Jumlah</th>
-                            <th className="p-3">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {viewData}
-                    </tbody>
-                </table>
+                {/* List */}
+                <div className="col-9">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th className="p-3"></th>
+                                <th className="p-3">ID Barang</th>
+                                <th className="p-3">Nama</th>
+                                <th className="p-3">Merek</th>
+                                <th className="p-3">Harga Beli</th>
+                                <th className="p-3">Jumlah</th>
+                                <th className="p-3">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {viewData}
+                        </tbody>
+                    </table>
 
-                <div className="row">
-                    <Link to={{ pathname : '/tambah_barang_pesanan_pembelian',state : idPesananPembelian }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
-                </div> 
+                    <div className="row">
+                        <Link to={{ pathname : '/tambah_barang_pesanan_pembelian',state : idPesananPembelian }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
+                    </div> 
+                </div>
+
+                {/* Rincian */}
+                <div className="col-3">
+                    <div class="form-floating mb-3 px-0">
+                        <input type="text" class="form-control" value = {"Rp. " + formatMoney(totalBarang)} id="floatingInput" disabled/>
+                        <label for="floatingInput">Grand Total</label>
+                    </div>
+                    <button className="btn btn-success w-100" onClick={handleSave} disabled = {dataContext.id_supplier && dataContext.tanggal_pemesanan && data.length > 0 ? false : true}>Simpan</button>
+                </div>
             </div>
         </div>
     )

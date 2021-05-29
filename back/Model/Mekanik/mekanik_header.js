@@ -7,7 +7,7 @@ const Mekanik_Header = db.sequelize.define('mekanik_header',{
         type : Sequelize.STRING,
         primaryKey : true
     },
-    nama : {
+    nama_mekanik : {
         type : Sequelize.STRING
     },
     no_telp : {

@@ -50,7 +50,7 @@ const Index = (props) => {
 
     const viewMekanik = dataMekanik ? dataMekanik.map((list,index) => {
         return (
-            <option value={list.id_mekanik} key={index}>{list.nama}</option>
+            <option value={list.id_mekanik} key={index}>{list.nama_mekanik}</option>
 
         )
     }) : null;

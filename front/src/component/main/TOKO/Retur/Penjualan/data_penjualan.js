@@ -15,6 +15,7 @@ const Index = (props) => {
             try{
                 const detail = props.location.state;
                 const responseBarang = await axios.get('http://localhost:5001/retur_penjualan_header/show_retur');
+                console.log(responseBarang);
                 setData(responseBarang.data);
                 setIdRetur(detail);
             }catch(error){
@@ -28,31 +29,19 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
-        if(list.Pelanggan && list.Penjualan_Detail){
+        if(list.Penjualan_Detail.length > 0){
             return (
-                <tr key={index}>
-                    <td className="p-3">{list.id_penjualan}</td>
-                    <td className="p-3">{list.tanggal_penjualan}</td>
-                    <td className="p-3">{list.Pelanggan.nama_pelanggan}</td>
-                    <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-                    <td className="p-3">{list.status}</td>
-                    <td className="p-3" style={{position:'relative'}}>
-                        <button style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success" onClick={() => handleAdd(list)}>Pilih</button>
-                    </td>
-                </tr>
-            )
-        }else if(list.Penjualan_Detail.length > 0){
-            return (
-                <tr key={index}>
-                    <td className="p-3">{list.id_penjualan}</td>
-                    <td className="p-3">{list.tanggal_penjualan}</td>
-                    <td className="p-3">{list.nopol}</td>
-                    <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
-                    <td className="p-3">{list.status}</td>
-                    <td className="p-3" style={{position:'relative'}}>
-                        <button style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success" onClick={() => handleAdd(list)}>Pilih</button>
-                    </td>
-                </tr>
+               <tr key={index}>
+                   <td className="p-3">{list.id_penjualan}</td>
+                   <td className="p-3">{list.tanggal_penjualan}</td>
+                   <td className="p-3">{list.Penjualan_Pelanggan.nama_pelanggan ? list.Penjualan_Pelanggan.nama_pelanggan : '-'}</td>
+                   <td className="p-3">{list.Penjualan_Pelanggan.nomor_polisi ? list.Penjualan_Pelanggan.nomor_polisi : '-'}</td>
+                   <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
+                   <td className="p-3">{list.status}</td>
+                   <td className="p-3" style={{position:'relative'}}>
+                       <button style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success" onClick={() => handleAdd(list)}>Pilih</button>
+                   </td>
+               </tr>
             )
         }
     }) : null;
@@ -100,8 +89,9 @@ const Index = (props) => {
                     <thead>
                         <tr>
                             <th className="p-3">ID Penjualan</th>
-                            <th className="p-3">Tanggal Pemesanan</th>
-                            <th className="p-3">Pelanggan</th>
+                            <th className="p-3">Tanggal Penjualan</th>
+                            <th className="p-3">Nama Pelanggan</th>
+                            <th className="p-3">Nomor Polisi</th>
                             <th className="p-3">Total</th>
                             <th className="p-3">Status</th>
                             <th></th>

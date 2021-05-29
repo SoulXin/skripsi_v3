@@ -8,7 +8,7 @@ const Jenis_Service = db.sequelize.define('jenis_service',{
         type : Sequelize.STRING,
         primaryKey : true
     },
-    nama : {
+    nama_service : {
         type : Sequelize.STRING
     },
     harga : {

@@ -3,7 +3,7 @@ const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const { Op } = require("sequelize");
 
 exports.register = async (req,res) => {
-    const {id_penjualan,id_service,harga,no_antrian} = req.body;
+    const {id_penjualan,id_service,harga} = req.body;
     try{
         await Penjualan_Service.destroy({ 
             where : {
@@ -16,8 +16,7 @@ exports.register = async (req,res) => {
         await Penjualan_Service.create({
             id_penjualan : id_penjualan,
             id_service : id_service,
-            harga : harga,
-            no_antrian : no_antrian
+            harga : harga
         })
         await res.status(200).send();
     }catch(err){

@@ -4,7 +4,6 @@ import moment from 'moment'
 
 export class Cetak_Hutang extends React.PureComponent {
     render() {
-        console.log(this.props.status_lunas)
       return (
         <div>
             <div className="row col-12 mx-auto pt-3 pb-3" style={{border: '2px solid black'}}>
@@ -29,7 +28,7 @@ export class Cetak_Hutang extends React.PureComponent {
                 <thead>
                     {
                         this.props.status_lunas ? 
-                        <th className="p-3">ID Pembayaran Hutang</th> : null
+                        <th className="p-3">ID Pembayaran</th> : null
                     }
                     <th className="p-3">ID Pembelian</th>
                     <th className="p-3">ID Supplier</th>

@@ -115,8 +115,8 @@ const Index = (props) => {
                                 <th className="p-3"></th>
                                 <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
-                                <th className="p-3">Stok Sistem</th>
-                                <th className="p-3">Stok Fisik</th>
+                                <th className="p-3">Jumlah Sistem</th>
+                                <th className="p-3">Jumlah Fisik</th>
                                 <th className="p-3">Penyesuaian</th>
                             </tr>
                         </thead>

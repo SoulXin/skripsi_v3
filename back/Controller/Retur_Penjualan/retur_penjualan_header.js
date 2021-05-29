@@ -123,6 +123,10 @@ exports.show_retur = async (req,res) => {
                 {
                     model : Penjualan_Detail,
                     as : 'Penjualan_Detail',
+                },
+                {
+                    model : Penjualan_Pelanggan,
+                    as : 'Penjualan_Pelanggan',
                 }
             ]
         });

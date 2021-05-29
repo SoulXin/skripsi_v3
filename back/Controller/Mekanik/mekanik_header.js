@@ -2,14 +2,14 @@ const Mekanik_Header = require('../../Model/Mekanik/mekanik_header');
 const { Op } = require("sequelize");
 
 exports.register = async (req,res) => {
-    const {id_mekanik,nama,no_telp,alamat} = req.body;
+    const {id_mekanik,nama_mekanik,no_telp,alamat} = req.body;
     try{
         if(req.file){
             const search = await Mekanik_Header.findOne({ where : {id_mekanik : id_mekanik}});
             if(!search){
                 const result = await Mekanik_Header.create({
                     id_mekanik : id_mekanik,
-                    nama : nama,
+                    nama_mekanik : nama_mekanik,
                     no_telp : no_telp,
                     alamat : alamat,
                     gambar : req.file.filename
@@ -23,7 +23,7 @@ exports.register = async (req,res) => {
             if(!search){
                 const result = await Mekanik_Header.create({
                     id_mekanik : id_mekanik,
-                    nama : nama,
+                    nama_mekanik : nama_mekanik,
                     no_telp : no_telp,
                     alamat : alamat
                 })
@@ -80,10 +80,10 @@ exports.show_detail = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {nama,no_telp,alamat} = req.body;
+    const {nama_mekanik,no_telp,alamat} = req.body;
     if(req.file){ // => Jika ada gambar
         Mekanik_Header.update({
-            nama : nama,
+            nama_mekanik : nama_mekanik,
             no_telp : no_telp,
             alamat : alamat,
             gambar : req.file.filename
@@ -100,7 +100,7 @@ exports.update = (req,res) => {
         });
     }else{ // => Jika tidak ada gambar
         Mekanik_Header.update({
-            nama : nama,
+            nama_mekanik : nama_mekanik,
             no_telp : no_telp,
             alamat : alamat,
         },{
@@ -143,7 +143,7 @@ exports.search = async (req,res) => {
             const response = await Mekanik_Header.findAll({
                 where : {
                     [Op.and] : [{
-                        nama : {
+                        nama_mekanik : {
                             [Op.substring] : nama_mekanik
                         },
                         aktif : aktif
@@ -156,7 +156,7 @@ exports.search = async (req,res) => {
                 where : {
                     [Op.and] : [
                         {
-                            nama : {
+                            nama_mekanik : {
                                 [Op.substring] : nama_mekanik
                             },
                             aktif : 1

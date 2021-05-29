@@ -135,13 +135,21 @@ const Index = (props) => {
 
     return (
         <div className="container px-0 pt-5">
-            {/* Bagian Atas */}
-            <div className="row mb-3">
-                <div className="col">
-                    <h2>Detail Pembayaran Supplier</h2>
+            {/* Atas */}
+            <div className="row mb-4 pb-3 border-bottom">
+                <button className="col-1 btn btn-outline-secondary" onClick = {() => props.history.goBack()}>Kembali</button>
+                <div className="col-5 mx-auto">
+                    <h2>Detail Pembayaran</h2>
                 </div>
             </div>
-            
+
+            <div className="row">
+                <div class="col-2 form-floating mb-3 px-0 mx-1">
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Pembayaran" value={detail.id_pembayaran} disabled/>
+                    <label for="id_penjualan">ID Pembayaran</label>
+                </div>
+            </div>
+
             {/* List */}
             <div className="row">
                 <div className="col-9">

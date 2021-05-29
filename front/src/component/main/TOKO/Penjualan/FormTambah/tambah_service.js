@@ -41,7 +41,7 @@ const Index = (props) => {
     const viewData = data ? data.map((list,index) => {
         return (
             <tr key={index}>
-                <td className="p-3">{list.nama}</td>
+                <td className="p-3">{list.nama_service}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>

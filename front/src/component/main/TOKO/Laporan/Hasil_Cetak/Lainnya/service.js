@@ -4,6 +4,13 @@ import moment from 'moment'
 
 export class Cetak_Service extends React.PureComponent {
     render() {
+        this.state = {
+            total : 0
+        }
+
+        this.props.dataTable.map((list,index) => {
+            this.state.total += list.harga;
+        });
       return (
         <div>
             <div className="row col-12 mx-auto pt-3 pb-3" style={{border : '2px solid black'}}>
@@ -25,9 +32,9 @@ export class Cetak_Service extends React.PureComponent {
                     <th className="p-3">ID Penjualan</th>
                     <th className="p-3">ID Service</th>
                     <th className="p-3">ID Mekanik</th>
-                    <th className="p-3">Tanggal</th>
+                    <th className="p-3">Tanggal Penjualan</th>
                     <th className="p-3">Nama Mekanik</th>
-                    <th className="p-3">Service</th>
+                    <th className="p-3">Nama Service</th>
                     <th className="p-3">Harga</th>
                 </thead>
                     {
@@ -46,7 +53,15 @@ export class Cetak_Service extends React.PureComponent {
                             
                         })
                     }
-
+                    <tr style={{borderTop : '2px solid black',background : 'white'}}>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td >&nbsp;</td>
+                        <td >&nbsp;</td>
+                        <td >&nbsp;</td>
+                        <td style = {{borderBottom : '2px solid black'}}>Grand Total : </td>
+                        <td style = {{borderBottom : '2px solid black'}}>Rp. {formatMoney(this.state.total)}</td>
+                    </tr>
                 </table>
             </div>
         </div>

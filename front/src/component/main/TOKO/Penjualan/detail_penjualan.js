@@ -93,8 +93,8 @@ const Index = (props) => {
                         <button className="btn btn-danger mx-1" onClick = {() => handleDelete(list)}>Hapus</button>
                     </td>
                 }
-                <td>Barang</td>
                 <td>{list.Barang_Header.id_barang}</td>
+                <td>Barang</td>
                 <td>{list.Barang_Header.nama_barang}</td>
                 <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
@@ -112,9 +112,9 @@ const Index = (props) => {
                         <button className="btn btn-danger mx-1" onClick = {() => handleDelete(list)}>Hapus</button>
                     </td>
                 }
-                <td>Service</td>
                 <td>{list.Jenis_Service.id_service}</td>
-                <td>{list.Jenis_Service.nama}</td>
+                <td>Service</td>
+                <td>{list.Jenis_Service.nama_service}</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
                 <td>1</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
@@ -124,9 +124,9 @@ const Index = (props) => {
 
     const viewMekanik = dataMekanik ? dataMekanik.map((list,index) => {
         if(list.id_mekanik == dataContext.id_mekanik){ 
-            return <option value={list.id_mekanik} key={index} selected>{list.nama}</option>
+            return <option value={list.id_mekanik} key={index} selected>{list.nama_mekanik}</option>
         }else{
-            return <option value={list.id_mekanik} key={index}>{list.nama}</option>
+            return <option value={list.id_mekanik} key={index}>{list.nama_mekanik}</option>
         }
         
     }) : null;
@@ -235,50 +235,48 @@ const Index = (props) => {
                 </div>
                 <div className="col-2 row">
                     <ReactToPrint
-                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan</button>}
+                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Faktur</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} idPenjualan = {idPenjualan} nopol = {dataContext.nomor_polisi}/></div>
+                    <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} idPenjualan = {idPenjualan} nama_pelanggan = {dataContext.nama_pelanggan} nopol = {dataContext.nomor_polisi}/></div>
                 </div>
             </div>
+            <div className="row">
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={idPenjualan} disabled/>
+                    <label for="id_penjualan">ID Penjualan</label>
+                </div>
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <input type="date" class="form-control" id="tanggal_pemesanan" placeholder={dataContext.tanggal_penjualan} value={dataContext.tanggal_penjualan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value})} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
+                    <label for="tanggal_pemesanan">Tanggal Penjualan</label>
+                </div>
 
+                <div class="form-floating mb-3 col px-0 mx-1">
+                    <input type="text" class="form-control" id="nama_pelanggan" onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} value = {dataContext.nama_pelanggan} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
+                    <label for="nomor_polisi">Nama Pelanggan</label>
+                </div>
+
+                <div class="form-floating mb-3 col px-0 mx-1">
+                    <input type="text" class="form-control" id="nomor_polisi" onChange = {(e) => dispatch({type : 'SIMPAN_NOMOR_POLISI',data : e.target.value})} value = {dataContext.nomor_polisi} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'} />
+                    <label for="nomor_polisi">Nomor Polisi</label>
+                </div>
+
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_MEKANIK',data : e.target.value})}  disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}>
+                        <option value='' selected>Tidak ada</option>
+                        {viewMekanik}
+                    </select>
+                    <label>Mekanik</label>
+                </div>
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? idPenjualan : '-'} disabled/>
+                    <label for="id_penjualan">Nomor Antrian</label>
+                </div>
+            </div>
             {/* Isi */}
             <div className="row">
                 {/* List */}
                 <div className="col-9">
-                    {/* Id penjualan, tanggal pemesanan, waktu, no antrian  */}
-                    {/* Kunjungan */}
-                    <div className="row">
-                        <div class="col-2 form-floating mb-3 px-0">
-                            <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={idPenjualan} disabled/>
-                            <label for="id_penjualan">ID Penjualan</label>
-                        </div>
-                        <div class="col-3 form-floating mb-3 px-0 mx-auto">
-                            <input type="date" class="form-control" id="tanggal_pemesanan" placeholder={dataContext.tanggal_penjualan} value={dataContext.tanggal_penjualan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value})} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
-                            <label for="tanggal_pemesanan">Tanggal Penjualan</label>
-                        </div>
-
-                        <div class="form-floating mb-3 col-2 px-0 mx-auto">
-                            <input type="text" class="form-control" id="nama_pelanggan" onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} value = {dataContext.nama_pelanggan} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}/>
-                            <label for="nomor_polisi">Nama Pelanggan</label>
-                        </div>
-
-                        <div class="form-floating mb-3 col-2 px-0 mx-auto">
-                            <input type="text" class="form-control" id="nomor_polisi" onChange = {(e) => dispatch({type : 'SIMPAN_NOMOR_POLISI',data : e.target.value})} value = {dataContext.nomor_polisi} disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'} />
-                            <label for="nomor_polisi">Nomor Polisi</label>
-                        </div>
-     
-                        <div class="col-2 form-floating mb-3 px-0 mx-auto">
-                            <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_MEKANIK',data : e.target.value})}  disabled = {!dataContext.edit_penjualan || checkRetur || status == 'Selesai'}>
-                                <option value='' selected>Tidak ada</option>
-                                {viewMekanik}
-                            </select>
-                            <label>Mekanik</label>
-                        </div>
-
-                    </div>
-              
-                    
                     {/* List pesanan */}
                     <div className="row">
                         <table class="table table-hover">
@@ -288,8 +286,8 @@ const Index = (props) => {
                                         status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ?  
                                         null : <th className="p-3"></th>
                                     }
+                                    <th className="p-3">ID</th>
                                     <th className="p-3">Jenis</th>
-                                    <th className="p-3">ID Barang / Service</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
                                     <th className="p-3">Jumlah</th>

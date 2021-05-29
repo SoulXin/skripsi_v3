@@ -2,11 +2,12 @@ const Penjualan_Pelanggan = require('../../Model/Penjualan/penjualan_pelanggan')
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
-    const {id_penjualan,nama_pelanggan,nomor_polisi} = req.body;
+    const {id_penjualan,nama_pelanggan,nomor_polisi,no_antrian} = req.body;
     Penjualan_Pelanggan.create({
         id_penjualan : id_penjualan,
         nama_pelanggan : nama_pelanggan,
-        nomor_polisi : nomor_polisi
+        nomor_polisi : nomor_polisi,
+        no_antrian : no_antrian
     })
     .then((result) => {
         res.status(200).json(result);
@@ -34,11 +35,12 @@ exports.show_detail = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {id_penjualan,nama_pelanggan,nomor_polisi} = req.body;
+    const {id_penjualan,nama_pelanggan,nomor_polisi,no_antrian} = req.body;
     Penjualan_Pelanggan.update({
         id_penjualan : id_penjualan,
         nama_pelanggan : nama_pelanggan,
-        nomor_polisi : nomor_polisi
+        nomor_polisi : nomor_polisi,
+        no_antrian : no_antrian
     },{
         where : {
             id_penjualan : id
@@ -72,11 +74,7 @@ exports.delete_detail = (req,res) => {
     const {id,id_penjualan} = req.params;
     Penjualan_Pelanggan.destroy({
         where : {
-            [Op.and] : [
-                {id : id},
-                {id_penjualan : id_penjualan}
-            ]
-            
+            id_penjualan : id_penjualan
         }
     })
     .then((result) => {

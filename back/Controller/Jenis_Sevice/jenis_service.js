@@ -3,13 +3,13 @@ const { Op } = require("sequelize");
 const Keranjang_Service = require('../../Model/Keranjang/keranjang_service');
 
 exports.register = async (req,res) => {
-    const {id_service,nama,harga} = req.body;
+    const {id_service,nama_service,harga} = req.body;
     try{
         const search = await Jenis_Service.findOne({ where : {id_service : id_service}});
         if(!search){
             const result = await Jenis_Service.create({
                 id_service : id_service,
-                nama : nama,
+                nama_service : nama_service,
                 harga : harga
             })
             res.status(200).json(result);
@@ -63,14 +63,14 @@ exports.show_detail = (req,res) => {
 }
 
 exports.search = async (req,res) => {
-    const {nama,aktif} = req.body;
+    const {nama_service,aktif} = req.body;
     try{
         if(aktif){
             const response = await Jenis_Service.findAll({
                 where : {
                     [Op.and] : [{
-                        nama : {
-                            [Op.substring] : nama
+                        nama_service : {
+                            [Op.substring] : nama_service
                         },
                         aktif : aktif
                     }]
@@ -81,8 +81,8 @@ exports.search = async (req,res) => {
             const response = await Jenis_Service.findAll({
                 where : {
                     [Op.and] : [{
-                        nama : {
-                            [Op.substring] : nama
+                        nama_service : {
+                            [Op.substring] : nama_service
                         },
                         aktif : 1
                     }]
@@ -98,9 +98,9 @@ exports.search = async (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {nama,harga} = req.body;
+    const {nama_service,harga} = req.body;
     Jenis_Service.update({
-        nama : nama,
+        nama_service : nama_service,
         harga : harga
     },{
         where : {

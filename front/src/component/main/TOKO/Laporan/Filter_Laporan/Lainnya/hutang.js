@@ -115,7 +115,7 @@ const Index = (props) => {
                         <tr>
                             {
                                 lunas ? 
-                                <th className="p-3">ID Pembayaran Hutang</th> : null
+                                <th className="p-3">ID Pembayaran</th> : null
                             }
                             <th className="p-3">ID Pembelian</th>
                             <th className="p-3">ID Supplier</th>

@@ -52,7 +52,7 @@ const Index = (props) => {
             <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row border-bottom">
                 <div className="col row">
-                    <h2 className="col-4">Laporan Kategori</h2>
+                    <h2 className="col-6">Laporan Kategori Barang</h2>
                 </div>
                 <div className="col-4">
                     <form className="form-group row" style={{position:'relative'}} onSubmit={handleSearch}>

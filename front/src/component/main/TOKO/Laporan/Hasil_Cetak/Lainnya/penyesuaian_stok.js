@@ -7,7 +7,7 @@ export class Cetak_Penyesuaian_Stok extends React.PureComponent {
         <div>
             <div className="row col-12 mx-auto pt-3 pb-3" style={{border : '2px solid black'}}>
                 <div className="col-6">
-                    <h1 style={{textAlign:'center'}}>Laporan Penyesuaian Stok</h1>
+                    <h1 style={{textAlign:'center'}}>Laporan Penyesuaian Barang</h1>
                 </div>
                 <div className="col-6">
                     <table>

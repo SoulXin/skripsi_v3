@@ -68,8 +68,8 @@ const Index = (props) => {
                     <Link to={{ pathname : '/edit_barang_offline',state : list }}className="btn btn-outline-secondary mx-1">Edit</Link>
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Barang',list.id_penjualan,list.id_barang)}>Hapus</button>
                 </td>
-                <td>Barang</td>
                 <td>{list.Barang_Header.id_barang}</td>
+                <td>Barang</td>
                 <td>{list.Barang_Header.nama_barang}</td>
                 <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
@@ -85,9 +85,9 @@ const Index = (props) => {
                     <Link to={{ pathname : '/edit_service',state : {detail : list, harga : list.harga} }}className="btn btn-outline-secondary mx-1">Edit</Link>
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Service',list.id_penjualan,list.id_service)}>Hapus</button>
                 </td>
-                <td>Service</td>
                 <td>{list.Jenis_Service.id_service}</td>
-                <td>{list.Jenis_Service.nama}</td>
+                <td>Service</td>
+                <td>{list.Jenis_Service.nama_service}</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
                 <td>1</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
@@ -97,7 +97,7 @@ const Index = (props) => {
 
     const viewMekanik = mekanik ? mekanik.map((list,index) => {
         return (
-            <option key = {index} value={list.id_mekanik} selected = {dataContext.id_mekanik == list.id_mekanik ? true : false}>{list.nama}</option>
+            <option key = {index} value={list.id_mekanik} selected = {dataContext.id_mekanik == list.id_mekanik ? true : false}>{list.nama_mekanik}</option>
         )
     }) : null;
 
@@ -138,7 +138,8 @@ const Index = (props) => {
         const dataPenjualanPelanggan = {
             id_penjualan : idPenjualan,
             nama_pelanggan : dataContext.nama_pelanggan,
-            nomor_polisi : dataContext.nomor_polisi
+            nomor_polisi : dataContext.nomor_polisi,
+            no_antrian : 1
         }
 
         try{
@@ -160,7 +161,6 @@ const Index = (props) => {
                     id_penjualan : idPenjualan,
                     id_service : dataService[b].Jenis_Service.id_service,
                     harga : dataService[b].harga,
-                    no_antrian : 1
                 }
 
                 const dataMekanikDetail = {
@@ -205,50 +205,50 @@ const Index = (props) => {
                     <h2>Tambah Penjualan</h2>
                 </div>
             </div>
+            <div className="row">
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={idPenjualan} disabled/>
+                    <label for="id_penjualan">ID Penjualan</label>
+                </div>
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <input type="date" class="form-control" id="tanggal_pemesanan"  value={dataContext.tanggal_penjualan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value})} />
+                    <label for="tanggal_pemesanan">Tanggal Penjualan</label>
+                </div>
+
+                <div class="form-floating col px-0 mb-3 mx-1">
+                    <input type="text" class="form-control" id="nomor_polisi" value = {dataContext.nama_pelanggan} onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} />
+                    <label for="nomor_polisi">Nama Pelanggan</label>
+                </div>
+
+                <div class="form-floating col px-0 mb-3 mx-1">
+                    <input type="text" class="form-control" id="nomor_polisi" value = {dataContext.nomor_polisi} onChange = {(e) => dispatch({type : 'SIMPAN_NOMOR_POLISI',data : e.target.value})} />
+                    <label for="nomor_polisi">Nomor Polisi</label>
+                </div>
+
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_MEKANIK',data : e.target.value})} disabled = {dataService.length > 0 ? false : true}>
+                        <option value='' selected>Tidak ada</option>
+                        {viewMekanik}
+                    </select>
+                    <label>Mekanik</label>
+                </div>
+                <div class="col form-floating mb-3 px-0 mx-1">
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? idPenjualan : '-'} disabled/>
+                    <label for="id_penjualan">Nomor Antrian</label>
+                </div>
+            </div>
             {/* Isi */}
             <div className="row">
                 {/* List */}
                 <div className="col-9">
-                    {/* Id penjualan, tanggal pemesanan, waktu, no antrian  */}
-                    {/* Kunjungan */}
-                    <div className="row">
-                        <div class="col-2 form-floating mb-3 px-0">
-                            <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={idPenjualan} disabled/>
-                            <label for="id_penjualan">ID Penjualan</label>
-                        </div>
-                        <div class="col-3 form-floating mb-3 px-0 mx-auto">
-                            <input type="date" class="form-control" id="tanggal_pemesanan"  value={dataContext.tanggal_penjualan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value})} />
-                            <label for="tanggal_pemesanan">Tanggal Penjualan</label>
-                        </div>
-
-                        <div class="form-floating col-2 px-0 mb-3 mx-auto">
-                            <input type="text" class="form-control" id="nomor_polisi" value = {dataContext.nama_pelanggan} onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} />
-                            <label for="nomor_polisi">Nama Pelanggan</label>
-                        </div>
-
-                        <div class="form-floating col-2 px-0 mb-3 mx-auto">
-                            <input type="text" class="form-control" id="nomor_polisi" value = {dataContext.nomor_polisi} onChange = {(e) => dispatch({type : 'SIMPAN_NOMOR_POLISI',data : e.target.value})} />
-                            <label for="nomor_polisi">Nomor Polisi</label>
-                        </div>
-
-                        <div class="col-2 form-floating mb-3 px-0 mx-auto">
-                            <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_MEKANIK',data : e.target.value})} disabled = {dataService.length > 0 ? false : true}>
-                                <option value='' selected>Tidak ada</option>
-                                {viewMekanik}
-                            </select>
-                            <label>Mekanik</label>
-                        </div>
-                    </div>
-              
-                    
                     {/* List pesanan */}
                     <div className="row">
                         <table class="table table-hover">
                             <thead>
                                 <tr>
                                     <th className="p-3"></th>
+                                    <th className="p-3">ID</th>
                                     <th className="p-3">Jenis</th>
-                                    <th className="p-3">ID Barang / Service</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
                                     <th className="p-3">Jumlah</th>
