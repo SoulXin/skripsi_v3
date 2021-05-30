@@ -109,6 +109,7 @@ const Index = (props) => {
                 {
                     status == "Selesai" || !dataContext.edit_penjualan || checkRetur ? null :
                     <td>
+                        <Link to={{ pathname : '/edit_service',state : {detail : list, harga : list.harga} }}className="btn btn-outline-secondary mx-1">Edit</Link>
                         <button className="btn btn-danger mx-1" onClick = {() => handleDelete(list)}>Hapus</button>
                     </td>
                 }
@@ -136,8 +137,10 @@ const Index = (props) => {
             if(checkRetur){
                 alert('Tidak bisa dibatalkan karena data sedang digunakan');
             }else{
+                console.log(idPenjualan)
                 // Pelanggan
-                await axios.delete(`http://localhost:5001/penjualan_pelanggan/delete_detail/${idRowPelanggan}/${idPenjualan}`);
+                await axios.delete(`http://localhost:5001/penjualan_pelanggan/delete_detail/${idPenjualan}`);
+
     
                 // Mekanik
                 if(dataContext.id_mekanik){
@@ -165,7 +168,8 @@ const Index = (props) => {
 
     const handleSave = async () => {
         const dataPenjualanHeader = {
-            tanggal_penjualan : dataContext.tanggal_penjualan
+            tanggal_penjualan : dataContext.tanggal_penjualan,
+            grand_total : totalBarang
         }
 
         const dataPenjualanPelanggan = {
@@ -202,6 +206,7 @@ const Index = (props) => {
     const handleComplete = async () => {
         try{
             const dataUpdate = {
+                grand_total : totalBarang,
                 status : 'Selesai'
             }
             await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataUpdate);
@@ -225,11 +230,16 @@ const Index = (props) => {
         }
     }
 
+    const handleBack = () => {
+        props.history.goBack();
+        dispatch({type : 'RESET_PENJUALAN'});
+    }
+
     return (
         <div className="container px-0 pt-5">
             {/* Atas */}
             <div className="row mb-4 pb-3 border-bottom">
-                <button className="col-1 btn btn-outline-secondary" onClick = {() => props.history.goBack()}>Kembali</button>
+                <button className="col-1 btn btn-outline-secondary" onClick = {handleBack}>Kembali</button>
                 <div className="col-5 mx-auto">
                     <h2>Detail Penjualan</h2>
                 </div>
@@ -269,7 +279,7 @@ const Index = (props) => {
                     <label>Mekanik</label>
                 </div>
                 <div class="col form-floating mb-3 px-0 mx-1">
-                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? idPenjualan : '-'} disabled/>
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? '15' : '-'} disabled/>
                     <label for="id_penjualan">Nomor Antrian</label>
                 </div>
             </div>

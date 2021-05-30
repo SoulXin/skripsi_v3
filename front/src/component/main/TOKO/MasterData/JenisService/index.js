@@ -1,7 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
-
+import {formatMoney} from '../../../../global/function'
 const Index = () => {
     const [data,setData] = useState([]);
     const [refresh,setRefresh] = useState(false);
@@ -28,8 +28,8 @@ const Index = () => {
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_service}</td>
-                <td className="p-3">{list.nama}</td>
-                <td className="p-3">{list.harga}</td>
+                <td className="p-3">{list.nama_service}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga)}</td>
                 <td className="p-3">{list.aktif ? "Aktif" : "Tidak Aktif"}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/form_jenis_service',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>

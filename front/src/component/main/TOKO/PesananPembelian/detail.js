@@ -94,7 +94,8 @@ const Index = (props) => {
     const handleSave = async () => {
         const data = {
             id_supplier : idSupplier,
-            tanggal_pemesanan : tanggalPemesanan
+            tanggal_pemesanan : tanggalPemesanan,
+            grand_total : totalBarang
         }
         try{
             await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,data);

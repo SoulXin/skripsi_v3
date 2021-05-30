@@ -84,7 +84,7 @@ const Index = (props) => {
     }
 
     const handleSave = async () => {
-        if(dataContext.id_supplier != '' && dataContext.tanggal_pembelian != '0000-00-00'){ // => supplier dan tanggal pembelian tidak kosong
+        if(dataContext.id_supplier != '' && dataContext.tanggal_pembelian != ''){ // => supplier dan tanggal pembelian tidak kosong
             if(dataContext.metode_pembayaran == 0 && dataContext.tanggal_jatuh_tempo > dataContext.tanggal_pembelian || dataContext.metode_pembayaran == 1){ // => metode pembayaran kredit dan jatuh tempo lebih besar dari pembelian
                 if(data.length > 0 ){ // => menggecek jika ada barang yang dimasukan
                     const dataTambah = {
@@ -102,12 +102,12 @@ const Index = (props) => {
                             }
                             await axios.put(`http://localhost:5001/barang_detail/update/${data[a].id_barang}`,dataBarang);
                         }
-                        if(dataContext.metode_pembayaran == 1){
+                        // if(dataContext.metode_pembayaran == 1){ // => jika tunai maka dia selesai
                             const dataPesananPembelianHeader = {
                                 status : 'Selesai'
                             }
                             await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,dataPesananPembelianHeader);
-                        }
+                        // }
                         await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
                         await dispatch({type : 'RESET_PEMBELIAN'});
                         alert('Pembelian berhasil di tambahkan');
@@ -156,7 +156,7 @@ const Index = (props) => {
                     </select>
                 </div>
                 <div class="form-floating mb-3 px-0 col mx-1">
-                    <input type="date" class="form-control" id="floatingInput" value={dataContext.tanggal_pembelian} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PEMBELIAN',data : e.target.value})}/>
+                    <input type="date" class="form-control" id="floatingInput" value={dataContext.tanggal_pembelian} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PEMBELIAN',data : e.target.value})} required/>
                     <label for="floatingInput">Tangal Pembelian</label>
                 </div>
                 <div className="col">

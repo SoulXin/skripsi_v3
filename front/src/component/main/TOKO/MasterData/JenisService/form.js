@@ -33,7 +33,7 @@ const Form = (props) => {
                 try{
                     const response = await axios.get(`http://localhost:5001/jenis_service/show_detail/${tempDetail.id_service}`);
                     setIdService(response.data.id_service);
-                    setNama(response.data.nama);
+                    setNama(response.data.nama_service);
                     setHarga(response.data.harga);
                     setAktif(response.data.aktif);
                 }catch(error){
@@ -65,7 +65,7 @@ const Form = (props) => {
 
         const data = {
             id_service : idService,
-            nama : nama,
+            nama_service : nama,
             harga : harga
         }
 
@@ -104,7 +104,7 @@ const Form = (props) => {
 
             <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" id="id_service" value={idService} onChange = {(e) => setIdService(e.target.value)} disabled = {detail ? true : false}/>
+                    <input type="text" className="form-control" id="id_service" value={idService} onChange = {(e) => setIdService(e.target.value)} disabled = {detail ? true : false} required/>
                     <label htmlFor="id_service" className="form-label">Id Service</label>
                 </div>
                 <div className="form-floating mb-3">

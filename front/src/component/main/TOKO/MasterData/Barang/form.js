@@ -147,7 +147,7 @@ const Add = (props) => {
             }
         }else{ // => tambah
             try{
-                if(nama && merek && kereta && hargaBeli && hargaJual && stokMin && stok){
+                if(idBarang && nama && merek && kereta && hargaBeli && hargaJual && stokMin && stok){
                     const dataBarangDetail  = {
                         id_barang : idBarang,
                         id_kategori : selectedKategori.id_kategori,
@@ -185,7 +185,7 @@ const Add = (props) => {
                 <div className="col-9">
 
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="id_barang" value={idBarang} onChange = {(e) => setIdBarang(e.target.value)} disabled = {detail ? true : false}/>
+                        <input type="text" className="form-control" id="id_barang" value={idBarang} onChange = {(e) => setIdBarang(e.target.value)} disabled = {detail ? true : false} required/>
                         <label htmlFor="id_barang" className="form-label">Id Barang</label>
                     </div>
                     <div className="form-floating mb-3">

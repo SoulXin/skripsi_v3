@@ -40,9 +40,9 @@ const Index = (props) => {
             <tr key={index}>
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                <td className="p-3">{list.harga_jual}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
                 <td className="p-3">{list.jumlah}</td>
-                <td className="p-3">{formatMoney(list.harga_jual * list.jumlah)}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga_jual * list.jumlah)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>
                 </td>

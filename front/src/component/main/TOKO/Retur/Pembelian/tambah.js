@@ -87,7 +87,7 @@ const Index = (props) => {
             const dataUpdate = {
                 tanggal_retur : dataContext.tanggal_retur,
                 jenis_penggembalian : dataContext.jenis_penggembalian,
-                alasan_retur : dataContext.tanggal_retur,
+                alasan_retur : dataContext.alasan_retur,
                 grand_total : grandTotal
             }
 

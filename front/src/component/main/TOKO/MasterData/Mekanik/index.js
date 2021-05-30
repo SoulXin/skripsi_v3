@@ -28,7 +28,7 @@ const Index = () => {
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_mekanik}</td>
-                <td className="p-3">{list.nama}</td>
+                <td className="p-3">{list.nama_mekanik}</td>
                 <td className="p-3">{list.no_telp}</td>
                 <td className="p-3">{list.alamat}</td>
                 <td className="p-3">{list.aktif ? "Aktif" : "Tidak Aktif"}</td>

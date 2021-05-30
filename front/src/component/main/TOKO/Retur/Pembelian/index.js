@@ -33,7 +33,7 @@ const Index = () => {
                 <td className="p-3">{list.id_retur_pembelian}</td>
                 <td className="p-3">{list.tanggal_retur}</td>
                 <td className="p-3">{list.Supplier.nama_supplier}</td>
-                <td className="p-3">{list.grand_total}</td>
+                <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/detail_retur_pembelian',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
                 </td>

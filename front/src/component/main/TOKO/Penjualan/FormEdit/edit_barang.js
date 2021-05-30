@@ -55,6 +55,7 @@ const Index = (props) => {
                 if(jumlah <= stok){
                     axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${idBarang}`, data)
                     .then((res) => {
+                        props.history.goBack();
                         alert('berhasil di ubah');
                     })
                     .catch((err) => {

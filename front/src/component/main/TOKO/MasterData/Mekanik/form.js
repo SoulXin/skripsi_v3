@@ -41,7 +41,7 @@ const Form = (props) => {
                 try{
                     const response = await axios.get(`http://localhost:5001/mekanik_header/show_detail/${tempDetail.id_mekanik}`);
                     setIdMekanik(response.data.id_mekanik);
-                    setNama(response.data.nama);
+                    setNama(response.data.nama_mekanik);
                     setNoTelp(response.data.no_telp);
                     setAlamat(response.data.alamat);
                     setGambar(response.data.gambar);
@@ -126,7 +126,7 @@ const Form = (props) => {
             <form className="row" onSubmit={handleSubmit}>
                 <div className="col-9">
                     <div className="form-floating mb-3">
-                        <input type="text" className="form-control" id="id_mekanik" value={idMekanik} onChange = {(e)=> setIdMekanik(e.target.value)} disabled={detail ? true : false}/>
+                        <input type="text" className="form-control" id="id_mekanik" value={idMekanik} onChange = {(e)=> setIdMekanik(e.target.value)} disabled={detail ? true : false} required/>
                         <label htmlFor="id_mekanik" className="form-label">Id Mekanik</label>
                     </div>
                     <div className="form-floating mb-3">
@@ -134,7 +134,7 @@ const Form = (props) => {
                         <label htmlFor="nama">Nama</label>
                     </div>
                     <div className="form-floating mb-3">
-                        <input type="text" value={noTelp} className="form-control" id="no_telp" placeholder="Nomor Telepon" onChange = {(e) => setNoTelp(e.target.value)} required/>
+                        <input type="text" value={noTelp} className="form-control" id="no_telp" placeholder="Nomor Telepon" onChange = {(e) => setNoTelp(e.target.value)} required autoComplete="off"/>
                         <label htmlFor="no_telp">Nomor Telepon</label>
                     </div>
                     <div className="form-floating mb-3">

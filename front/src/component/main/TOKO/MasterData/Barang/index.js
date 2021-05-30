@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import {formatMoney} from '../../../../global/function'
 
 const Index = () => {
     const [data,setData] = useState([]);
@@ -32,8 +33,8 @@ const Index = () => {
                 <td className="p-3">{list.nama_barang}</td>
                 <td className="p-3">{list.merek_barang}</td>
                 <td className="p-3">{list.jenis_kereta}</td>
-                <td className="p-3">{list.harga_beli}</td>
-                <td className="p-3">{list.harga_jual}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
                 <td className="p-3">{list.Barang_Detail.stok}</td>
                 <td className="p-3">{list.aktif ? "Aktif" : "Tidak Aktif"}</td>
                 <td className="p-3" style={{position:'relative'}}>

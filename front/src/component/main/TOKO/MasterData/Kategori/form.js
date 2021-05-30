@@ -100,7 +100,7 @@ const Form = (props) => {
 
             <form onSubmit={handleSubmit}>
                 <div className="form-floating mb-3">
-                    <input type="text" className="form-control" id="id_kategori" value={idKategori} onChange = {(e) => setIdKategori(e.target.value)} disabled = {detail ? true : false}/>
+                    <input type="text" className="form-control" id="id_kategori" value={idKategori} onChange = {(e) => setIdKategori(e.target.value)} disabled = {detail ? true : false} required/>
                     <label htmlFor="id_kategori" className="form-label">Id Kategori</label>
                 </div>
                 <div className="form-floating mb-3">

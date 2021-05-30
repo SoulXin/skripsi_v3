@@ -121,8 +121,9 @@ const Index = (props) => {
             dispatch({type : 'RESET_PENJUALAN'});
             await axios.delete(`http://localhost:5001/penjualan_detail/delete/${idPenjualan}`);
             await axios.delete(`http://localhost:5001/penjualan_service/delete/${idPenjualan}`);
-            await axios.delete(`http://localhost:5001/penjualan_header/delete/${idPenjualan}`)
+            await axios.delete(`http://localhost:5001/penjualan_header/delete/${idPenjualan}`);
             await props.history.goBack();
+            dispatch({type : 'RESET_PENJUALAN'});
         }catch(error){
             console.log(error);
         }
@@ -177,7 +178,7 @@ const Index = (props) => {
 
             // Header
             await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
-            await dispatch({type : 'RESET_PENJUALAN'});
+            dispatch({type : 'RESET_PENJUALAN'});
             alert('Penjualan berhasil ditambahkan');
             props.history.goBack();
         }catch(error){

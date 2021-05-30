@@ -11,7 +11,7 @@ const Mekanik_Header = db.sequelize.define('mekanik_header',{
         type : Sequelize.STRING
     },
     no_telp : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     alamat : {
         type : Sequelize.STRING

@@ -87,8 +87,12 @@ const Index = (props) => {
             const dataUpdate = {
                 tanggal_retur : dataContext.tanggal_retur,
                 jenis_penggembalian : dataContext.jenis_penggembalian,
-                alasan_retur : dataContext.tanggal_retur,
+                alasan_retur : dataContext.alasan_retur,
                 grand_total : grandTotal
+            }
+
+            const dataPenjualanHeader = {
+                status : 'Selesai'
             }
 
             if(dataContext.tanggal_retur != ''){
@@ -105,7 +109,7 @@ const Index = (props) => {
                             }
                         });
                     }
-    
+                    await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
                     await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete/${idRetur}/0`);
                     await axios.put(`http://localhost:5001/retur_penjualan_header/update/${idRetur}`,dataUpdate);
                     await props.history.goBack();

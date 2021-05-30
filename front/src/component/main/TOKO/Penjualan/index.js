@@ -66,7 +66,7 @@ const Index = () => {
                             <th className="p-3">ID Penjualan</th>
                             <th className="p-3">Tanggal Penjualan</th>
                             <th className="p-3">Nama Pelanggan</th>
-                            <th className="p-3">BK Kereta</th>
+                            <th className="p-3">Nomor Polisi</th>
                             <th className="p-3">Total</th>
                             <th className="p-3">Status</th>
                             <th className="p-3"></th>

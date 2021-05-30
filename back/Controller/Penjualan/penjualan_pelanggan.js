@@ -71,7 +71,7 @@ exports.delete = (req,res) => {
 }
 
 exports.delete_detail = (req,res) => {
-    const {id,id_penjualan} = req.params;
+    const {id_penjualan} = req.params;
     Penjualan_Pelanggan.destroy({
         where : {
             id_penjualan : id_penjualan
