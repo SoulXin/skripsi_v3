@@ -28,19 +28,19 @@ const Index = (props) => {
         const loadData = async () => {
             try{
                 const temp_detail = props.location.state;
+                setNamaSupplier(temp_detail.Supplier.nama_supplier);
+                setNamaBank(temp_detail.Supplier.bank_supplier);
+                setNoRek(temp_detail.Supplier.no_rek_supplier);
+
                 const response = await axios.get(`http://localhost:5001/pembayaran_hutang_header/show_detail/${temp_detail.id_pembayaran}`);
-
                 setDetail(temp_detail);
-                setData(response.data.Pembayaran_Hutang_Detail);
-                setJenisPembayaran(response.data.jenis_pembayaran);
-                setNamaSupplier(response.data.Supplier.nama_supplier);
-                setNamaBank(response.data.Supplier.bank_supplier);
-                setNoRek(response.data.Supplier.no_rek_supplier);
-                setTanggalPembayara(response.data.tanggal_pembayaran);
-                setStatusPembayaran(response.data.status_pembayaran);
-                setTotal(response.data.total);
+                setData(response.data);
+                setJenisPembayaran(response.data[0].Pembayaran_Hutang_Header.jenis_pembayaran);
+                setTanggalPembayara(response.data[0].Pembayaran_Hutang_Header.tanggal_pembayaran);
+                setStatusPembayaran(response.data[0].Pembayaran_Hutang_Header.status_pembayaran);
+                setTotal(formatMoney(response.data[0].Pembayaran_Hutang_Header.total));
 
-                if(response.data.status_pembayaran){
+                if(response.data[0].Pembayaran_Hutang_Header.status_pembayaran){
                     setTempTotal(temp_detail.total);
                 }
                 
@@ -67,7 +67,7 @@ const Index = (props) => {
 
     const handleSave = async () => {
         if(tempTotal == detail.total){
-            if(tanggalPembayaran != '0000-00-00'){
+            if(tanggalPembayaran != '0000-00-00' || tanggalPembayaran != ''){
                 try{
                     const dataHeader = {
                         tanggal_pembayaran : tanggalPembayaran,
@@ -184,7 +184,7 @@ const Index = (props) => {
                                 <label htmlFor="id_barang" className="form-label px-4">Bank</label>
                             </div>
                             <div className="form-floating mb-2 col">
-                                <input type="text" className="form-control" value="782738122" disabled/>
+                                <input type="text" className="form-control" value={noRek} disabled/>
                                 <label htmlFor="id_barang" className="form-label px-4">No.Rekening</label>
                             </div>
                         </div> : null

@@ -20,10 +20,10 @@ const Index = (props) => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const response = await axios.get('http://localhost:5001/pembayaran_hutang_header/show_all_hutang');
+                // const response = await axios.get('http://localhost:5001/pembayaran_hutang_header/show_all_hutang');
                 const responseSupplier = await axios.get('http://localhost:5001/supplier/show_all');
                 setSupplier(responseSupplier.data);
-                setData(response.data);
+                // setData(response.data);
 
             }catch(error){
                 setError(true);
@@ -58,11 +58,9 @@ const Index = (props) => {
     const handleSearch = async () => {
         if(idSupplier != '0'){
             const response = await axios.get(`http://localhost:5001/pembayaran_hutang_header/show_all_hutang_supplier/${idSupplier}`);
+            console.log(idSupplier)
             setSearch(true);
             setData(response.data);
-        }else{
-            setSearch(false);
-            setRefresh(!refresh);
         }
     }
 
@@ -106,6 +104,7 @@ const Index = (props) => {
                }
                alert('Silakan lanjutkan ke pembayaran');
                setRefresh(!refresh);
+               history.push('/index_pembayaran');
             }catch(error){
                 console.log(error);
             }
@@ -122,11 +121,11 @@ const Index = (props) => {
                     <h2>List Hutang Supplier</h2>
                 </div>
 
-                <div className="offset-5 col row">
-                    <div className="col">
+                <div className="offset-4 col row">
+                    <div className="col-7">
                         <label>Supplier</label>
                         <select class="form-select" onChange={(e) => setIdSupplier(e.target.value)}>
-                            <option value = "0">Semua</option>
+                            <option value = "0" selected disabled>Pilih Supplier</option>
                             {viewSupplier}
                         </select>
                     </div>

@@ -33,25 +33,24 @@ exports.show_all = (req,res) => {
 
 exports.show_detail = (req,res) => {
     const {id} = req.params;
-    Pembayaran_Hutang_Header.findOne({
+    Pembayaran_Hutang_Detail.findAll({
         where : {
             id_pembayaran : id
         },
         include : [
             {
-                model : Pembayaran_Hutang_Detail,
-                as : 'Pembayaran_Hutang_Detail',
+                model : Pembayaran_Hutang_Header,
+                as : 'Pembayaran_Hutang_Header',
                 include : [
                     {
-                        model : Pembelian_Header,
-                        as : 'Pembelian_Header',
-                         
+                        model : Supplier,
+                        as : 'Supplier'
                     }
                 ]
             },
             {
-                model : Supplier,
-                as : 'Supplier'
+                model : Pembelian_Header,
+                as : 'Pembelian_Header'
             }
         ]
     })

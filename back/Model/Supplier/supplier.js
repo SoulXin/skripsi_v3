@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
+const Pembayaran_Hutang_Detail = require('../Pembayaran_Hutang/pembayaran_hutang_detail');
 const Pembayaran_Hutang_Header = require('../Pembayaran_Hutang/pembayaran_hutang_header');
 const Pembelian_Header = require('../Pembelian/pembelian_header');
 const Pesanan_Pembelian_Header = require('../Pesanan_Pembelian/pesanan_pembelian_header');
@@ -26,7 +27,7 @@ const Supplier = db.sequelize.define('supplier',{
         type : Sequelize.STRING
     },
     no_rek_supplier : {
-        type : Sequelize.INTEGER
+        type : Sequelize.STRING
     },
     keterangan : {
         type : Sequelize.STRING
@@ -48,6 +49,7 @@ Pembelian_Header.belongsTo(Supplier,{as : 'Supplier', foreignKey : 'id_supplier'
 // Pembayaran Hutang
 Supplier.hasOne(Pembayaran_Hutang_Header,{as : 'Pembayaran_Hutang_Header', foreignKey : 'id_supplier'});
 Pembayaran_Hutang_Header.belongsTo(Supplier,{as : 'Supplier', foreignKey : 'id_supplier'});
+
 
 
 
