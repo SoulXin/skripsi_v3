@@ -44,12 +44,17 @@ const Index = (props) => {
 
         try{
             const responseDataLaporan = await axios.post('http://localhost:5001/retur_pembelian_header/search_date',data);
-            console.log(responseDataLaporan);
             const responseDataLaporanPerItem = await axios.post('http://localhost:5001/retur_pembelian_header/laporan_per_item',data);
-            setdataLaporan(responseDataLaporan.data);
-            setDataLaporanPerItem(responseDataLaporanPerItem.data);
-            setNamaSupplier(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Supplier.nama_supplier : '');
+            
+            if(responseDataLaporan.data.length > 0 && responseDataLaporanPerItem.data.length > 0){
+                setdataLaporan(responseDataLaporan.data);
+                setDataLaporanPerItem(responseDataLaporanPerItem.data);
+                setNamaSupplier(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Supplier.nama_supplier : '');
+            }else{
+                setNamaSupplier('');
+            }
         }catch(error){
+            setNamaSupplier('');
             console.log(error);
         }
     }

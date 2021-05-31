@@ -44,6 +44,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = dataRetur ? dataRetur.map((list,index) => {
+        console.log(list)
         if(list.id_barang && list.total){
             return (
                 <tr key={index}>
@@ -142,10 +143,6 @@ const Index = (props) => {
                         <div class="form-floating mb-3 px-0 col-2 mx-1">
                             <input type="text" class="form-control" id="floatingInput" value={idRetur} disabled/>
                             <label for="floatingInput">ID Retur</label>
-                        </div>
-                        <div class="form-floating mb-3 px-0 col-2 mx-1">
-                            <input type="text" class="form-control" id="floatingInput" value={dataRetur.length} disabled/>
-                            <label for="floatingInput">Jumlah Barang</label>
                         </div>
                     </div>
                     <table class="table table-hover">

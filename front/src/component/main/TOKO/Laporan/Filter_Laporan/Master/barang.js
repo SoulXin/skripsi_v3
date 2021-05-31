@@ -43,12 +43,14 @@ const Index = (props) => {
     }) : null;
 
     const handleSearch = async (e) => {
+        console.log("masu")
         e.preventDefault();
         try{
             const dataSearch = {
                 nama_barang : searchNamaBarang,
                 merek_barang : searchMerekBarang,
-                jenis_kereta : searchJenisKereta
+                jenis_kereta : searchJenisKereta,
+                aktif : 1
             }
             const response = await axios.post('http://localhost:5001/barang_header/search',dataSearch);
             setData(response.data);

@@ -174,26 +174,14 @@ exports.search_date = async (req,res) => {
                         as : 'Retur_Penjualan_Detail',
                         include : [
                             {
-                                model : Penjualan_Header,
-                                as : 'Penjualan_Header',
-                                include : [
-                                    {
-                                        model : Penjualan_Pelanggan,
-                                        as : 'Penjualan_Pelanggan',
-                                        where : {
-                                            [Op.or] : [
-                                                {
-                                                    nama_pelanggan : {
-                                                        [Op.substring] : nama
-                                                    },
-                                                    nomor_polisi : {
-                                                        [Op.substring] : nama
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
+                                model : Penjualan_Pelanggan,
+                                as : 'Penjualan_Pelanggan',
+                                where : {
+                                    [Op.or] : [
+                                        { nama_pelanggan : nama },
+                                        { nomor_polisi : nama }
+                                    ]
+                                }
                             }
                         ]
                     }
@@ -228,7 +216,6 @@ exports.search_date = async (req,res) => {
             })
             res.status(200).json(response);
         }else if(nama){
-            console.log("NAMAMAMAMAM")
             const response = await Retur_Penjualan_Header.findAll({
                 include : [
                     {
@@ -236,26 +223,14 @@ exports.search_date = async (req,res) => {
                         as : 'Retur_Penjualan_Detail',
                         include : [
                             {
-                                model : Penjualan_Header,
-                                as : 'Penjualan_Header',
-                                include : [
-                                    {
-                                        model : Penjualan_Pelanggan,
-                                        as : 'Penjualan_Pelanggan',
-                                        where : {
-                                            [Op.or] : [
-                                                {
-                                                    nama_pelanggan : {
-                                                        [Op.substring] : nama
-                                                    },
-                                                    nomor_polisi : {
-                                                        [Op.substring] : nama
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
+                                model : Penjualan_Pelanggan,
+                                as : 'Penjualan_Pelanggan',
+                                where : {
+                                    [Op.or] : [
+                                        { nama_pelanggan : nama },
+                                        { nomor_polisi : nama }
+                                    ]
+                                }
                             }
                         ]
                     }
@@ -318,26 +293,14 @@ exports.laporan_per_item = async (req,res) => {
                                 as : 'Barang_Header'
                             },
                             {
-                                model : Penjualan_Header,
-                                as : 'Penjualan_Header',
-                                include : [
-                                    {
-                                        model : Penjualan_Pelanggan,
-                                        as : 'Penjualan_Pelanggan',
-                                        where : {
-                                            [Op.or] : [
-                                                {
-                                                    nama_pelanggan : {
-                                                        [Op.substring] : nama
-                                                    },
-                                                    nomor_polisi : {
-                                                        [Op.substring] : nama
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
+                                model : Penjualan_Pelanggan,
+                                as : 'Penjualan_Pelanggan',
+                                where : {
+                                    [Op.or] : [
+                                            { nama_pelanggan : nama} ,
+                                            { nomor_polisi : nama }
+                                    ]
+                                }
                             }
                         ]
                     }
@@ -349,6 +312,8 @@ exports.laporan_per_item = async (req,res) => {
                         id_retur_penjualan : retur_penjualan_header[a].id_retur_penjualan,
                         id_penjualan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_penjualan,
                         id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
+                        nama_pelanggan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Penjualan_Pelanggan.nama_pelanggan,
+                        nomor_polisi : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Penjualan_Pelanggan.nomor_polisi,
                         tanggal_retur : retur_penjualan_header[a].tanggal_retur,
                         nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
                         harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
@@ -410,27 +375,15 @@ exports.laporan_per_item = async (req,res) => {
                                 model : Barang_Header,
                                 as : 'Barang_Header'
                             },
-                            {
-                                model : Penjualan_Header,
-                                as : 'Penjualan_Header',
-                                include : [
-                                    {
-                                        model : Penjualan_Pelanggan,
-                                        as : 'Penjualan_Pelanggan',
-                                        where : {
-                                            [Op.or] : [
-                                                {
-                                                    nama_pelanggan : {
-                                                        [Op.substring] : nama
-                                                    },
-                                                    nomor_polisi : {
-                                                        [Op.substring] : nama
-                                                    }
-                                                }
-                                            ]
-                                        }
-                                    }
-                                ]
+                            {        
+                                model : Penjualan_Pelanggan,
+                                as : 'Penjualan_Pelanggan',
+                                where : {
+                                    [Op.or] : [
+                                            { nama_pelanggan : nama} ,
+                                            { nomor_polisi : nama }
+                                    ]
+                                }
                             }
                         ]
                     }
@@ -442,6 +395,8 @@ exports.laporan_per_item = async (req,res) => {
                         id_retur_penjualan : retur_penjualan_header[a].id_retur_penjualan,
                         id_penjualan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_penjualan,
                         id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
+                        nama_pelanggan : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Penjualan_Pelanggan.nama_pelanggan,
+                        nomor_polisi : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Penjualan_Pelanggan.nomor_polisi,
                         tanggal_retur : retur_penjualan_header[a].tanggal_retur,
                         nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
                         harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,

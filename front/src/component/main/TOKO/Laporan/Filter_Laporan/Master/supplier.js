@@ -44,7 +44,8 @@ const Index = (props) => {
         e.preventDefault();
         try{
             const dataSearch = {
-                nama_supplier : searchSupplier
+                nama_supplier : searchSupplier,
+                aktif : 1
             }
             const response = await axios.post('http://localhost:5001/supplier/search',dataSearch);
             setData(response.data);

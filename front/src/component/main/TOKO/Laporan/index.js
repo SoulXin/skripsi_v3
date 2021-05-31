@@ -57,12 +57,12 @@ const Index = () => {
                         <Link to = "/laporan_penjualan" className="btn btn-outline-success mx-1 w-100">Penjualan</Link>
                     </div>
                 }
-                {
+                {/* {
                     !dataContext.lihat_laporan_pesanan_pembelian ? null : 
                     <div className="col-2">
                         <Link to = "/laporan_pesanan_pembelian" className="btn btn-outline-success mx-1 w-100">Pesanan Pembelian</Link>
                     </div>
-                }
+                } */}
                 {
                     !dataContext.lihat_laporan_pembelian ? null : 
                     <div className="col-2">

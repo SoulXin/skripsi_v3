@@ -27,10 +27,13 @@ export class Cetak_Retur_Pembelian_Per_Item extends React.PureComponent {
                             <td>Sampai Tanggal</td>
                             <td>{this.props.sampai ? this.props.sampai : '-'}</td>
                         </tr>
-                        <tr>
-                            <td>Supplier</td>
-                            <td>{this.props.supplier ? this.props.supplier : '-'}</td>
-                        </tr>
+                        {
+                            this.props.supplier ? 
+                            <tr>
+                                <td>Supplier</td>
+                                <td>{this.props.supplier}</td>
+                            </tr> : null
+                        }
                         <tr>
                             <td>Tanggal Cetak</td>
                             <td>  {moment(this.props.tanggal).utc().format('DD / MMMM / YYYY')} </td>

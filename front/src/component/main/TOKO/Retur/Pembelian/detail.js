@@ -136,6 +136,12 @@ const Index = (props) => {
             {/* List */}
             <div className="row">
                 <div className="col-9">
+                    <div className="row">
+                        <div class="form-floating mb-3 px-0 col-2 mx-1">
+                            <input type="text" class="form-control" id="floatingInput" value={idRetur} disabled/>
+                            <label for="floatingInput">ID Retur</label>
+                        </div>
+                    </div>
                     <table class="table table-hover">
                         <thead>
                             <tr>

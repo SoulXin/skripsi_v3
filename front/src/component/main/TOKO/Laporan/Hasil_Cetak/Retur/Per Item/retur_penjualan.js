@@ -27,10 +27,20 @@ export class Cetak_Retur_Penjualan_Per_Item extends React.PureComponent {
                             <td>Sampai Tanggal</td>
                             <td>{this.props.sampai ? this.props.sampai : '-'}</td>
                         </tr>
-                        {/* <tr>
-                            <td>Nama Pelanggan / Nomor Polisi</td>
-                            <td>{this.props.pelanggan ? this.props.pelanggan : ''}</td>
-                        </tr> */}
+                        {
+                            this.props.pelanggan ? 
+                            <tr>
+                                <td>Nama Pelanggan</td>
+                                <td>{this.props.pelanggan }</td>
+                            </tr> : null
+                        }
+                        {
+                            this.props.nomor_polisi ? 
+                            <tr>
+                                <td>Nomor Polisi</td>
+                                <td>{this.props.nomor_polisi}</td>
+                            </tr> : null
+                        }
                         <tr>
                             <td>Tanggal Cetak</td>
                             <td>  {moment(this.props.tanggal).utc().format('DD / MMMM / YYYY')} </td>

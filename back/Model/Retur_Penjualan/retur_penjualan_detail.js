@@ -4,7 +4,7 @@ const db = require ('../../Database/db');
 const Retur_Penjualan_Detail = db.sequelize.define('retur_penjualan_detail',{
     id_retur_penjualan  : {
         type : Sequelize.INTEGER,
-        primaryKey : true,
+        unique: true
     },
     id_penjualan  : {
         type : Sequelize.INTEGER

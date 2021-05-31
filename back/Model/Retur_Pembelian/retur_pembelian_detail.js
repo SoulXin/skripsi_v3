@@ -3,8 +3,8 @@ const db = require ('../../Database/db');
 
 const Retur_Pembelian_Detail = db.sequelize.define('retur_pembelian_detail',{
     id_retur_pembelian : {
-        primaryKey : true,
-        type : Sequelize.INTEGER
+        type : Sequelize.INTEGER,
+        unique: true
     },
     id_pembelian : {
         type : Sequelize.INTEGER
