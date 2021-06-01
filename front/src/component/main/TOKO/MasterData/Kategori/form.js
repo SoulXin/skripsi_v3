@@ -95,7 +95,7 @@ const Form = (props) => {
             <div className="row" style={{position:'relative'}}>
                 <Link to="/index_kategori" className="btn btn-outline-secondary col-1" style={{position:'absolute',top:'15px'}}>Kembali</Link>
                 <h1 className="text-center border-bottom pt-2 pb-2 fw-bold col">{ detail ? 'Detail Kategori' : 'Tambah Kategori' }</h1>
-                <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button>
+                {/* <button className="btn btn-success col-1" style={{position:'absolute',top:'15px',right:0}}>Cetak</button> */}
             </div>
 
             <form onSubmit={handleSubmit}>
