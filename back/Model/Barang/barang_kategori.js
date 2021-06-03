@@ -1,20 +1,14 @@
 const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
 
-const Barang_Detail = db.sequelize.define('barang_detail',{
+const Barang_Kategori = db.sequelize.define('barang_kategori',{
     id_barang : {
         type : Sequelize.STRING,
         primaryKey : true
     },
     id_kategori : {
         type : Sequelize.STRING
-    },
-    stok_minimal : {
-        type : Sequelize.INTEGER
-    },
-    stok : {
-        type : Sequelize.INTEGER
     }
 });
 
-module.exports = Barang_Detail
+module.exports = Barang_Kategori

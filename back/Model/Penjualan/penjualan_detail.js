@@ -10,9 +10,6 @@ const Penjualan_Detail = db.sequelize.define('penjualan_detail',{
     id_barang : {
         type : Sequelize.STRING
     },
-    harga_jual: {
-        type : Sequelize.INTEGER
-    },
     jumlah : {
         type : Sequelize.INTEGER
     },

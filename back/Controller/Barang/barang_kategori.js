@@ -1,12 +1,10 @@
-const Barang = require('../../Model/Barang/barang_detail');
+const Barang = require('../../Model/Barang/barang_kategori');
 
 exports.register = (req,res) => {
-    const {id_barang,id_kategori,stok_minimal,stok} = req.body;
+    const {id_barang,id_kategori} = req.body;
     Barang.create({
         id_barang : id_barang,
-        id_kategori : id_kategori,
-        stok_minimal : stok_minimal,
-        stok : stok
+        id_kategori : id_kategori
     })
     .then((result) => {
         res.status(200).json(result);
@@ -18,11 +16,9 @@ exports.register = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {id_kategori,stok_minimal,stok} = req.body;
+    const {id_kategori} = req.body;
     Barang.update({
-        id_kategori : id_kategori,
-        stok_minimal : stok_minimal,
-        stok : stok
+        id_kategori : id_kategori
     },{
         where : {
             id_barang : id

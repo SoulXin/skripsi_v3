@@ -1,10 +1,10 @@
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const { Op } = require("sequelize");
 const Barang_Header = require('../../Model/Barang/barang_header');
-const Barang_Detail = require('../../Model/Barang/barang_detail');
+const Barang_Kategori = require('../../Model/Barang/barang_kategori');
 
 exports.register = async (req,res) => {
-    const {id_penjualan,id_barang,harga_jual,jumlah,total} = req.body;
+    const {id_penjualan,id_barang,jumlah,total} = req.body;
     try{
         await Penjualan_Detail.destroy({ 
             where : {
@@ -17,7 +17,6 @@ exports.register = async (req,res) => {
         await Penjualan_Detail.create({
             id_penjualan : id_penjualan,
             id_barang : id_barang,
-            harga_jual : harga_jual,
             jumlah : jumlah,
             total : total
         })
@@ -40,8 +39,8 @@ exports.show_detail = (req,res) => {
                 as : 'Barang_Header',
                 include : [
                     {
-                        model : Barang_Detail,
-                        as : 'Barang_Detail',
+                        model : Barang_Kategori,
+                        as : 'Barang_Kategori',
                     }
                 ]
             },
@@ -57,9 +56,8 @@ exports.show_detail = (req,res) => {
 
 exports.update = (req,res) => {
     const {id, id_barang} = req.params;
-    const {harga_jual,jumlah,total} = req.body;
+    const {jumlah,total} = req.body;
     Penjualan_Detail.update({
-        harga_jual : harga_jual,
         jumlah : jumlah,
         total : total
     },{

@@ -143,11 +143,11 @@ const Index = (props) => {
                     <h2>Detail Retur Penjualan</h2>
                 </div>
                 <div className="col-2 row">
-                    {/* <ReactToPrint
+                    <ReactToPrint
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Faktur</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataRetur} idRetur = {idRetur} idPenjualan = {idPenjualan}   tanggal_retur = {tanggalRetur}/></div> */}
+                    <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataRetur} idRetur = {idRetur} idPenjualan = {idPenjualan}   tanggal_retur = {tanggalRetur}/></div>
                 </div>
             </div>
             

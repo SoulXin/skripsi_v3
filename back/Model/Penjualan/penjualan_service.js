@@ -9,8 +9,8 @@ const Penjualan_Service = db.sequelize.define('penjualan_service',{
     id_service : {
         type : Sequelize.STRING
     },
-    harga : {
-        type : Sequelize.INTEGER
+    id_mekanik : {
+        type : Sequelize.STRING
     }
 });
 

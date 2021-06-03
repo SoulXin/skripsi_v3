@@ -43,9 +43,6 @@ exports.show_all = (req,res) => {
 
 exports.show_all_laporan = (req,res) => {
     Pembelian_Header.findAll({
-        where : {
-            status : 'Selesai'
-        },
         include : [
             {
                 model : Supplier,
@@ -152,17 +149,10 @@ exports.search_date = async (req,res) => {
     try{
         if(dari && sampai && nama){
             const response = await Pembelian_Header.findAll({
-                where : {
-                    [Op.and] : [
-                        {
-                            tanggal_pembelian : {
-                                [Op.between] : [dari,sampai]
-                            }
-                        },
-                        {
-                            status : 'Selesai'
-                        }
-                    ]
+                where : {  
+                    tanggal_pembelian : {
+                        [Op.between] : [dari,sampai]
+                    } 
                 },
                 include : [
                     {
@@ -179,9 +169,6 @@ exports.search_date = async (req,res) => {
             res.status(200).json(response);
         }else if(nama){
             const response = await Pembelian_Header.findAll({
-                where : {  
-                    status : 'Selesai'
-                },
                 include : [
                     {
                         model : Supplier,
@@ -198,16 +185,9 @@ exports.search_date = async (req,res) => {
         }else if(dari && sampai){
             const response = await Pembelian_Header.findAll({
                 where : {
-                    [Op.and] : [
-                        {
-                            tanggal_pembelian : {
-                                [Op.between] : [dari,sampai]
-                            }
-                        },
-                        {
-                            status : 'Selesai'
-                        }
-                    ]
+                    tanggal_pembelian : {
+                        [Op.between] : [dari,sampai]
+                    } 
                 },
                 include : [
                     {
@@ -219,9 +199,6 @@ exports.search_date = async (req,res) => {
             res.status(200).json(response);
         }else{
             const response = await Pembelian_Header.findAll({
-                where : {  
-                    status : 'Selesai'
-                },
                 include : [
                     {
                         model : Supplier,

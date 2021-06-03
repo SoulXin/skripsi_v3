@@ -69,11 +69,10 @@ const Index = (props) => {
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Barang',list.id_penjualan,list.id_barang)}>Hapus</button>
                 </td>
                 <td>{list.Barang_Header.id_barang}</td>
-                <td>Barang</td>
                 <td>{list.Barang_Header.nama_barang}</td>
-                <td>Rp. {formatMoney(list.harga_jual)}</td>
+                <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                 <td>{list.jumlah}</td>
-                <td>Rp. {formatMoney(list.harga_jual * list.jumlah)}</td>
+                <td>Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
             </tr>
         )
     }) : null;
@@ -86,11 +85,8 @@ const Index = (props) => {
                     <button className="btn btn-danger mx-1" onClick = {() => handleDelete('Service',list.id_penjualan,list.id_service)}>Hapus</button>
                 </td>
                 <td>{list.Jenis_Service.id_service}</td>
-                <td>Service</td>
                 <td>{list.Jenis_Service.nama_service}</td>
-                <td>Rp. {formatMoney(list.harga)}</td>
-                <td>1</td>
-                <td>Rp. {formatMoney(list.harga)}</td>
+                <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
             </tr>
         )
     }) : null;
@@ -244,12 +240,12 @@ const Index = (props) => {
                 <div className="col-9">
                     {/* List pesanan */}
                     <div className="row">
-                        <table class="table table-hover">
+                        <h3>List Barang</h3>
+                        <table class="table table-hover border">
                             <thead>
                                 <tr>
                                     <th className="p-3"></th>
-                                    <th className="p-3">ID</th>
-                                    <th className="p-3">Jenis</th>
+                                    <th className="p-3">ID Barang</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
                                     <th className="p-3">Jumlah</th>
@@ -258,9 +254,24 @@ const Index = (props) => {
                             </thead>
                             <tbody>
                                 {viewBarang}
+                            </tbody>
+                        </table>
+
+                        <h3>List Service</h3>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th className="p-3"></th>
+                                    <th className="p-3">ID Service</th>
+                                    <th className="p-3">Nama</th>
+                                    <th className="p-3">Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {viewService}
                             </tbody>
                         </table>
+
 
                         <div className="col-12 row">
                             <Link to={{ pathname : '/tambah_service_penjualan_offline',state : idPenjualan }} className = "col-5 mx-auto btn btn-outline-success">Tambah Service</Link>

@@ -49,55 +49,72 @@ export class Faktur_Penjualan extends React.PureComponent {
                 
             </div>
             <div className="row mx-auto">
+                <h3 className="text-center">Barang</h3>
                 <table className="table_anak">
-                <thead style={{borderBottom : '2px solid black'}}>
-                    <th>ID</th>
-                    <th>Jenis</th>
-                    <th>Nama</th>
-                    <th>Harga</th>
-                    <th>Jumlah</th>
-                    <th>Total</th>
-                </thead>
-                    {
-                        this.props.dataTableBarang.map((list,index) => {
-                            return (
-                                <tr>
-                                    <td>{list.Barang_Header.id_barang}</td>
-                                    <td>Barang</td>
-                                    <td>{list.Barang_Header.nama_barang}</td>
-                                    <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
-                                    <td>{list.jumlah}</td>
-                                    <td>Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
-                                </tr>
-                            )
-                        })
-                    }
+                    <thead style={{borderBottom : '2px solid black'}}>
+                        <th>ID Barang</th>
+                        <th>Nama</th>
+                        <th>Harga</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
+                    </thead>
+                        {
+                            this.props.dataTableBarang.map((list,index) => {
+                                return (
+                                    <tr>
+                                        <td>{list.Barang_Header.id_barang}</td>
+                                        <td>{list.Barang_Header.nama_barang}</td>
+                                        <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
+                                        <td>{list.jumlah}</td>
+                                        <td>Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                </table>
 
-                    {
-                        this.props.dataTableService.map((list,index) => {
-                            return (
-                                <tr>
-                                    <td>{list.Jenis_Service.id_service}</td>
-                                    <td>Service</td>
-                                    <td>{list.Jenis_Service.nama_service}</td>
-                                    <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
-                                    <td>1</td>
-                                    <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
-                                </tr>
-                            )
-                        })
-                    }
+                <h3 className="text-center">Service</h3>
+                <table className="table_anak">
+                    <thead style={{borderBottom : '2px solid black'}}>
+                        <th>ID Service</th>
+                        <th>Nama</th>
+                        <th>Harga</th>
+                    </thead>
+                        {
+                            this.props.dataTableService.map((list,index) => {
+                                return (
+                                    <tr>
+                                        <td>{list.Jenis_Service.id_service}</td>
+                                        <td>{list.Jenis_Service.nama_service}</td>
+                                        <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                                    </tr>
+                                )
+                            })
+                        }
+                </table>
+
+                <table className="table_anak">
                     <tr style={{borderTop : '2px solid black',background : 'white'}}>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
-                        <td >&nbsp;</td>
-                        <td >&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
                         <td style = {{borderBottom : '2px solid black'}}>Grand Total : </td>
                         <td style = {{borderBottom : '2px solid black'}}>Rp. {formatMoney(this.state.totalBarang + this.state.totalService)}</td>
                     </tr>
                 </table>
+
             </div>
-            
+
+           
+
+
             <div className = "row">
                 <div className = "col-3 mt-5 pt-5  text-center mr-auto">
                     <p className="mb-5 pb-2">Tanda Terima,</p>

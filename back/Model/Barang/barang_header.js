@@ -1,6 +1,5 @@
 const Sequelize = require('sequelize');
 const db = require ('../../Database/db');
-const Barang_Detail = require('./barang_detail');
 const Kategori = require('../Kategori/kategori');
 const Penjualan_Detail = require('../Penjualan/penjualan_detail');
 const Pembelian_Detail = require('../Pembelian/pembelian_detail');
@@ -8,8 +7,9 @@ const Penyesuaian_Detail = require('../Penyesuaian/penyesuaian_detail');
 const Retur_Pembelian_Detail = require('../Retur_Pembelian/retur_pembelian_detail');
 const Retur_Penjualan_Detail = require('../Retur_Penjualan/retur_penjualan_detail');
 const Pesanan_Pembelian_Detail = require('../Pesanan_Pembelian/pesanan_pembelian_detail');
+const Barang_Kategori = require('./barang_kategori');
 
-const Barang_Header = db.sequelize.define('barang_header',{
+const Barang_Header = db.sequelize.define('barang',{
     id_barang : {
         type : Sequelize.STRING,
         primaryKey : true
@@ -32,6 +32,12 @@ const Barang_Header = db.sequelize.define('barang_header',{
     harga_jual : {
         type : Sequelize.INTEGER
     },
+    stok_minimal : {
+        type : Sequelize.INTEGER
+    },
+    stok : {
+        type : Sequelize.INTEGER
+    },
     gambar : {
         type : Sequelize.STRING
     },
@@ -40,9 +46,9 @@ const Barang_Header = db.sequelize.define('barang_header',{
         defaultValue : 1
     }
 });
-
-Barang_Header.hasOne(Barang_Detail,{as : 'Barang_Detail',foreignKey : 'id_barang'});
-Barang_Detail.belongsTo(Barang_Header,{as : 'Barang_Header',foreignKey : 'id_barang'});
+// Kategori
+Barang_Header.hasOne(Barang_Kategori,{as : 'Barang_Kategori', foreignKey : 'id_barang'});
+Barang_Kategori.belongsTo(Barang_Header,{as : 'Barang_Header', foreignKey : 'id_barang'});
 
 // Pembelian Detail
 Barang_Header.hasOne(Pembelian_Detail,{as : 'Pembelian_Detail', foreignKey : 'id_barang'});
@@ -53,8 +59,8 @@ Barang_Header.hasOne(Pesanan_Pembelian_Detail,{as : 'Pesanan_Pembelian_Detail', 
 Pesanan_Pembelian_Detail.belongsTo(Barang_Header,{as : 'Barang_Header', foreignKey : 'id_barang'});
 
 // kategori
-Kategori.hasOne(Barang_Detail,{as : 'Barang_Detail', foreignKey : 'id_kategori'});
-Barang_Detail.belongsTo(Kategori,{as : 'Kategori',foreignKey : 'id_kategori'});
+Kategori.hasOne(Barang_Kategori,{as : 'Barang_Kategori', foreignKey : 'id_kategori'});
+Barang_Kategori.belongsTo(Kategori,{as : 'Kategori',foreignKey : 'id_kategori'});
 
 // Penjualan detail
 Barang_Header.hasOne(Penjualan_Detail,{as : 'Penjualan_Detail', foreignKey : 'id_barang'});

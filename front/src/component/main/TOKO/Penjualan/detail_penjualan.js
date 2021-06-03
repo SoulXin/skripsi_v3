@@ -94,7 +94,6 @@ const Index = (props) => {
                     </td>
                 }
                 <td>{list.Barang_Header.id_barang}</td>
-                <td>Barang</td>
                 <td>{list.Barang_Header.nama_barang}</td>
                 <td>Rp. {formatMoney(list.harga_jual)}</td>
                 <td>{list.jumlah}</td>
@@ -114,10 +113,7 @@ const Index = (props) => {
                     </td>
                 }
                 <td>{list.Jenis_Service.id_service}</td>
-                <td>Service</td>
                 <td>{list.Jenis_Service.nama_service}</td>
-                <td>Rp. {formatMoney(list.harga)}</td>
-                <td>1</td>
                 <td>Rp. {formatMoney(list.harga)}</td>
             </tr>
         )
@@ -289,6 +285,7 @@ const Index = (props) => {
                 <div className="col-9">
                     {/* List pesanan */}
                     <div className="row">
+                        <h3>List Barang</h3>
                         <table class="table table-hover">
                             <thead>
                                 <tr>
@@ -296,8 +293,7 @@ const Index = (props) => {
                                         status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ?  
                                         null : <th className="p-3"></th>
                                     }
-                                    <th className="p-3">ID</th>
-                                    <th className="p-3">Jenis</th>
+                                    <th className="p-3">ID Barang</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
                                     <th className="p-3">Jumlah</th>
@@ -306,6 +302,23 @@ const Index = (props) => {
                             </thead>
                             <tbody>
                                 {viewBarang}
+                            </tbody>
+                        </table>
+
+                        <h3>List Service</h3>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    {
+                                        status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ?  
+                                        null : <th className="p-3"></th>
+                                    }
+                                    <th className="p-3">ID Service</th>
+                                    <th className="p-3">Nama</th>
+                                    <th className="p-3">Harga</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 {viewService}
                             </tbody>
                         </table>

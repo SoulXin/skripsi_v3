@@ -1,12 +1,12 @@
 const Barang_Header = require('../../Model/Barang/barang_header');
-const Barang_Detail = require('../../Model/Barang/barang_detail');
+const Barang_Kategori = require('../../Model/Barang/barang_kategori');
 const Kategori = require('../../Model/Kategori/kategori');
 const { Op } = require("sequelize");
 const Keranjang_Barang = require('../../Model/Keranjang/keranjang_barang');
 const { Sequelize } = require('../../Database/db');
 
 exports.register = async (req,res) => {
-    const {id_barang,nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual} = req.body;
+    const {id_barang,nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual,stok_minimal,stok} = req.body;
     if(req.file){
         try{
             const search = await Barang_Header.findOne({ where : {id_barang : id_barang}});
@@ -19,6 +19,8 @@ exports.register = async (req,res) => {
                     keterangan : keterangan,
                     harga_beli : harga_beli,
                     harga_jual : harga_jual,
+                    stok_minimal : stok_minimal,
+                    stok : stok,
                     gambar : req.file.filename
                 });
                 res.status(200).json(result);
@@ -41,6 +43,8 @@ exports.register = async (req,res) => {
                     keterangan : keterangan,
                     harga_beli : harga_beli,
                     harga_jual : harga_jual,
+                    stok_minimal : stok_minimal,
+                    stok : stok
                 })
                 res.status(200).json(result);
             }else{
@@ -60,8 +64,8 @@ exports.show_all = (req,res) => {
         },
         include : [
             {
-                model : Barang_Detail,
-                as : 'Barang_Detail',
+                model : Barang_Kategori,
+                as : 'Barang_Kategori',
                 include : [{ model : Kategori, as : 'Kategori' }]
             }
         ]
@@ -92,8 +96,8 @@ exports.show_detail = (req,res) => {
         },
         include : [
             {
-                model : Barang_Detail,
-                as : 'Barang_Detail',
+                model : Barang_Kategori,
+                as : 'Barang_Kategori',
                 include : [
                     {
                         model : Kategori,
@@ -124,18 +128,18 @@ exports.search = (req,res) => {
                         [Op.substring] : jenis_kereta
                     }
                 }],
+            },{
+                stok : {
+                    [Op.gt] : 1
+                }
+            },{
                 aktif : aktif
             }]
         },
         include : [
             {
-                model : Barang_Detail,
-                as : 'Barang_Detail',
-                where : {
-                    stok : {
-                        [Op.gt] : 1
-                    }
-                },
+                model : Barang_Kategori,
+                as : 'Barang_Kategori',
                 include : [{ model : Kategori, as : 'Kategori' }]
             }
         ]
@@ -151,7 +155,7 @@ exports.search = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual} = req.body;
+    const {nama_barang,merek_barang,jenis_kereta,keterangan,harga_beli,harga_jual,stok_minimal,stok} = req.body;
 
     if(req.file){ // => kondisi jika gambarnya diganti
         Barang_Header.update({
@@ -161,6 +165,8 @@ exports.update = (req,res) => {
             keterangan : keterangan,
             harga_beli : harga_beli,
             harga_jual : harga_jual,
+            stok_minimal : stok_minimal,
+            stok : stok,
             gambar : req.file.filename
         },{
             where : {
@@ -182,6 +188,8 @@ exports.update = (req,res) => {
             keterangan : keterangan,
             harga_beli : harga_beli,
             harga_jual : harga_jual,
+            stok_minimal : stok_minimal,
+            stok : stok
         },{
             where : {
                 id_barang : id
@@ -220,8 +228,8 @@ exports.show_all_barang_keranjang = (req,res) => {
     Barang_Header.findAll({
         include : [
             {
-                model : Barang_Detail,
-                as : 'Barang_Detail'
+                model : Barang_Kategori,
+                as : 'Barang_Kategori'
             },
             {
                 model : Keranjang_Barang,
@@ -249,19 +257,19 @@ exports.show_all_limit = async (req,res) => {
                 aktif : 1
             },
             include : [{
-                model : Barang_Detail,
-                as : 'Barang_Detail',
+                model : Barang_Kategori,
+                as : 'Barang_Kategori',
             }]
         })
 
         for(var a = 0;a < first.length;a++){
             const second = await Barang_Header.findOne({
                 include : [{
-                    model : Barang_Detail,
-                    as : 'Barang_Detail',
+                    model : Barang_Kategori,
+                    as : 'Barang_Kategori',
                     where : {
                         stok : {
-                            [Op.lte] : first[a].Barang_Detail.stok_minimal
+                            [Op.lte] : first[a].Barang_Kategori.stok_minimal
                         },
                         id_barang : first[a].id_barang
                     },
@@ -297,19 +305,19 @@ exports.search_limit = (req,res) => {
                     jenis_kereta : {
                         [Op.substring] : jenis_kereta
                     }
-                }],
+                }]
+            },{
+                stok : {
+                    [Op.lt] : 5
+                }
+            },{
                 aktif : 1
             }]
         },
         include : [
             {
-                model : Barang_Detail,
-                as : 'Barang_Detail',
-                where : {
-                    stok : {
-                        [Op.lt] : 5
-                    }
-                },
+                model : Barang_Kategori,
+                as : 'Barang_Kategori',
                 include : [{ model : Kategori, as : 'Kategori' }]
             }
         ]
@@ -331,8 +339,8 @@ exports.show_status = (req,res) => {
         },
         include : [
             {
-                model : Barang_Detail,
-                as : 'Barang_Detail',
+                model : Barang_Kategori,
+                as : 'Barang_Kategori',
                 include : [{ model : Kategori, as : 'Kategori' }]
             }
         ]

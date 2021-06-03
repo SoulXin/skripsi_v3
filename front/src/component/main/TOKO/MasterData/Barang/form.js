@@ -57,6 +57,7 @@ const Add = (props) => {
                 var tempDetail = props.location.state; // => variable detail
                 try{
                     const response = await axios.get(`http://localhost:5001/barang_header/show_detail/${tempDetail.id_barang}`);
+                    console.log(response.data)
                     setIdBarang(tempDetail.id_barang);
                     setNama(response.data.nama_barang);
                     setMerek(response.data.merek_barang);
@@ -65,9 +66,9 @@ const Add = (props) => {
                     setHargaJual(response.data.harga_jual);
                     setGambar(response.data.gambar); // => Gambar langsung tampilkan ke div container
                     setKeterangan(response.data.keterangan);
-                    setStokMin(response.data.Barang_Detail.stok_minimal);
-                    setStok(response.data.Barang_Detail.stok);
-                    setSelectedKategori(response.data.Barang_Detail.Kategori);
+                    setStokMin(response.data.stok_minimal);
+                    setStok(response.data.stok);
+                    setSelectedKategori(response.data.Barang_Kategori.Kategori);
                     setAktif(response.data.aktif);
                 }catch(error){
                     console.log(error);
@@ -118,6 +119,7 @@ const Add = (props) => {
     }
 
     const handleSubmit = async (e) => {
+
         e.preventDefault();
 
         const data = new FormData()
@@ -128,18 +130,19 @@ const Add = (props) => {
         data.append('keterangan',keterangan)
         data.append('harga_beli',hargaBeli)
         data.append('harga_jual',hargaJual)
+        data.append('stok_minimal',stokMin)
+        data.append('stok',stok)
         data.append('gambar',gambar)
 
         // Cek jika ini merupakan detail atau bukan
         if(detail){ // => update
+            
             try{
                 const dataBarangDetail  = {
-                    id_kategori : selectedKategori.id_kategori,
-                    stok_minimal : stokMin,
-                    stok : stok
+                    id_kategori : selectedKategori.id_kategori
                 }
                 await axios.put(`http://localhost:5001/barang_header/update/${idBarang}`,data);
-                await axios.put(`http://localhost:5001/barang_detail/update/${idBarang}`,dataBarangDetail);
+                await axios.put(`http://localhost:5001/barang_kategori/update/${idBarang}`,dataBarangDetail);
                 alert('Data barang berhasil diupdate');
                 setRefresh(!refresh);
             }catch(error){
@@ -150,14 +153,12 @@ const Add = (props) => {
                 if(idBarang && nama && merek && kereta && hargaBeli && hargaJual && stokMin && stok){
                     const dataBarangDetail  = {
                         id_barang : idBarang,
-                        id_kategori : selectedKategori.id_kategori,
-                        stok_minimal : stokMin,
-                        stok : stok
+                        id_kategori : selectedKategori.id_kategori
                     }
                     
                     const responseHeader = await axios.post('http://localhost:5001/barang_header/register',data);
                     if(responseHeader.data != 'Id Barang Sudah Dipakai'){
-                        await axios.post('http://localhost:5001/barang_detail/register',dataBarangDetail);
+                        await axios.post('http://localhost:5001/barang_kategori/register',dataBarangDetail);
                         alert('Data barang berhasil ditambah');
                         props.history.goBack();
                     }else{

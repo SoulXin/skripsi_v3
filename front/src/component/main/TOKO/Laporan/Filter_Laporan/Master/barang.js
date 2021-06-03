@@ -34,10 +34,10 @@ const Index = (props) => {
                 <td className="p-3">{list.nama_barang}</td>
                 <td className="p-3">{list.merek_barang}</td>
                 <td className="p-3">{list.jenis_kereta}</td>
-                <td className="p-3">{list.Barang_Detail.Kategori.nama_kategori}</td>
+                <td className="p-3">{list.Barang_Kategori.Kategori.nama_kategori}</td>
                 <td className="p-3">{list.harga_beli}</td>
                 <td className="p-3">{list.harga_jual}</td>
-                <td className="p-3">{list.Barang_Detail.stok}</td>
+                <td className="p-3">{list.stok}</td>
             </tr>
         )
     }) : null;

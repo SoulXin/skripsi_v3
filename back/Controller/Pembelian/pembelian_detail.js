@@ -2,7 +2,7 @@ const Pembelian_Detail = require('../../Model/Pembelian/pembelian_detail');
 const Pembelian_Header = require('../../Model/Pembelian/pembelian_header');
 const Barang_Header = require('../../Model/Barang/barang_header');
 const { Op } = require("sequelize");
-const Barang_Detail = require('../../Model/Barang/barang_detail');
+const Barang_Kategori = require('../../Model/Barang/Barang_Kategori');
 
 exports.register = (req,res) => {
     const {id_pembelian,id_barang,harga_beli,jumlah,total} = req.body;
@@ -33,8 +33,8 @@ exports.show_detail = (req,res) => {
                 as : 'Barang_Header',
                 include : [
                     {
-                        model : Barang_Detail,
-                        as : 'Barang_Detail'
+                        model : Barang_Kategori,
+                        as : 'Barang_Kategori'
                     }
                 ]
             }
@@ -115,8 +115,8 @@ exports.check_detail = (req,res) => {
                 as : 'Barang_Header',
                 include : [
                     {
-                        model : Barang_Detail,
-                        as : 'Barang_Detail'
+                        model : Barang_Kategori,
+                        as : 'Barang_Kategori'
                     }
                 ]
             },

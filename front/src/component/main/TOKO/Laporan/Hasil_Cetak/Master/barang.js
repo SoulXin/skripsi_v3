@@ -36,8 +36,8 @@ export class Cetak_Barang extends React.PureComponent {
                                     <td>{list.nama_barang}</td>
                                     <td>{list.merek_barang}</td>
                                     <td>{list.jenis_kereta}</td>
-                                    <td>{list.Barang_Detail.Kategori.nama_kategori}</td>
-                                    <td>{list.Barang_Detail.stok}</td>
+                                    <td>{list.Barang_Kategori.Kategori.nama_kategori}</td>
+                                    <td>{list.stok}</td>
                                 </tr>
                             )
                         })

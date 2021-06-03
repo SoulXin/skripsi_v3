@@ -1,6 +1,6 @@
 const Barang_Header = require('../../Model/Barang/barang_header');
 const { Op } = require("sequelize");
-const Barang_Detail = require('../../Model/Barang/barang_detail');
+const Barang_Kategori = require('../../Model/Barang/barang_kategori');
 const Penyesuaian_Detail = require('../../Model/Penyesuaian/penyesuaian_detail');
 
 exports.register = (req,res) => {
@@ -32,8 +32,8 @@ exports.show_detail = (req,res) => {
                 as : 'Barang_Header',
                 include : [
                     {
-                        model : Barang_Detail,
-                        as : 'Barang_Detail'
+                        model : Barang_Kategori,
+                        as : 'Barang_Kategori'
                     }
                 ]
             }

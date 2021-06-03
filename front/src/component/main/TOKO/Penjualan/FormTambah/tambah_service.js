@@ -58,7 +58,6 @@ const Index = (props) => {
                     id_penjualan : idPenjualan,
                     id_service : e.id_service,
                     harga : e.harga,
-                    no_antrian : 0
                 }
                 console.log(data)
 

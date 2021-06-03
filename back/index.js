@@ -41,14 +41,13 @@ app.use('/fix',require("./Router/Fix/index"));
 
 // Barang
 app.use("/barang_header",require("./Router/Barang/barang_header"));
-app.use("/barang_detail",require("./Router/Barang/barang_detail"));
+app.use("/barang_kategori",require("./Router/Barang/barang_kategori"));
 
 // Supplier
 app.use("/supplier",require("./Router/Supplier/supplier"));
 
 // Mekanik
 app.use("/mekanik_header",require("./Router/Mekanik/mekanik_header"));
-app.use("/mekanik_detail",require("./Router/Mekanik/mekanik_detail"));
 
 // Jenis Service
 app.use("/jenis_service",require("./Router/Jenis_Service/jenis_service"));

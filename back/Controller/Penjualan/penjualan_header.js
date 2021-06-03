@@ -5,7 +5,6 @@ const { Op } = require("sequelize");
 const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const Penjualan_Pelanggan = require('../../Model/Penjualan/penjualan_pelanggan');
-const Mekanik_Detail = require('../../Model/Mekanik/mekanik_detail');
 const Retur_Penjualan_Detail = require('../../Model/Retur_Penjualan/retur_penjualan_detail');
 const Barang_Header = require('../../Model/Barang/barang_header');
 
@@ -102,14 +101,8 @@ exports.show_all_service = async (req,res) => {
                         ]
                     },
                     {
-                        model : Mekanik_Detail,
-                        as : 'Mekanik_Detail',
-                        include : [
-                            {
-                                model : Mekanik_Header,
-                                as : 'Mekanik_Header'
-                            }
-                        ],
+                        model : Mekanik_Header,
+                        as : 'Mekanik_Header',
                         where : {
                             id_mekanik : id_mekanik
                         }
@@ -121,9 +114,9 @@ exports.show_all_service = async (req,res) => {
                     temp_array.push({
                         id_penjualan : penjualan_header[a].id_penjualan,
                         id_service : penjualan_header[a].Penjualan_Service[b].id_service,
-                        id_mekanik : penjualan_header[a].Mekanik_Detail.id_mekanik,
+                        id_mekanik : penjualan_header[a].Mekanik_Header.id_mekanik,
                         tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
-                        nama_mekanik : penjualan_header[a].Mekanik_Detail.Mekanik_Header.nama_mekanik,
+                        nama_mekanik : penjualan_header[a].Mekanik_Header.Mekanik_Header.nama_mekanik,
                         service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
                         harga : penjualan_header[a].Penjualan_Service[b].harga
                     })
@@ -147,14 +140,8 @@ exports.show_all_service = async (req,res) => {
                         ]
                     },
                     {
-                        model : Mekanik_Detail,
-                        as : 'Mekanik_Detail',
-                        include : [
-                            {
-                                model : Mekanik_Header,
-                                as : 'Mekanik_Header'
-                            }
-                        ]
+                        model : Mekanik_Header,
+                        as : 'Mekanik_Header'
                     }
                 ]
             });
@@ -163,9 +150,9 @@ exports.show_all_service = async (req,res) => {
                     temp_array.push({
                         id_penjualan : penjualan_header[a].id_penjualan,
                         id_service : penjualan_header[a].Penjualan_Service[b].id_service,
-                        id_mekanik : penjualan_header[a].Mekanik_Detail.id_mekanik,
+                        id_mekanik : penjualan_header[a].Mekanik_Header.id_mekanik,
                         tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
-                        nama_mekanik : penjualan_header[a].Mekanik_Detail.Mekanik_Header.nama_mekanik,
+                        nama_mekanik : penjualan_header[a].Mekanik_Header.Mekanik_Header.nama_mekanik,
                         service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
                         harga : penjualan_header[a].Penjualan_Service[b].harga
                     })
@@ -189,8 +176,14 @@ exports.show_detail = (req,res) => {
         },
         include : [
             {
-                model : Mekanik_Detail,
-                as : 'Mekanik_Detail'
+                model : Penjualan_Service,
+                as : 'Penjualan_Service',
+                include : [
+                    {
+                        model : Mekanik_Header,
+                        as : 'Mekanik_Header'
+                    }
+                ]
             },
             {
                 model : Retur_Penjualan_Detail,

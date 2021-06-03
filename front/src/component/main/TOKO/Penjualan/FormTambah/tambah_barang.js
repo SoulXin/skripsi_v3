@@ -33,6 +33,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = dataBarang ? dataBarang.map((list,index) => {
+        console.log(list)
         return (
             <tr key={index}>
                 <td className="p-3">{list.nama_barang}</td>
@@ -40,7 +41,7 @@ const Index = (props) => {
                 <td className="p-3">{list.jenis_kereta}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
-                <td className="p-3">{list.Barang_Detail.stok}</td>
+                <td className="p-3">{list.stok}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>
                 </td>
@@ -56,14 +57,15 @@ const Index = (props) => {
             if(!checkKetersediaan.length && !checkJumlah.length){ // => tidak ada di pesanan, maka tambah
                 var jumlah = prompt("Masukan jumlah barang"); // => prompt input jumlah
                 if(jumlah != '' && jumlah != 0){
-                    if(jumlah <= e.Barang_Detail.stok){
+                    if(jumlah <= e.stok){
                         const dataTambah = {
                             id_penjualan : idPenjualan,
                             id_barang : e.id_barang,
-                            harga_jual : e.harga_jual,
                             jumlah : jumlah,
                             total : e.harga_jual * jumlah
                         }
+
+                        console.log(dataTambah);
                         await axios.post(`http://localhost:5001/penjualan_detail/register`, dataTambah);
                         setRefresh(!refresh);
                         alert('Barang berhasil di tambahkan');
@@ -74,7 +76,7 @@ const Index = (props) => {
                     alert('Jumlah tidak boleh kosong!');
                 }
             }else{ // => ada di pesanan, update saja
-                if(checkJumlah[0].jumlah < e.Barang_Detail.stok){
+                if(checkJumlah[0].jumlah < e.stok){
                     const dataUpdate = {
                         jumlah : checkKetersediaan[0].jumlah + 1,
                         total : checkKetersediaan[0].harga_jual * parseInt (checkKetersediaan[0].jumlah + 1)
