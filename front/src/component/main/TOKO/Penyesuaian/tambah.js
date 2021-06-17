@@ -76,7 +76,7 @@ const Index = (props) => {
                     const dataBarang = {
                         stok : dataPenyesuaianDetail[a].jumlah_fisik
                     }
-                    await axios.put(`http://localhost:5001/barang_detail/update/${dataPenyesuaianDetail[a].id_barang}`,dataBarang);
+                    await axios.put(`http://localhost:5001/barang_header/update/${dataPenyesuaianDetail[a].id_barang}`,dataBarang);
                 }
 
                 await props.history.goBack();

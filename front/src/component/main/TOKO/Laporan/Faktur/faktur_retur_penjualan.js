@@ -32,6 +32,14 @@ export class Faktur_Retur_Penjualan extends React.PureComponent {
                             <td>{this.props.idPenjualan} </td>
                         </tr>
                         <tr>
+                            <td>Jenis Pengembalian</td>
+                            <td>{this.props.jenis_penggembalian ? 'Tunai' : 'Ganti Barang'}</td>
+                        </tr>
+                        <tr>
+                            <td>Alasan Retur</td>
+                            <td>{this.props.alasan_retur ? this.props.alasan_retur : '-'}</td>
+                        </tr>
+                        <tr>
                             <td>Tanggal Retur</td>
                             <td>{this.props.tanggal_retur}</td>
                         </tr>
@@ -54,7 +62,7 @@ export class Faktur_Retur_Penjualan extends React.PureComponent {
                                 <tr>
                                     <td>{list.id_barang}</td>
                                     <td>{list.Barang_Header.nama_barang}</td>
-                                    <td>Rp. {formatMoney(list.harga_jual)}</td>
+                                    <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                                     <td>{list.jumlah}</td>
                                     <td>Rp. {formatMoney(list.total)}</td>
                                 </tr>

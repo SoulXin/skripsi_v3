@@ -5,11 +5,10 @@ const { Op } = require("sequelize");
 const Barang_Kategori = require('../../Model/Barang/Barang_Kategori');
 
 exports.register = (req,res) => {
-    const {id_pembelian,id_barang,harga_beli,jumlah,total} = req.body;
+    const {id_pembelian,id_barang,jumlah,total} = req.body;
     Pembelian_Detail.create({
         id_pembelian : id_pembelian,
         id_barang : id_barang,
-        harga_beli : harga_beli,
         jumlah : jumlah,
         total : total
     })
@@ -50,10 +49,8 @@ exports.show_detail = (req,res) => {
 
 exports.update = (req,res) => {
     const {id,id_barang} = req.params;
-    const {harga_beli,jumlah,total} = req.body;
+    const {jumlah,total} = req.body;
     Pembelian_Detail.update({
-        id_barang : id_barang,
-        harga_beli : harga_beli,
         jumlah : jumlah,
         total : total
     },{

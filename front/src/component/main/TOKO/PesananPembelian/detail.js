@@ -72,9 +72,9 @@ const Index = (props) => {
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.Barang_Header.merek_barang}</td>
-                <td className="p-3">{list.Barang_Header.harga_beli}</td>
+                <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_beli)}</td>
                 <td className="p-3">{list.jumlah}</td>
-                <td className="p-3">{ formatMoney(list.Barang_Header.harga_beli * list.jumlah) }</td>
+                <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_beli * list.jumlah) }</td>
             </tr>
         )
     }) : null;

@@ -30,18 +30,32 @@ export class Faktur_Penjualan extends React.PureComponent {
                     <table>
                         <tr>
                             <td>ID Penjualan</td>
+                            <td> : </td>
                             <td>  {this.props.idPenjualan} </td>
                         </tr>
                         <tr>
                             <td>Tanggal Penjualan</td>
+                            <td> : </td>
                             <td>  {moment(this.props.tanggal).utc().format('DD / MMMM / YYYY')} </td>
                         </tr>
                         <tr>
+                            <td>Nama Mekanik</td>
+                            <td> : </td>
+                            <td>{this.props.nama_pelanggan ? this.props.nama_mekanik : '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>Nomor Antrian</td>
+                            <td> : </td>
+                            <td>{this.props.no_antrian ? this.props.no_antrian : '-'}</td>
+                        </tr>
+                        <tr>
                             <td>Nama Pelanggan</td>
+                            <td> : </td>
                             <td>{this.props.nama_pelanggan ? this.props.nama_pelanggan : '-'}</td>
                         </tr>
                         <tr>
                             <td>Nomor Polisi</td>
+                            <td> : </td>
                             <td>{this.props.nopol ? this.props.nopol : '-'}</td>
                         </tr>
                     </table>
@@ -79,6 +93,8 @@ export class Faktur_Penjualan extends React.PureComponent {
                         <th>ID Service</th>
                         <th>Nama</th>
                         <th>Harga</th>
+                        <th>Jumlah</th>
+                        <th>Total</th>
                     </thead>
                         {
                             this.props.dataTableService.map((list,index) => {
@@ -86,6 +102,8 @@ export class Faktur_Penjualan extends React.PureComponent {
                                     <tr>
                                         <td>{list.Jenis_Service.id_service}</td>
                                         <td>{list.Jenis_Service.nama_service}</td>
+                                        <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                                        <td>1</td>
                                         <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
                                     </tr>
                                 )

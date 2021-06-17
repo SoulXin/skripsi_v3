@@ -34,8 +34,6 @@ const Index = (props) => {
                 setDataBarang(responsePenjualanDetail.data);
                 setDataService(responsePenjualanService.data);
 
-                console.log(responsePenjualanService)
-
                 var totalBarang = 0;
                 var totalService = 0;
                 // Barang
@@ -45,7 +43,7 @@ const Index = (props) => {
                 
                 // Service
                 responsePenjualanService.data.map((list,index) => {
-                    totalService += list.harga;
+                    totalService += list.total;
                 });
 
                 setTotalBarang(totalBarang);
@@ -87,6 +85,8 @@ const Index = (props) => {
                 <td>{list.Jenis_Service.id_service}</td>
                 <td>{list.Jenis_Service.nama_service}</td>
                 <td>Rp. {formatMoney(list.Jenis_Service.harga)}</td>
+                <td>{list.jumlah}</td>
+                <td>Rp. {formatMoney(list.total)}</td>
             </tr>
         )
     }) : null;
@@ -127,16 +127,11 @@ const Index = (props) => {
 
     const handleTambah = async () => {
         const dataPenjualanHeader = {
-            tanggal_penjualan : dataContext.tanggal_penjualan,
-            grand_total : totalBarang + totalService
-        }
-        
-
-        const dataPenjualanPelanggan = {
-            id_penjualan : idPenjualan,
             nama_pelanggan : dataContext.nama_pelanggan,
             nomor_polisi : dataContext.nomor_polisi,
-            no_antrian : 1
+            nomor_antrian : 1,
+            tanggal_penjualan : dataContext.tanggal_penjualan,
+            grand_total : totalBarang + totalService
         }
 
         try{
@@ -145,9 +140,8 @@ const Index = (props) => {
                 const dataPenjualanDetail = {
                     id_penjualan : idPenjualan,
                     id_barang : dataBarang[a].Barang_Header.id_barang,
-                    harga_jual : dataBarang[a].harga_jual,
                     jumlah : dataBarang[a].jumlah,
-                    total : parseInt(dataBarang[a].jumlah * dataBarang[a].harga_jual)
+                    total : parseInt(dataBarang[a].jumlah * dataBarang[a].Barang_Header.harga_jual)
                 }
                 await axios.post('http://localhost:5001/penjualan_detail/register',dataPenjualanDetail);
             }
@@ -157,21 +151,12 @@ const Index = (props) => {
                 const dataPenjualanService = {
                     id_penjualan : idPenjualan,
                     id_service : dataService[b].Jenis_Service.id_service,
-                    harga : dataService[b].harga,
-                }
-
-                const dataMekanikDetail = {
                     id_mekanik : dataContext.id_mekanik,
-                    id_penjualan : idPenjualan,
-                    id_service : dataService[b].Jenis_Service.id_service,
-                    tanggal : dataContext.tanggal_penjualan
                 }
-                await axios.post('http://localhost:5001/penjualan_service/register',dataPenjualanService);
-                await axios.post('http://localhost:5001/mekanik_detail/register',dataMekanikDetail);
-            }
-            // Pelanggan
-            await axios.post('http://localhost:5001/penjualan_pelanggan/register',dataPenjualanPelanggan);
 
+                await axios.post('http://localhost:5001/penjualan_service/register',dataPenjualanService);
+            }
+            
             // Header
             await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
             dispatch({type : 'RESET_PENJUALAN'});
@@ -213,8 +198,8 @@ const Index = (props) => {
                 </div>
 
                 <div class="form-floating col px-0 mb-3 mx-1">
-                    <input type="text" class="form-control" id="nomor_polisi" value = {dataContext.nama_pelanggan} onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} />
-                    <label for="nomor_polisi">Nama Pelanggan</label>
+                    <input type="text" class="form-control" id="nama_pelanggan" value = {dataContext.nama_pelanggan} onChange = {(e) => dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : e.target.value})} />
+                    <label for="nama_pelanggan">Nama Pelanggan</label>
                 </div>
 
                 <div class="form-floating col px-0 mb-3 mx-1">
@@ -265,6 +250,8 @@ const Index = (props) => {
                                     <th className="p-3">ID Service</th>
                                     <th className="p-3">Nama</th>
                                     <th className="p-3">Harga</th>
+                                      <th className="p-3">Jumlah</th>
+                                    <th className="p-3">Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -286,16 +273,6 @@ const Index = (props) => {
                             <th colspan="3" style={{fontSize:'24px'}}>Rincian Biaya</th>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Total Barang</td>
-                                <td> : </td>
-                                <td>Rp. {formatMoney(totalBarang)}</td>
-                            </tr>
-                            <tr>
-                                <td>Total Service</td>
-                                <td> : </td>
-                                <td>Rp. {formatMoney(totalService) }</td>
-                            </tr>
                             <tr className="fw-b">
                                 <td>Grand Total</td>
                                 <td> : </td>

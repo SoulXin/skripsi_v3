@@ -4,7 +4,7 @@ const db = require ('../../Database/db');
 const Retur_Penjualan_Detail = db.sequelize.define('retur_penjualan_detail',{
     id_retur_penjualan  : {
         type : Sequelize.INTEGER,
-        unique: true
+        primaryKey : true
     },
     id_penjualan  : {
         type : Sequelize.INTEGER
@@ -13,9 +13,6 @@ const Retur_Penjualan_Detail = db.sequelize.define('retur_penjualan_detail',{
         type : Sequelize.STRING,
     },
     max : {
-        type : Sequelize.INTEGER
-    },
-    harga_jual : {
         type : Sequelize.INTEGER
     },
     jumlah : {

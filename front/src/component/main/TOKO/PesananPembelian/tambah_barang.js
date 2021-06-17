@@ -40,7 +40,7 @@ const Index = (props) => {
                 <td className="p-3">{list.jenis_kereta}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
-                <td className="p-3">{list.Barang_Detail.stok}</td>
+                <td className="p-3">{list.stok}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>
                 </td>
@@ -58,7 +58,6 @@ const Index = (props) => {
                     const dataTambah = {
                         id_pesanan_pembelian : idPesananPembelian,
                         id_barang : e.id_barang,
-                        harga_beli : e.harga_beli,
                         jumlah : jumlah,
                         total : e.harga_beli * jumlah
                     }

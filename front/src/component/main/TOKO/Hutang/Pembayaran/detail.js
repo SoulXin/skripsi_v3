@@ -20,10 +20,7 @@ const Index = (props) => {
     const [jenisPembayaran,setJenisPembayaran] = useState('1');
     const [tanggalPembayaran,setTanggalPembayara] = useState('');
     const [statusPembayaran,setStatusPembayaran] = useState('');
-
-    const [total,setTotal] = useState(0); // => dari database
-    const [tempTotal,setTempTotal] = useState(0); // => diinput
-    
+        
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -38,13 +35,6 @@ const Index = (props) => {
                 setJenisPembayaran(response.data[0].Pembayaran_Hutang_Header.jenis_pembayaran);
                 setTanggalPembayara(response.data[0].Pembayaran_Hutang_Header.tanggal_pembayaran);
                 setStatusPembayaran(response.data[0].Pembayaran_Hutang_Header.status_pembayaran);
-                setTotal(formatMoney(response.data[0].Pembayaran_Hutang_Header.total));
-
-                if(response.data[0].Pembayaran_Hutang_Header.status_pembayaran){
-                    setTempTotal(temp_detail.total);
-                }
-                
-
             }catch(error){
                 setError(true);
             }
@@ -66,41 +56,37 @@ const Index = (props) => {
     }) : null;
 
     const handleSave = async () => {
-        if(tempTotal == detail.total){
-            if(tanggalPembayaran != '0000-00-00' || tanggalPembayaran != ''){
-                try{
-                    const dataHeader = {
-                        tanggal_pembayaran : tanggalPembayaran,
-                        jenis_pembayaran : jenisPembayaran
-                    }                    
-                    
-                    await axios.put(`http://localhost:5001/pembayaran_hutang_header/update_lunas/${detail.id_pembayaran}`,dataHeader);
-                    
-                    for(var a = 0;a < data.length;a++){
-                        const dataPembelianHeader = {
-                            status : 'Selesai'
-                        }
-
-                        const dataPesananPembelianHeader = {
-                            status : 'Selesai'
-                        }
-                        await axios.put(`http://localhost:5001/pembelian_header/update/${data[a].id_pembelian}`,dataPembelianHeader);
-
-                        if(data[a].Pembelian_Header.id_pesanan_pembelian != 0){
-                            await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${data[a].Pembelian_Header.id_pesanan_pembelian}`,dataPesananPembelianHeader);
-                        }
+        if(tanggalPembayaran != '0000-00-00' || tanggalPembayaran != ''){
+            try{
+                const dataHeader = {
+                    tanggal_pembayaran : tanggalPembayaran,
+                    jenis_pembayaran : jenisPembayaran
+                }                    
+                
+                await axios.put(`http://localhost:5001/pembayaran_hutang_header/update_lunas/${detail.id_pembayaran}`,dataHeader);
+                
+                for(var a = 0;a < data.length;a++){
+                    const dataPembelianHeader = {
+                        status : 'Selesai'
                     }
-                    setRefresh(!refresh);
-                    alert('Hutang berhasil di bayarkan');
-                    props.history.goBack();
-                }catch(error){
-                    console.log(error)
+
+                    const dataPesananPembelianHeader = {
+                        status : 'Selesai'
+                    }
+                    await axios.put(`http://localhost:5001/pembelian_header/update/${data[a].id_pembelian}`,dataPembelianHeader);
+
+                    if(data[a].Pembelian_Header.id_pesanan_pembelian != 0){
+                        await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${data[a].Pembelian_Header.id_pesanan_pembelian}`,dataPesananPembelianHeader);
+                    }
                 }
-            }else{
-                alert('Masukan tanggal pembayaran');
+                setRefresh(!refresh);
+                alert('Hutang berhasil di bayarkan');
+                props.history.goBack();
+            }catch(error){
+                console.log(error)
             }
-        }else if(tempTotal < detail.total || tempTotal > detail.total){
-            alert('Konfirmasi total yang dimasukan tidak cocok dengan total hutang');
+        }else{
+            alert('Masukan tanggal pembayaran');
         }
     }
 
@@ -201,11 +187,6 @@ const Index = (props) => {
                     <div className="form-floating mb-2">
                         <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran} />
                         <label className="form-label">Tanggal Pembayaran</label>
-                    </div>
-
-                    <div className="form-floating mb-2">
-                        <input type="text" className="form-control" value = {statusPembayaran ? total : tempTotal} onChange = {(e) => setTempTotal(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran}/>
-                        <label className="form-label">Konfirmasi Total</label>
                     </div>
                     <div className="row">
                         {

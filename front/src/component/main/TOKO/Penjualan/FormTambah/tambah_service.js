@@ -54,21 +54,33 @@ const Index = (props) => {
         const filter = dataService.filter((list) => list.id_service === e.id_service && list.id_penjualan === idPenjualan);
         if(!filter.length){ // => jika data filter memberikan return service tersebut, berarti service yg direturn tersebut blm ada di pesanan
             try{
-                const data = {
-                    id_penjualan : idPenjualan,
-                    id_service : e.id_service,
-                    harga : e.harga,
+                var jumlah = prompt("Masukan jumlah barang"); // => prompt input jumlah
+                if(jumlah != '' && jumlah != 0){
+                    const data = {
+                        id_penjualan : idPenjualan,
+                        id_service : e.id_service,
+                        harga : e.harga,
+                        jumlah : jumlah,
+                        total : e.harga * jumlah
+                    }
+    
+                    await axios.post('http://localhost:5001/penjualan_service/register',data);
+                    setRefresh(!refresh);
+                    alert('Service berhasil di tambahkan');
+                }else{
+                    alert('Jumlah tidak boleh kosong!');
                 }
-                console.log(data)
-
-                await axios.post('http://localhost:5001/penjualan_service/register',data);
-                setRefresh(!refresh);
-                alert('Service berhasil di tambahkan');
             }catch(err){
                 console.log(err);
             }
         }else{ // => sudah ada dipesanan
-            alert('Service ini sudah ada')
+            const dataUpdate = {
+                jumlah : detail[0].jumlah + 1,
+                total : detail[0].total + parseInt (e.harga)
+            }
+            await axios.put(`http://localhost:5001/penjualan_service/update_service/${idPenjualan}/${e.id_service}`, dataUpdate);
+            setRefresh(!refresh);
+            alert('Service berhasil di tambahkan');
         }
         setRefresh(!refresh);
     }

@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import axios from 'axios'
+import { formatMoney } from '../../../../global/function';
 
 const Index = (props) => {
     const [data,setData] = useState([]);
@@ -46,7 +47,6 @@ const Index = (props) => {
 
     const handleSave = () => {
         const data = {
-            harga_beli : hargaBeli,
             jumlah : jumlah,
             total : jumlah * hargaBeli
         }
@@ -55,6 +55,7 @@ const Index = (props) => {
                 axios.put(`http://localhost:5001/retur_pembelian_detail/update/${idRetur}/${idBarang}`, data)
                 .then((res) => {
                     alert('Jumlah barang berhasil di ubah');
+                    props.history.goBack();
                 })
                 .catch((err) => {
                     console.log(err);
@@ -102,15 +103,21 @@ const Index = (props) => {
 
                 <div class="mb-3 col-4 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaJual} disabled/>
+                        <input type="text" class="form-control" id="nama_barang" value={"Rp. " + formatMoney(hargaJual)} disabled/>
                         <label for="nama_barang">Harga Jual</label>
                     </div>
                 </div>
 
                 <div class="mb-3 col-4 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaBeli} onChange = {(e) => setHargaBeli(e.target.value)}/>
+                        <input type="text" class="form-control" id="nama_barang" value={"Rp. " + formatMoney(hargaBeli)} disabled/>
                         <label for="nama_barang">Harga Beli</label>
+                    </div>
+                </div>
+                <div class="mb-3 col-4 mt-2">
+                    <div className="form-floating px-0">
+                        <input type="text" class="form-control" id="nama_barang" value={max} disabled/>
+                        <label for="nama_barang">Jumlah Maksimal</label>
                     </div>
                 </div>
 
@@ -121,7 +128,7 @@ const Index = (props) => {
                     </div>
                 </div>
 
-                <div class="mb-3 col-12 mt-2">
+                <div class="mb-3 col-8 mt-2">
                      <button className="btn btn-outline-success w-100 mt-2" onClick = {handleSave}>Simpan</button>
                 </div>
             </div>

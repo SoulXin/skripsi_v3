@@ -18,10 +18,6 @@ const Index = (props) => {
     const [alasanRetur,setAlasanRetur] = useState('');
     const [grandTotal,setGrandTotal] = useState('');
 
-    // State Laporan
-    const [idPelanggan,setIdPelanggan] = useState('');
-    const [nomorPolisi,setNomorPolisi] = useState('');
-
     const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
 
     useEffect(() => {
@@ -36,10 +32,6 @@ const Index = (props) => {
                 setTanggalRetur(responseHeader.data.tanggal_retur);
                 setAlasanRetur(responseHeader.data.alasan_retur);
                 setJenisPenggembalian(responseHeader.data.jenis_penggembalian);
-
-                // Laporan
-                setIdPelanggan(detail.id_pelanggan);
-                setNomorPolisi(detail.nopol);
 
                 var total = 0;
                 responseDataRetur.data.map((list,index) => {
@@ -70,7 +62,7 @@ const Index = (props) => {
                     }
                     <td className="p-3">{list.id_barang}</td>
                     <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                    <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
+                    <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                     <td className="p-3">{list.jumlah}</td>
                     <td className="p-3">Rp. {formatMoney(list.total)}</td>
                 </tr>
@@ -91,6 +83,7 @@ const Index = (props) => {
     const handleSave = async () => {
         try{
             const dataUpdate = {
+                jenis_penggembalian : jenisPenggembalian,
                 tanggal_retur : tanggalRetur,
                 alasan_retur : alasanRetur,
                 grand_total : grandTotal
@@ -147,7 +140,7 @@ const Index = (props) => {
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Faktur</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataRetur} idRetur = {idRetur} idPenjualan = {idPenjualan}   tanggal_retur = {tanggalRetur}/></div>
+                    <div style={{ display: "none" }}><Faktur_Retur_Penjualan ref={componentRef}  dataTable = {dataRetur} idRetur = {idRetur} jenis_penggembalian = {jenisPenggembalian} alasan_retur = {alasanRetur} idPenjualan = {idPenjualan}   tanggal_retur = {tanggalRetur}/></div>
                 </div>
             </div>
             
@@ -157,7 +150,7 @@ const Index = (props) => {
                     <div className="row">
                         <div class="form-floating mb-3 px-0 col-2 mx-1">
                             <input type="text" class="form-control" id="floatingInput" value={idRetur} disabled/>
-                            <label for="floatingInput">ID Retur</label>
+                            <label for="floatingInput">ID Retur Penjualan</label>
                         </div>
                     </div>
                     <table class="table table-hover">
@@ -192,12 +185,12 @@ const Index = (props) => {
                             <input type="text" class="form-control" value={idPenjualan} disabled/>
                             <label for="floatingInput">ID Penjualan</label>
                         </div>
-                        {
+                        {/* {
                             !dataContext.edit_retur_penjualan ? null : 
                             <div className="col-6 px-0">
                                 <Link to={{ pathname : '/tambah_data_retur_penjualan',state: idRetur}} className=" btn btn-outline-success">Ambil Data Penjualan</Link>
                             </div>
-                        }
+                        } */}
                     </div>
                     <div className="row">
                         <div class="form-floating mb-3 px-0 mx-1">
@@ -211,7 +204,7 @@ const Index = (props) => {
                             <option value = "1" selected = {jenisPenggembalian ? true : false}>Tunai</option>
                             <option value = "0" selected = {!jenisPenggembalian ? true : false}>Ganti Barang</option>
                         </select>
-                        <label>Jenis Pembayaran</label>
+                        <label>Jenis Pengembalian</label>
                     </div>
 
                     <div className="row">

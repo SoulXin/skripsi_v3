@@ -35,12 +35,12 @@ const Index = (props) => {
     const viewData = dataBarang ? dataBarang.map((list,index) => {
         return (
             <tr key={index}>
+                <td className="p-3">{list.id_barang}</td>
                 <td className="p-3">{list.nama_barang}</td>
                 <td className="p-3">{list.merek_barang}</td>
-                <td className="p-3">{list.jenis_kereta}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
                 <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
-                <td className="p-3">{list.Barang_Detail.stok}</td>
+                <td className="p-3">{list.stok}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>
                 </td>
@@ -59,9 +59,11 @@ const Index = (props) => {
                         id_penyesuaian : idPenyesuaian,
                         id_barang : e.id_barang,
                         jumlah_fisik : jumlahFisik,
-                        jumlah_sistem : e.Barang_Detail.stok,
-                        penyesuaian : jumlahFisik > e.Barang_Detail.stok ? jumlahFisik - e.Barang_Detail.stok : e.Barang_Detail.stok - jumlahFisik,
+                        jumlah_sistem : e.stok,
+                        penyesuaian : jumlahFisik > e.stok ? jumlahFisik - e.stok : e.stok - jumlahFisik,
                     }
+
+                    console.log(dataTambah)
                     await axios.post(`http://localhost:5001/penyesuaian_detail/register`, dataTambah);
                     setRefresh(!refresh);
                     alert('Barang berhasil di tambahkan');
@@ -70,7 +72,7 @@ const Index = (props) => {
                 var jumlahFisik = prompt("Masukan jumlah fisik"); // => prompt input jumlah
                 const dataUpdate = {
                     jumlah_fisik : jumlahFisik,
-                    penyesuaian : jumlahFisik > checkKetersediaan[0].Barang_Header.Barang_Detail.stok ? jumlahFisik - checkKetersediaan[0].Barang_Header.Barang_Detail.stok : checkKetersediaan[0].Barang_Header.Barang_Detail.stok - jumlahFisik,
+                    penyesuaian : jumlahFisik > checkKetersediaan[0].Barang_Header.stok ? jumlahFisik - checkKetersediaan[0].Barang_Header.stok : checkKetersediaan[0].Barang_Header.stok - jumlahFisik,
                 }
 
                 await axios.put(`http://localhost:5001/penyesuaian_detail/update/${idPenyesuaian}/${e.id_barang}`, dataUpdate);

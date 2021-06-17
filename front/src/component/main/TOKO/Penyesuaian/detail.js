@@ -78,7 +78,7 @@ const Index = (props) => {
                 const data = {
                     stok : dataPenyesuaianDetail[a].jumlah_sistem
                 }
-                await axios.put(`http://localhost:5001/barang_detail/update/${dataPenyesuaianDetail[a].id_barang}`,data); 
+                await axios.put(`http://localhost:5001/barang_header/update/${dataPenyesuaianDetail[a].id_barang}`,data); 
             }
             await axios.delete(`http://localhost:5001/penyesuaian_detail/delete_penyesuaian/${idPenyesuaian}`); 
             await axios.delete(`http://localhost:5001/penyesuaian_header/delete/${idPenyesuaian}`);

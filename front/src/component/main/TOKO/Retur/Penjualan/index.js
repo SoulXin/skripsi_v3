@@ -31,8 +31,6 @@ const Index = () => {
                 <td className="p-3">{list.id_retur_penjualan}</td>
                 <td className="p-3">{list.Retur_Penjualan_Detail[0].id_penjualan}</td>
                 <td className="p-3">{list.tanggal_retur}</td>
-                <td className="p-3">{list.Retur_Penjualan_Detail[0].Penjualan_Header.Penjualan_Pelanggan.nama_pelanggan }</td>
-                <td className="p-3">{list.Retur_Penjualan_Detail[0].Penjualan_Header.Penjualan_Pelanggan.nomor_polisi }</td>
                 <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/detail_retur_penjualan',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
@@ -69,8 +67,6 @@ const Index = () => {
                             <th className="p-3">ID Retur Penjualan</th>
                             <th className="p-3">ID Penjualan</th>
                             <th className="p-3">Tanggal Retur</th>
-                            <th className="p-3">Nama Pelanggan</th>
-                            <th className="p-3">Nomor Polisi</th>
                             <th className="p-3">Total</th>
                             <th className="p-3"></th>
                         </tr>

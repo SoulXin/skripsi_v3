@@ -11,6 +11,12 @@ const Penjualan_Service = db.sequelize.define('penjualan_service',{
     },
     id_mekanik : {
         type : Sequelize.STRING
+    },
+    jumlah : {
+        type : Sequelize.INTEGER
+    },
+    total : {
+        type : Sequelize.INTEGER
     }
 });
 

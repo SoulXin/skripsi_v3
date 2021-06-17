@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { formatMoney } from '../../../../global/function';
 
 const Index = (props) => {
     const [data,setData] = useState([]);
@@ -15,14 +16,13 @@ const Index = (props) => {
     const [merek,setMerek] = useState('');
     const [jenisKereta,setJenisKereta] = useState('');
     const [hargaJualSistem,setHargaJualSistem] = useState('');
-    const [hargaJual,setHargaJual] = useState('');
     const [jumlah,setJumlah] = useState('');
     const [stok,setStok] = useState('');
     useEffect(() => { 
         const loadData = async () => {
             try{
                 const detail = props.location.state;
-
+                console.log(detail)
                 setDetail(detail);
                 setIdBarang(detail.id_barang);
                 setIdPenjualan(detail.id_penjualan);
@@ -30,9 +30,8 @@ const Index = (props) => {
                 setMerek(detail.Barang_Header.merek_barang);
                 setJenisKereta(detail.Barang_Header.jenis_kereta);
                 setHargaJualSistem(detail.Barang_Header.harga_jual);
-                setHargaJual(detail.harga_jual);
                 setJumlah(detail.jumlah);
-                setStok(detail.Barang_Header.Barang_Detail.stok);
+                setStok(detail.Barang_Header.stok);
             }catch(error){
                 setError(true);
             }
@@ -45,27 +44,22 @@ const Index = (props) => {
 
     const handleSave = () => {
         const data = {
-            harga_jual : hargaJual,
             jumlah : jumlah,
-            total : hargaJual * jumlah
+            total : hargaJualSistem * jumlah
         }
 
         if(jumlah && jumlah != 0){
-            if(hargaJual >= hargaJualSistem){
-                if(jumlah <= stok){
-                    axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${idBarang}`, data)
-                    .then((res) => {
-                        props.history.goBack();
-                        alert('berhasil di ubah');
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    })
-                }else{
-                    alert('Stok barang tidak cukup!');
-                }
+            if(jumlah <= stok){
+                axios.put(`http://localhost:5001/penjualan_detail/update/${idPenjualan}/${idBarang}`, data)
+                .then((res) => {
+                    props.history.goBack();
+                    alert('berhasil di ubah');
+                })
+                .catch((err) => {
+                    console.log(err);
+                })
             }else{
-                alert('harga tidak boleh lebih rendah dari sistem');
+                alert('Stok barang tidak cukup!');
             }
         }else{
             alert('Jumlah tidak boleh kosong');
@@ -115,24 +109,18 @@ const Index = (props) => {
 
                 <div class="mb-3 col-4 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaJualSistem} disabled/>
-                        <label for="nama_barang">Harga Jual ( Sistem )</label>
+                        <input type="text" class="form-control" id="nama_barang" value={"Rp. " + formatMoney(hargaJualSistem)} disabled/>
+                        <label for="nama_barang">Harga Jual</label>
                     </div>
                 </div>
 
                 <div class="mb-3 col-4 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaJual} onChange = {(e) => setHargaJual(e.target.value)}/>
-                        <label for="nama_barang">Harga Jual</label>
-                    </div>
-                </div>
-                <div class="mb-3 col-6 mt-2">
-                    <div className="form-floating px-0">
                         <input type="text" class="form-control" id="nama_barang" value={jumlah} onChange = {(e) => setJumlah(e.target.value)} />
                         <label for="nama_barang">Jumlah</label>
                     </div>
                 </div>
-                <div class="mb-3 col-6 mt-2">
+                <div class="mb-3 col-12 mt-2">
                      <button className="btn btn-outline-success w-100 mt-2" onClick = {handleSave}>Simpan</button>
                 </div>
             </div>

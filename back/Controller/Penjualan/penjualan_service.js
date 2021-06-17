@@ -3,7 +3,7 @@ const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const { Op } = require("sequelize");
 
 exports.register = async (req,res) => {
-    const {id_penjualan,id_service,harga} = req.body;
+    const {id_penjualan,id_service,id_mekanik,jumlah,total} = req.body;
     try{
         await Penjualan_Service.destroy({ 
             where : {
@@ -16,7 +16,9 @@ exports.register = async (req,res) => {
         await Penjualan_Service.create({
             id_penjualan : id_penjualan,
             id_service : id_service,
-            harga : harga
+            id_mekanik : id_mekanik,
+            jumlah : jumlah,
+            total : total
         })
         await res.status(200).send();
     }catch(err){
@@ -64,16 +66,13 @@ exports.show_detail = (req,res) => {
 }
 
 exports.update = (req,res) => {
-    const {id,id_service} = req.params;
-    const {harga} = req.body;
+    const {id} = req.params;
+    const {id_mekanik} = req.body;
     Penjualan_Service.update({
-        harga : harga
+        id_mekanik : id_mekanik
     },{
-        where : {
-            [Op.and] : [
-                { id_penjualan : id },
-                { id_service : id_service }
-            ]
+        where : { 
+            id_penjualan : id
         }
     })
     .then((result) => {
@@ -112,6 +111,29 @@ exports.delete_detail = (req,res) => {
     })
     .then((result) => {
         res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
+
+exports.update_service = (req,res) => {
+    const {id,id_service} = req.params;
+    const {jumlah,total} = req.body;
+    Penjualan_Service.update({
+        jumlah : jumlah,
+        total : total
+    },{
+        where : { 
+            [Op.and] : [
+                {id_penjualan : id},
+                {id_service : id_service}
+            ]
+        }
+    })
+    .then((result) => {
+        res.status(200).json(result);
+
     }).catch((err) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();

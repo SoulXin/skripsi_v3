@@ -29,8 +29,8 @@ const Index = () => {
             <tr key={index}>
                 <td className="p-3">{list.id_penjualan}</td>
                 <td className="p-3">{list.tanggal_penjualan}</td>
-                <td className="p-3">{list.Penjualan_Pelanggan.nama_pelanggan ? list.Penjualan_Pelanggan.nama_pelanggan : '-'}</td>
-                <td className="p-3">{list.Penjualan_Pelanggan.nomor_polisi ? list.Penjualan_Pelanggan.nomor_polisi : '-'}</td>
+                <td className="p-3">{list.nama_pelanggan ? list.nama_pelanggan : '-'}</td>
+                <td className="p-3">{list.nomor_polisi ? list.nomor_polisi : '-'}</td>
                 <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
                 <td className="p-3">{list.status}</td>
                 <td className="p-3" style={{position:'relative'}}>
@@ -49,6 +49,7 @@ const Index = () => {
             console.log(err)
         })
     }
+
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}

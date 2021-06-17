@@ -1,5 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import axios from 'axios'
+import { formatMoney } from '../../../global/function';
 
 const Index = (props) => {
     const [data,setData] = useState([]);
@@ -51,6 +52,7 @@ const Index = (props) => {
             axios.put(`http://localhost:5001/penyesuaian_detail/update/${idPenyesuaian}/${idBarang}`, data)
             .then((res) => {
                 alert('Jumlah barang berhasil di ubah');
+                props.history.goBack();
             })
             .catch((err) => {
                 console.log(err);
@@ -95,14 +97,14 @@ const Index = (props) => {
 
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaBeli} disabled/>
+                        <input type="text" class="form-control" id="nama_barang" value={"Rp. " + formatMoney(hargaBeli)} disabled/>
                         <label for="nama_barang">Harga Beli</label>
                     </div>
                 </div>
 
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaJual} disabled/>
+                        <input type="text" class="form-control" id="nama_barang" value={"Rp. " + formatMoney(hargaJual)} disabled/>
                         <label for="nama_barang">Harga Jual</label>
                     </div>
                 </div>

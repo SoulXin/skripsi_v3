@@ -58,9 +58,9 @@ const Index = (props) => {
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.Barang_Header.merek_barang}</td>
-                <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
+                <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_beli)}</td>
                 <td className="p-3">{list.jumlah}</td>
-                <td className="p-3">Rp. { formatMoney(list.harga_beli * list.jumlah) }</td>
+                <td className="p-3">Rp. { formatMoney(list.Barang_Header.harga_beli * list.jumlah) }</td>
 
             </tr>
         )
@@ -98,9 +98,9 @@ const Index = (props) => {
                     try{
                         for(var a = 0;a < data.length; a++){
                             const dataBarang = {
-                                stok : data[a].Barang_Header.Barang_Detail.stok + data[a].jumlah
+                                stok : data[a].Barang_Header.stok + data[a].jumlah
                             }
-                            await axios.put(`http://localhost:5001/barang_detail/update/${data[a].id_barang}`,dataBarang);
+                            await axios.put(`http://localhost:5001/barang_header/update/${data[a].id_barang}`,dataBarang);
                         }
                         // if(dataContext.metode_pembayaran == 1){ // => jika tunai maka dia selesai
                             const dataPesananPembelianHeader = {
@@ -170,17 +170,6 @@ const Index = (props) => {
                     <input type="date" class="form-control" id="floatingInput" value={dataContext.tanggal_jatuh_tempo} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_JATUH_TEMPO',data : e.target.value})} disabled = {dataContext.metode_pembayaran == "1" ? true : false}/>
                     <label for="floatingInput">Tanggal Jatuh Tempo</label>
                 </div>
-
-                {/* Pergi ke pesanan pembelian ambil data */}
-                <div className = "row col-3">
-                    <div class="form-floating mb-3 px-0 col mx-1">
-                        <input type="text" class="form-control" id="floatingInput" value={idPesananPembelian} disabled />
-                        <label for="floatingInput">ID Pesanan</label>
-                    </div>
-                    <div className="col">
-                        <Link to={{ pathname : '/index_pesanan_pembelian',state : idPembelian }} className="btn btn-outline-success w-100">Ambil Pesanan Pembelian</Link>
-                    </div>
-                </div>
                     
                 {/* <div className="col-1 offset-2 px-0">
                     <button className="btn btn-success w-100" onClick={handleSave}>Simpan</button>
@@ -213,6 +202,16 @@ const Index = (props) => {
                 </div>
 
                 <div className="col-3">
+                    {/* Pergi ke pesanan pembelian ambil data */}
+                    <div className = "row col-12 px-0 mx-auto">
+                        <div class="form-floating mb-3 px-0 col-8 mx-auto">
+                            <input type="text" class="form-control" id="floatingInput" value={idPesananPembelian} disabled />
+                            <label for="floatingInput">ID Pesanan Pembelian</label>
+                        </div>
+                        <div className="col-3 px-0 mx-auto mt-2">
+                            <Link to={{ pathname : '/index_pesanan_pembelian',state : idPembelian }} className="btn btn-outline-success w-100">Ambil</Link>
+                        </div>
+                    </div>
                     <table>
                         <tr>
                             <td>Grand Total</td>

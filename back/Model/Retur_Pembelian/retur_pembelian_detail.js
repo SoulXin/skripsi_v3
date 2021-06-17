@@ -4,7 +4,7 @@ const db = require ('../../Database/db');
 const Retur_Pembelian_Detail = db.sequelize.define('retur_pembelian_detail',{
     id_retur_pembelian : {
         type : Sequelize.INTEGER,
-        unique: true
+        primaryKey : true
     },
     id_pembelian : {
         type : Sequelize.INTEGER
@@ -13,9 +13,6 @@ const Retur_Pembelian_Detail = db.sequelize.define('retur_pembelian_detail',{
         type : Sequelize.STRING
     },
     max : {
-        type : Sequelize.INTEGER
-    },
-    harga_beli : {
         type : Sequelize.INTEGER
     },
     jumlah : {

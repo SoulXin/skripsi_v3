@@ -3,11 +3,10 @@ const Barang_Header = require('../../Model/Barang/barang_header');
 const { Op } = require("sequelize");
 
 exports.register = (req,res) => {
-    const {id_pesanan_pembelian,id_barang,harga_beli,jumlah,total} = req.body;
+    const {id_pesanan_pembelian,id_barang,jumlah,total} = req.body;
     Pesanan_Pembelian_Detail.create({
         id_pesanan_pembelian : id_pesanan_pembelian,
         id_barang : id_barang,
-        harga_beli : harga_beli,
         jumlah : jumlah,
         total : total
     })
@@ -42,9 +41,8 @@ exports.show_detail = (req,res) => {
 
 exports.update = (req,res) => {
     const {id,id_barang} = req.params;
-    const {harga_beli,jumlah,total} = req.body;
+    const {jumlah,total} = req.body;
     Pesanan_Pembelian_Detail.update({
-        harga_beli : harga_beli,
         jumlah : jumlah,
         total : total
     },{

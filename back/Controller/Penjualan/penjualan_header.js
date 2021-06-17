@@ -4,13 +4,14 @@ const Jenis_Service = require('../../Model/Jenis_Sevice/jenis_service');
 const { Op } = require("sequelize");
 const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
-const Penjualan_Pelanggan = require('../../Model/Penjualan/penjualan_pelanggan');
-const Retur_Penjualan_Detail = require('../../Model/Retur_Penjualan/retur_penjualan_detail');
 const Barang_Header = require('../../Model/Barang/barang_header');
 
 exports.register = (req,res) => {
-    const {tanggal_penjualan,grand_total} = req.body;
+    const {nama_pelanggan,nomor_polisi,nomor_antrian,tanggal_penjualan,grand_total} = req.body;
     Penjualan_Header.create({
+        nama_pelanggan : nama_pelanggan,
+        nomor_polisi : nomor_polisi,
+        nomor_antrian : nomor_antrian,
         tanggal_penjualan : tanggal_penjualan,
         grand_total : grand_total
     })
@@ -28,10 +29,6 @@ exports.show_all = (req,res) => {
             {
                 model : Penjualan_Detail,
                 as : 'Penjualan_Detail',
-            },
-            {
-                model : Penjualan_Pelanggan,
-                as : 'Penjualan_Pelanggan'
             }
         ]
     })
@@ -49,10 +46,6 @@ exports.show_all_laporan = (req,res) => {
             {
                 model : Penjualan_Detail,
                 as : 'Penjualan_Detail',
-            },
-            {
-                model : Penjualan_Pelanggan,
-                as : 'Penjualan_Pelanggan'
             }
         ]
     })
@@ -185,10 +178,7 @@ exports.show_detail = (req,res) => {
                     }
                 ]
             },
-            {
-                model : Retur_Penjualan_Detail,
-                as : 'Retur_Penjualan_Detail'
-            }
+             
         ]
     })
     .then((result) => {
@@ -217,8 +207,11 @@ exports.search = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {tanggal_penjualan,grand_total,status} = req.body;
+    const {nama_pelanggan,nomor_polisi,nomor_antrian,tanggal_penjualan,grand_total,status} = req.body;
     Penjualan_Header.update({
+        nama_pelanggan : nama_pelanggan,
+        nomor_polisi : nomor_polisi,
+        nomor_antrian : nomor_antrian,
         tanggal_penjualan : tanggal_penjualan,
         grand_total : grand_total,
         status : status
@@ -306,10 +299,6 @@ exports.search_date = (req,res) => {
         },
         include : [
             {
-                model : Penjualan_Pelanggan,
-                as : 'Penjualan_Pelanggan'
-            },
-            {
                 model : Penjualan_Detail,
                 as : 'Penjualan_Detail',
             }
@@ -349,10 +338,6 @@ exports.laporan_per_item = async (req,res) => {
                                 as : 'Barang_Header'
                             }
                         ]
-                    },
-                    {
-                        model : Penjualan_Pelanggan,
-                        as : 'Penjualan_Pelanggan'
                     }
                 ]
             })
@@ -383,10 +368,6 @@ exports.laporan_per_item = async (req,res) => {
                                 as : 'Barang_Header'
                             }
                         ]
-                    },
-                    {
-                        model : Penjualan_Pelanggan,
-                        as : 'Penjualan_Pelanggan'
                     }
                 ]
             })

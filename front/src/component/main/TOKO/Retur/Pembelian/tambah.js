@@ -54,7 +54,7 @@ const Index = (props) => {
                     </td>
                     <td className="p-3">{list.id_barang}</td>
                     <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                    <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
+                    <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_beli)}</td>
                     <td className="p-3">{list.jumlah}</td>
                     <td className="p-3">Rp. {formatMoney(list.total)}</td>
                 </tr>
@@ -98,7 +98,7 @@ const Index = (props) => {
                         dataBarang.filter(async (list,index) => {
                             if(list.id_barang == dataRetur[a].id_barang && updateBarang){
                                 const dataBarangUpdate = {
-                                    stok : list.Barang_Detail.stok - dataRetur[a].jumlah
+                                    stok : list.stok - dataRetur[a].jumlah
                                 }
                                 await axios.put(`http://localhost:5001/barang_detail/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
                                 setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
@@ -142,7 +142,7 @@ const Index = (props) => {
                     <div className="row">
                         <div class="form-floating mb-3 px-0 col-2 mx-1">
                             <input type="text" class="form-control" id="floatingInput" value={idRetur} disabled/>
-                            <label for="floatingInput">ID Retur</label>
+                            <label for="floatingInput">ID Retur Pembelian</label>
                         </div>
                     </div>
                     <table class="table table-hover">
@@ -189,7 +189,7 @@ const Index = (props) => {
                             <option value = "1" selected = {dataContext.jenis_penggembalian == '1' ? true : false}>Tunai</option>
                             <option value = "0" selected = {dataContext.jenis_penggembalian == '0' ? true : false}>Ganti Barang</option>
                         </select>
-                        <label>Jenis Penggembalian</label>
+                        <label>Jenis Pengembalian</label>
                     </div>
 
                     <div className="row">

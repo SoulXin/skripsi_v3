@@ -1,6 +1,7 @@
 import React,{useEffect, useState} from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
+import { formatMoney } from '../../../../global/function';
 
 const Index = (props) => {
     const [data,setData] = useState([]);
@@ -10,17 +11,18 @@ const Index = (props) => {
     const [idPenjualan,setIdPenjualan] = useState('');
     const [idService,setIdService] = useState('');
     const [namaService,setNamaService] = useState('');
-    const [harga,setHarga] = useState('');
+    const [jumlah,setJumlah] = useState('');
     const [hargaSistem,setHargaSistem] = useState('');
 
     useEffect(() => { 
         const loadData = async () => {
+            console.log(props.location.state)
             try{
                 setIdPenjualan(props.location.state.detail.id_penjualan);
                 setIdService(props.location.state.detail.id_service);
-                setNamaService(props.location.state.detail.Jenis_Service.nama);
+                setNamaService(props.location.state.detail.Jenis_Service.nama_service);
                 setHargaSistem(props.location.state.detail.Jenis_Service.harga);
-                setHarga(props.location.state.harga);
+                setJumlah(props.location.state.detail.jumlah);
             }catch(error){
                 setError(true);
             }
@@ -33,20 +35,21 @@ const Index = (props) => {
 
     const handleSave = () => {
         const data = {
-            harga : harga
+            jumlah : jumlah,
+            total : hargaSistem * jumlah
         }
 
-        if(harga){
-            axios.put(`http://localhost:5001/penjualan_service/update/${idPenjualan}/${idService}`, data)
+        if(jumlah){
+            axios.put(`http://localhost:5001/penjualan_service/update_service/${idPenjualan}/${idService}`, data)
             .then((res) => {
-                alert('Harga service berrhasil di ubah');
+                alert('Jumlah service berrhasil di ubah');
                 props.history.goBack();
             })
             .catch((err) => {
                 console.log(err);
             })
         }else{
-            alert('Harga tidak boleh kosong');
+            alert('Jumlah tidak boleh kosong');
         }
     }
 
@@ -73,19 +76,19 @@ const Index = (props) => {
                
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={hargaSistem} disabled/>
+                        <input type="text" class="form-control" id="nama_barang" value={"Rp. "+formatMoney(hargaSistem)} disabled/>
                         <label for="nama_barang">Harga Sistem</label>
                     </div>
                 </div>
                 
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={harga} onChange = {(e) => setHarga(e.target.value)}/>
-                        <label for="nama_barang">Harga Terkini</label>
+                        <input type="text" class="form-control" id="nama_barang" value={jumlah} onChange = {(e) => setJumlah(e.target.value)}/>
+                        <label for="nama_barang">Jumlah</label>
                     </div>
                 </div>
 
-                <div class="mb-3 col-12 mt-2">
+                <div class="mb-3 col-6 mt-2">
                      <button className="btn btn-outline-success w-100 mt-2" onClick = {handleSave}>Simpan</button>
                 </div>
             </div>

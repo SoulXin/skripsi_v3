@@ -72,8 +72,6 @@ app.use("/pembelian_detail",require("./Router/Pembelian/pembelian_detail"));
 app.use("/penjualan_header",require("./Router/Penjualan/penjualan_header"));
 app.use("/penjualan_detail",require("./Router/Penjualan/penjualan_detail"));
 app.use("/penjualan_service",require("./Router/Penjualan/penjualan_service"));
-app.use("/penjualan_pelanggan",require("./Router/Penjualan/penjualan_pelanggan"));
-
 
 // Pembayaran Hutang
 app.use("/pembayaran_hutang_header",require("./Router/Pembayaran_Hutang/pembayaran_hutang_header"));

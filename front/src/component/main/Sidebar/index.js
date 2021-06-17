@@ -208,7 +208,7 @@ linkColor.forEach(l=> l.addEventListener('click', colorLink))
                                 
                                 <Link to="/index_pesanan_pembelian" class={dataContext.lihat_pesanan_pembelian ? "nav__link sub_nav_link" : "nav__link sub_nav_link visually-hidden"}>
                                     <i class='bx bx-bookmark nav__icon' ></i>
-                                    <span class="nav__name">Pesanan Pembelian</span>
+                                    <span class="nav__name">Pesanan <br/> Pembelian</span>
                                 </Link>
 
                                 <Link to="/index_pembelian" class={dataContext.lihat_pembelian ? "nav__link sub_nav_link" : "nav__link sub_nav_link visually-hidden"}>

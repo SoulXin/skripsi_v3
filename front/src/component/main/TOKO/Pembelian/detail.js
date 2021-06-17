@@ -81,9 +81,9 @@ const Index = (props) => {
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.Barang_Header.merek_barang}</td>
-                <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
+                <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_beli)}</td>
                 <td className="p-3">{list.jumlah}</td>
-                <td className="p-3">Rp. { formatMoney(list.harga_beli * list.jumlah) }</td>
+                <td className="p-3">Rp. { formatMoney(list.Barang_Header.harga_beli * list.jumlah) }</td>
             </tr>
         )
     }) : null;
@@ -141,9 +141,9 @@ const Index = (props) => {
                 try{
                     for(var a = 0;a < dataBarangDetail.length; a++){
                         const dataBarang = {
-                            stok : dataBarangDetail[a].Barang_Header.Barang_Detail.stok + dataBarangDetail[a].jumlah
+                            stok : dataBarangDetail[a].Barang_Header.stok + dataBarangDetail[a].jumlah
                         }
-                        await axios.put(`http://localhost:5001/barang_detail/update/${dataBarangDetail[a].id_barang}`,dataBarang);
+                        await axios.put(`http://localhost:5001/barang_header/update/${dataBarangDetail[a].id_barang}`,dataBarang);
                     }
                     await axios.put(`http://localhost:5001/pembelian_header/update/${idPembelian}`,dataTambah);
                     await axios.put(`http://localhost:5001/pesanan_pembelian_header/update/${idPesananPembelian}`,dataTambah);
@@ -263,6 +263,16 @@ const Index = (props) => {
                     }
                 </div>
                 <div className="col-3">
+                    {/* Pergi ke pesanan pembelian ambil data */}
+                    <div className = "row col-12 px-0 mx-auto">
+                        <div class="form-floating mb-3 px-0 col-8 mx-auto">
+                            <input type="text" class="form-control" id="floatingInput" value={idPesananPembelian} disabled />
+                            <label for="floatingInput">ID Pesanan Pembelian</label>
+                        </div>
+                        <div className="col-3 px-0 mx-auto mt-2">
+                            <Link to={{ pathname : '/index_pesanan_pembelian',state : idPembelian }} className="btn btn-outline-success w-100">Ambil</Link>
+                        </div>
+                    </div>
                     <table>
                         <tr>
                             <td>Grand Total</td>
@@ -303,7 +313,7 @@ const Index = (props) => {
                                 <button className="btn btn-success col mx-1 w-100" onClick={handleSaveDetail}>Simpan</button>
                             }
                             {
-                                !dataContext.edit_pembelian || checkRetur || status == 'Proses' ? null : 
+                                !dataContext.edit_pembelian || checkRetur || checkHutang || status == 'Proses' ? null : 
                                 <button className="btn btn-success col mx-1 w-100" onClick={handleEdit}>Ubah</button>
                             }
                         </div>

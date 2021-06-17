@@ -39,9 +39,9 @@ const Index = (props) => {
             <tr key={index}>
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                <td className="p-3">{list.harga_beli}</td>
+                <td className="p-3">{"Rp. " + formatMoney(list.Barang_Header.harga_beli)}</td>
                 <td className="p-3">{list.jumlah}</td>
-                <td className="p-3">{formatMoney(list.harga_beli * list.jumlah)}</td>
+                <td className="p-3">{"Rp. " + formatMoney(list.Barang_Header.harga_beli * list.jumlah)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>
                 </td>
@@ -62,10 +62,10 @@ const Index = (props) => {
                             id_pembelian : idPembelian,
                             id_barang : e.id_barang,
                             max : e.jumlah,
-                            harga_beli : e.harga_beli,
                             jumlah : jumlah,
-                            total : e.harga_beli * jumlah 
+                            total : parseInt(e.Barang_Header.harga_beli * jumlah) 
                         }
+
                         await axios.post(`http://localhost:5001/retur_pembelian_detail/register`, dataTambah);
                         setRefresh(!refresh);
                         alert('Barang berhasil di tambahkan');
@@ -79,7 +79,7 @@ const Index = (props) => {
                 if(e.jumlah + 1 <= e.jumlah){
                     const dataUpdate = {
                         jumlah : e.jumlah + 1,
-                        total : e.harga_beli * jumlah 
+                        total : parseInt(e.Barang_Header.harga_beli * jumlah)
                     }
     
                     await axios.put(`http://localhost:5001/retur_pembelian_detail/update/${idRetur}/${e.id_barang}`, dataUpdate);

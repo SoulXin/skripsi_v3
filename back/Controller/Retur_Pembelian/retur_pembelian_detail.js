@@ -3,12 +3,11 @@ const { Op } = require("sequelize");
 const Barang_Header = require('../../Model/Barang/barang_header');
 
 exports.register = (req,res) => {
-    const {id_retur_pembelian,id_pembelian,id_barang,max,harga_beli,jumlah,total } = req.body;
+    const {id_retur_pembelian,id_pembelian,id_barang,max,jumlah,total } = req.body;
     Retur_Pembelian_Detail.create({
         id_retur_pembelian : id_retur_pembelian ,
         id_pembelian : id_pembelian,
         id_barang : id_barang,
-        harga_beli : harga_beli,
         max : max,
         jumlah : jumlah,
         total : total
@@ -59,10 +58,9 @@ exports.delete_retur = (req,res) => {
 
 exports.update = (req,res) => {
     const {id,id_barang} = req.params;
-    const {harga_beli,jumlah,total} = req.body;
+    const {jumlah,total} = req.body;
 
     Retur_Pembelian_Detail.update({
-        harga_beli : harga_beli,
         jumlah : jumlah,
         total : total
     },{

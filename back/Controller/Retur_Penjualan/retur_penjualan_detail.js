@@ -1,6 +1,7 @@
 const Retur_Penjualan_Detail = require('../../Model/Retur_Penjualan/retur_penjualan_detail');
 const { Op } = require("sequelize");
 const Barang_Header = require('../../Model/Barang/barang_header');
+const Penjualan_Header = require('../../Model/Penjualan/penjualan_header');
 
 exports.register = (req,res) => {
     const {id_retur_penjualan,id_penjualan,id_barang,max,harga_jual,jumlah,total } = req.body;
@@ -31,6 +32,10 @@ exports.show_detail = (req,res) => {
             {
                 model : Barang_Header,
                 as : 'Barang_Header'
+            },
+            {
+                model : Penjualan_Header,
+                as : 'Penjualan_Header'
             }
         ]
     })
