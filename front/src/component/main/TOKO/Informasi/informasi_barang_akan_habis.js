@@ -30,8 +30,8 @@ const Index = () => {
                 <td className="p-3">{list.nama_barang}</td>
                 <td className="p-3">{list.merek_barang}</td>
                 <td className="p-3">{list.jenis_kereta}</td>
-                <td className="p-3">{list.Barang_Detail.stok_minimal}</td>
-                <td className="p-3">{list.Barang_Detail.stok}</td>
+                <td className="p-3">{list.stok_minimal}</td>
+                <td className="p-3">{list.stok}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/form_barang',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
                 </td>

@@ -255,24 +255,20 @@ exports.show_all_limit = async (req,res) => {
         const first = await Barang_Header.findAll({
             where : {
                 aktif : 1
-            },
-            include : [{
-                model : Barang_Kategori,
-                as : 'Barang_Kategori',
-            }]
+            }
         })
 
         for(var a = 0;a < first.length;a++){
             const second = await Barang_Header.findOne({
+                where : {
+                    stok : {
+                        [Op.lte] : first[a].stok_minimal
+                    },
+                    id_barang : first[a].id_barang
+                },
                 include : [{
                     model : Barang_Kategori,
                     as : 'Barang_Kategori',
-                    where : {
-                        stok : {
-                            [Op.lte] : first[a].Barang_Kategori.stok_minimal
-                        },
-                        id_barang : first[a].id_barang
-                    },
                     include : [{ model : Kategori, as : 'Kategori' }]
                 }] 
             });
