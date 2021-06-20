@@ -49,7 +49,9 @@ const Index = (props) => {
             if(responseDataLaporan.data.length > 0 && responseDataLaporanPerItem.data.length > 0){
                 setdataLaporan(responseDataLaporan.data);
                 setDataLaporanPerItem(responseDataLaporanPerItem.data);
-                setNamaSupplier(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Supplier.nama_supplier : '');
+                if(searchSupplier){
+                    setNamaSupplier(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Supplier.nama_supplier : '');
+                }
             }else{
                 setNamaSupplier('');
             }
