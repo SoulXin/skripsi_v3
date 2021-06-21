@@ -40,9 +40,9 @@ const Index = (props) => {
             <tr key={index}>
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
+                <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                 <td className="p-3">{list.jumlah}</td>
-                <td className="p-3">Rp. {formatMoney(list.harga_jual * list.jumlah)}</td>
+                <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <button className="btn btn-outline-success" style = {{position : 'absolute',bottom : 10,right : 10}} onClick={() => handleAdd(list)}>Tambah</button>
                 </td>
@@ -63,10 +63,10 @@ const Index = (props) => {
                             id_penjualan : idPenjualan,
                             id_barang : e.id_barang,
                             max : e.jumlah,
-                            harga_jual : e.harga_jual,
                             jumlah : jumlah,
-                            total : e.harga_jual * jumlah 
+                            total : e.Barang_Header.harga_jual * parseInt(jumlah)
                         }
+                        
                         await axios.post(`http://localhost:5001/retur_penjualan_detail/register`, dataTambah);
                         setRefresh(!refresh);
                         alert('Barang berhasil di tambahkan');

@@ -29,10 +29,9 @@ const Index = (props) => {
                 setDataRetur(responseDataRetur.data);
                 setIdRetur(detail.id_retur_penjualan);
                 setIdPenjualan(responseDataRetur.data[0].id_penjualan);
-                setNamaPelanggan(responseDataRetur.data[0].Penjualan_Pelanggan.nama_pelanggan);
-                setNomorPolisi(responseDataRetur.data[0].Penjualan_Pelanggan.nomor_polisi);
 
                 var total = 0;
+                console.log(responseDataRetur)
                 responseDataRetur.data.map((list,index) => {
                     total += list.total;
                 });
@@ -58,7 +57,7 @@ const Index = (props) => {
                     </td>
                     <td className="p-3">{list.id_barang}</td>
                     <td className="p-3">{list.Barang_Header.nama_barang}</td>
-                    <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
+                    <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                     <td className="p-3">{list.jumlah}</td>
                     <td className="p-3">Rp. {formatMoney(list.total)}</td>
                 </tr>
@@ -106,9 +105,9 @@ const Index = (props) => {
                         dataBarang.filter(async (list,index) => {
                             if(list.id_barang == dataRetur[a].id_barang && updateBarang){
                                 const dataBarangUpdate = {
-                                    stok : list.Barang_Detail.stok + dataRetur[a].jumlah
+                                    stok : list.stok + dataRetur[a].jumlah
                                 }
-                                await axios.put(`http://localhost:5001/barang_detail/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
+                                await axios.put(`http://localhost:5001/barang_header/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
                                 setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
                                 // => jika tidak diberikan state 'updatebarang' nanti barangnya akan terus berkurang ketika tekan 'SIMPAN' berkali2
                             }

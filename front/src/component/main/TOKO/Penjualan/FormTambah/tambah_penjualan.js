@@ -135,7 +135,7 @@ const Index = (props) => {
         }
 
         try{
-            // Detail 
+            // Detail dan Barang
             for(var a = 0; a < dataBarang.length; a++){
                 const dataPenjualanDetail = {
                     id_penjualan : idPenjualan,
@@ -144,6 +144,15 @@ const Index = (props) => {
                     total : parseInt(dataBarang[a].jumlah * dataBarang[a].Barang_Header.harga_jual)
                 }
                 await axios.post('http://localhost:5001/penjualan_detail/register',dataPenjualanDetail);
+
+                const stokBarang = await axios.get(`http://localhost:5001/barang_header/show_detail/${dataBarang[a].Barang_Header.id_barang}`);
+                const dataUpdateStokBarang = {
+                    stok : parseInt(stokBarang.data.stok - dataBarang[a].jumlah)
+                }
+
+                console.log(stokBarang);
+                console.log(dataUpdateStokBarang)
+                await axios.put(`http://localhost:5001/barang_header/update/${dataBarang[a].Barang_Header.id_barang}`,dataUpdateStokBarang);
             }
 
             // Service dan Mekanik

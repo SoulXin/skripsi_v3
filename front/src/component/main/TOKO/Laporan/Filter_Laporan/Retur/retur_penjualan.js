@@ -87,14 +87,6 @@ const Index = (props) => {
             <div className="row">
                 <div className="col-3">
                     <ReactToPrint
-                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Retur</button>}
-                        content={() => componentRef.current}
-                    />
-                    <div style={{ display: "none" }}><Cetak_Retur_Penjualan ref={componentRef} dataTable = {dataLaporan} dari = {dari} sampai = {sampai} pelanggan = {namaPelanggan} nomor_polisi = {nomorPolisi}/></div>
-                </div>
-
-                <div className="col-3">
-                    <ReactToPrint
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Retur Barang</button>}
                         content={() => componentRef2.current}
                     />

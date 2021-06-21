@@ -130,7 +130,7 @@ exports.show_retur = async (req,res) => {
             }
         }
 
-       res.status(200).json(newArray);
+       res.status(200).json(retur);
     }catch(error){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();

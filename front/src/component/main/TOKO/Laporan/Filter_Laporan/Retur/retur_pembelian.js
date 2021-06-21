@@ -46,15 +46,14 @@ const Index = (props) => {
             const responseDataLaporan = await axios.post('http://localhost:5001/retur_pembelian_header/search_date',data);
             const responseDataLaporanPerItem = await axios.post('http://localhost:5001/retur_pembelian_header/laporan_per_item',data);
             
-            if(responseDataLaporan.data.length > 0 && responseDataLaporanPerItem.data.length > 0){
                 setdataLaporan(responseDataLaporan.data);
                 setDataLaporanPerItem(responseDataLaporanPerItem.data);
                 if(searchSupplier){
                     setNamaSupplier(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Supplier.nama_supplier : '');
+                }else{
+                    setNamaSupplier('');
                 }
-            }else{
-                setNamaSupplier('');
-            }
+           
         }catch(error){
             setNamaSupplier('');
             console.log(error);
@@ -86,14 +85,6 @@ const Index = (props) => {
                 </div>
             </div>
             <div className="row">
-                <div className="col-3">
-                    <ReactToPrint
-                        trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Retur</button>}
-                        content={() => componentRef.current}
-                    />
-                    <div style={{ display: "none" }}><Cetak_Retur_Pembelian ref={componentRef} dataTable = {dataLaporan} dari = {dari} sampai = {sampai} supplier = {namaSupplier}/></div>
-                </div>
-
                 <div className="col-3">
                     <ReactToPrint
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Retur Barang</button>}

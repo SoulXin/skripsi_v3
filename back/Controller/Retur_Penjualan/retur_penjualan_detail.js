@@ -4,12 +4,11 @@ const Barang_Header = require('../../Model/Barang/barang_header');
 const Penjualan_Header = require('../../Model/Penjualan/penjualan_header');
 
 exports.register = (req,res) => {
-    const {id_retur_penjualan,id_penjualan,id_barang,max,harga_jual,jumlah,total } = req.body;
+    const {id_retur_penjualan,id_penjualan,id_barang,max,jumlah,total } = req.body;
     Retur_Penjualan_Detail.create({
         id_retur_penjualan : id_retur_penjualan ,
         id_penjualan : id_penjualan,
         id_barang : id_barang,
-        harga_jual : harga_jual,
         max : max,
         jumlah : jumlah,
         total : total

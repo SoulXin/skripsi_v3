@@ -15,7 +15,6 @@ const Index = (props) => {
             try{
                 const detail = props.location.state;
                 const responseBarang = await axios.get('http://localhost:5001/retur_penjualan_header/show_retur');
-                console.log(responseBarang);
                 setData(responseBarang.data);
                 setIdRetur(detail);
             }catch(error){
@@ -34,8 +33,8 @@ const Index = (props) => {
                <tr key={index}>
                    <td className="p-3">{list.id_penjualan}</td>
                    <td className="p-3">{list.tanggal_penjualan}</td>
-                   <td className="p-3">{list.Penjualan_Pelanggan.nama_pelanggan ? list.Penjualan_Pelanggan.nama_pelanggan : '-'}</td>
-                   <td className="p-3">{list.Penjualan_Pelanggan.nomor_polisi ? list.Penjualan_Pelanggan.nomor_polisi : '-'}</td>
+                   <td className="p-3">{list.nama_pelanggan ? list.nama_pelanggan : '-'}</td>
+                   <td className="p-3">{list.nomor_polisi ? list.nomor_polisi : '-'}</td>
                    <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
                    <td className="p-3">{list.status}</td>
                    <td className="p-3" style={{position:'relative'}}>
@@ -52,6 +51,7 @@ const Index = (props) => {
                 id_retur_penjualan : idRetur,
                 id_penjualan : e.id_penjualan,
             }
+            console.log(data)
 
             const dataUpdate = {
                 id_pelanggan : e.id_pelanggan == 0 ? '' : e.id_pelanggan,

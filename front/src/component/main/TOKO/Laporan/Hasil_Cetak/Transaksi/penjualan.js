@@ -49,8 +49,8 @@ export class Cetak_Penjualan extends React.PureComponent {
                                 <tr key = {index}>
                                     <td>{list.id_penjualan}</td>
                                     <td>{list.tanggal_penjualan}</td>
-                                    <td>{list.Penjualan_Pelanggan.nama_pelanggan}</td>
-                                    <td>{list.Penjualan_Pelanggan.nomor_polisi}</td>
+                                    <td>{list.nama_pelanggan}</td>
+                                    <td>{list.nomor_polisi}</td>
                                     <td>Rp. {formatMoney(list.grand_total)}</td>
                                 </tr>
                             )

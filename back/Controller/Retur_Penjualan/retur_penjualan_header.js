@@ -108,7 +108,7 @@ exports.show_retur = async (req,res) => {
 
         for(var a = 0;a < retur.length;a++){
             if(tempNum.indexOf(retur[a].Retur_Penjualan_Detail.id_penjualan)){
-                tempNum.push(retur[a].Retur_Penjualan_Detail.id_penjualan);
+                tempNum.push(retur[a].Retur_Penjualan_Detail[0].id_penjualan);
             }
         }
         const penjualan = await Penjualan_Header.findAll({
@@ -116,10 +116,6 @@ exports.show_retur = async (req,res) => {
                 {
                     model : Penjualan_Detail,
                     as : 'Penjualan_Detail',
-                },
-                {
-                    model : Penjualan_Header,
-                    as : 'Penjualan_Header',
                 }
             ]
         });
