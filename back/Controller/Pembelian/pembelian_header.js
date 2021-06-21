@@ -295,7 +295,7 @@ exports.laporan_per_item = async (req,res) => {
                         id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
                         tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
                         nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
-                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        harga : pembelian_header[a].Pembelian_Detail[b].Barang_Header.harga_beli,
                         jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
                         total : pembelian_header[a].Pembelian_Detail[b].total
                     })
@@ -335,7 +335,7 @@ exports.laporan_per_item = async (req,res) => {
                         id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
                         tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
                         nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
-                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        harga : pembelian_header[a].Pembelian_Detail[b].Barang_Header.harga_beli,
                         jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
                         total : pembelian_header[a].Pembelian_Detail[b].total
                     })
@@ -378,7 +378,7 @@ exports.laporan_per_item = async (req,res) => {
                         id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
                         tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
                         nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
-                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        harga : pembelian_header[a].Pembelian_Detail[b].Barang_Header.harga_beli,
                         jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
                         total : pembelian_header[a].Pembelian_Detail[b].total
                     })
@@ -412,7 +412,7 @@ exports.laporan_per_item = async (req,res) => {
                         id_barang : pembelian_header[a].Pembelian_Detail[b].id_barang,
                         tanggal_pembelian : pembelian_header[a].tanggal_pembelian,
                         nama_barang : pembelian_header[a].Pembelian_Detail[b].Barang_Header.nama_barang,
-                        harga : pembelian_header[a].Pembelian_Detail[b].harga_beli,
+                        harga : pembelian_header[a].Pembelian_Detail[b].Barang_Header.harga_beli,
                         jumlah : pembelian_header[a].Pembelian_Detail[b].jumlah,
                         total : pembelian_header[a].Pembelian_Detail[b].total
                     })

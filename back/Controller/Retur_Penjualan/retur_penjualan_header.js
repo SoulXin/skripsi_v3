@@ -293,7 +293,7 @@ exports.laporan_per_item = async (req,res) => {
                         nomor_polisi : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Penjualan_Header.nomor_polisi,
                         tanggal_retur : retur_penjualan_header[a].tanggal_retur,
                         nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
-                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.harga_jual,
                         jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
                         total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
                     })
@@ -333,7 +333,7 @@ exports.laporan_per_item = async (req,res) => {
                         id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
                         tanggal_retur : retur_penjualan_header[a].tanggal_retur,
                         nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
-                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.harga_jual,
                         jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
                         total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
                     })
@@ -376,7 +376,7 @@ exports.laporan_per_item = async (req,res) => {
                         nomor_polisi : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Penjualan_Header.nomor_polisi,
                         tanggal_retur : retur_penjualan_header[a].tanggal_retur,
                         nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
-                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.harga_jual,
                         jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
                         total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
                     })
@@ -407,7 +407,7 @@ exports.laporan_per_item = async (req,res) => {
                         id_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].id_barang,
                         tanggal_retur : retur_penjualan_header[a].tanggal_retur,
                         nama_barang : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.nama_barang,
-                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].harga_jual,
+                        harga : retur_penjualan_header[a].Retur_Penjualan_Detail[b].Barang_Header.harga_jual,
                         jumlah : retur_penjualan_header[a].Retur_Penjualan_Detail[b].jumlah,
                         total : retur_penjualan_header[a].Retur_Penjualan_Detail[b].total
                     })
