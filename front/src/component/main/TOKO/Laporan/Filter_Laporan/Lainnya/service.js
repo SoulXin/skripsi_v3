@@ -57,7 +57,7 @@ const Index = (props) => {
 
     const handleSearch = async () => {
         const data = {
-            id_mekanik : parseInt(idMekanik),
+            id_mekanik : idMekanik,
             tanggal_penjualan : tanggal
         }
 

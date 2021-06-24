@@ -66,6 +66,7 @@ exports.show_all_service = async (req,res) => {
     date.setDate(date.getDate());
 
     try{
+        console.log("masuk ini" + id_mekanik + tanggal_penjualan)
         if(id_mekanik && tanggal_penjualan ){
             const penjualan_header = await Penjualan_Header.findAll({
                 where : {
@@ -90,16 +91,17 @@ exports.show_all_service = async (req,res) => {
                             {
                                 model : Jenis_Service,
                                 as : 'Jenis_Service'
+                            },
+                            {
+                                model : Mekanik_Header,
+                                as : 'Mekanik_Header',
+                                where : {
+                                    id_mekanik : id_mekanik
+                                }
                             }
                         ]
                     },
-                    {
-                        model : Mekanik_Header,
-                        as : 'Mekanik_Header',
-                        where : {
-                            id_mekanik : id_mekanik
-                        }
-                    }
+                    
                 ]
             });
             for(var a = 0;a < penjualan_header.length;a++){
@@ -107,11 +109,11 @@ exports.show_all_service = async (req,res) => {
                     temp_array.push({
                         id_penjualan : penjualan_header[a].id_penjualan,
                         id_service : penjualan_header[a].Penjualan_Service[b].id_service,
-                        id_mekanik : penjualan_header[a].Mekanik_Header.id_mekanik,
+                        id_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.id_mekanik,
                         tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
-                        nama_mekanik : penjualan_header[a].Mekanik_Header.Mekanik_Header.nama_mekanik,
+                        nama_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.nama_mekanik,
                         service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
-                        harga : penjualan_header[a].Penjualan_Service[b].harga
+                        harga : penjualan_header[a].Penjualan_Service[b].total
                     })
                 }
             }  
@@ -129,13 +131,14 @@ exports.show_all_service = async (req,res) => {
                             {
                                 model : Jenis_Service,
                                 as : 'Jenis_Service'
+                            },
+                            {
+                                model : Mekanik_Header,
+                                as : 'Mekanik_Header'
                             }
                         ]
                     },
-                    {
-                        model : Mekanik_Header,
-                        as : 'Mekanik_Header'
-                    }
+                    
                 ]
             });
             for(var a = 0;a < penjualan_header.length;a++){
@@ -143,11 +146,11 @@ exports.show_all_service = async (req,res) => {
                     temp_array.push({
                         id_penjualan : penjualan_header[a].id_penjualan,
                         id_service : penjualan_header[a].Penjualan_Service[b].id_service,
-                        id_mekanik : penjualan_header[a].Mekanik_Header.id_mekanik,
+                        id_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.id_mekanik,
                         tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
-                        nama_mekanik : penjualan_header[a].Mekanik_Header.Mekanik_Header.nama_mekanik,
+                        nama_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.nama_mekanik,
                         service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
-                        harga : penjualan_header[a].Penjualan_Service[b].harga
+                        harga : penjualan_header[a].Penjualan_Service[b].total
                     })
                 }
             }
