@@ -48,6 +48,9 @@ const Add = (props) => {
             setStok('');
             setKeterangan('');
             setSelectedKategori('');
+            
+            const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
+            setKategori(responseKategori.data);
 
             // Cek untuk detail
             // props.location.state
@@ -57,7 +60,7 @@ const Add = (props) => {
                 var tempDetail = props.location.state; // => variable detail
                 try{
                     const response = await axios.get(`http://localhost:5001/barang_header/show_detail/${tempDetail.id_barang}`);
-                    console.log(response.data)
+
                     setIdBarang(tempDetail.id_barang);
                     setNama(response.data.nama_barang);
                     setMerek(response.data.merek_barang);
@@ -72,13 +75,6 @@ const Add = (props) => {
                     setAktif(response.data.aktif);
                 }catch(error){
                     console.log(error);
-                }
-            }else{
-                try{
-                    const responseKategori = await axios.get('http://localhost:5001/kategori/show_all');
-                    setKategori(responseKategori.data);
-                }catch(error){
-                    setError(true);
                 }
             }
 
@@ -257,7 +253,7 @@ const Add = (props) => {
                         detail ? 
                         <button type="button" className={aktif ? "btn btn-outline-danger mt-2 mb-5 mx-2 col" : "btn btn-outline-success mt-2 mb-5 mx-2 col"}  onClick={handleChangeStatus} disabled = {!dataContext.hapus_barang}>{ aktif ? 'Non-Aktifkan Barang' : 'Aktifkan Barang' }</button> : null 
                     }
-                    <button type="submit" className="btn btn-success mt-2 mb-5 mx-2 col" disabled = {!dataContext.edit_barang}>{detail ? 'Simpan' : 'Tambah Barang'}</button>
+                    <button type="submit" className="btn btn-success mt-2 mb-5 mx-2 col" disabled = {!dataContext.edit_barang || selectedKategori ? false : true}>{detail ? 'Simpan' : 'Tambah Barang'}</button>
                 </div>
             </form>
         </div>

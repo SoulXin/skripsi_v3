@@ -113,6 +113,17 @@ const Form = (props) => {
         setRefresh(!refresh);
     }
 
+    const handleNumber = (e,type) => {
+        const re = /^[0-9\b]+$/;
+        if (e.target.value === '' || re.test(e.target.value)) {
+            if(type == 1){
+                setTelepon(e.target.value)
+            }else if(type == 2){
+                setNoRekening(e.target.value)
+            }
+        }
+    }
+
     return (
         <div className = "container" style = {{marginTop : 62}}>
             <div className="row" style={{position:'relative'}}>
@@ -131,7 +142,7 @@ const Form = (props) => {
                     <label htmlFor="nama_supplier">Nama Supplier</label>
                 </div>
                 <div className="form-floating mb-3">
-                    <input type="text" value={telepon} className="form-control" id="no_telepon" placeholder="Nomor Telepon" onChange = {(e) => setTelepon(e.target.value)} required/>
+                    <input type="text" value={telepon} className="form-control" id="no_telepon" placeholder="Nomor Telepon" onChange = {(e) => handleNumber(e,1)} required/>
                     <label htmlFor="no_telepon">Nomor Telepon</label>
                 </div>
                 <div className="form-floating mb-3">
@@ -151,7 +162,7 @@ const Form = (props) => {
                     </div>
                     <div className="col">
                         <div className="form-floating mb-3">
-                            <input type="text" value={noRekening} className="form-control" id="no_rekening" placeholder="Nomor Rekning" onChange = {(e) => setNoRekening(e.target.value)} required/>
+                            <input type="text" value={noRekening} className="form-control" id="no_rekening" placeholder="Nomor Rekning" onChange = {(e) => handleNumber(e,2)} required/>
                             <label htmlFor="no_rekening">Nomor Rekning</label>
                         </div>
                     </div>

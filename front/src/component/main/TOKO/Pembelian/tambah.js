@@ -150,7 +150,7 @@ const Index = (props) => {
                 </div>
                 <div className="col">
                     <label>Supplier</label>
-                    <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_SUPPLIER',data : e.target.value})}>
+                    <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_SUPPLIER',data : e.target.value})} disabled={idPesananPembelian ? true : false}>
                         <option value="" selected>Tidak Ada</option>
                         {viewSupplier}
                     </select>

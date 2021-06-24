@@ -150,8 +150,6 @@ const Index = (props) => {
                     stok : parseInt(stokBarang.data.stok - dataBarang[a].jumlah)
                 }
 
-                console.log(stokBarang);
-                console.log(dataUpdateStokBarang)
                 await axios.put(`http://localhost:5001/barang_header/update/${dataBarang[a].Barang_Header.id_barang}`,dataUpdateStokBarang);
             }
 
@@ -161,6 +159,8 @@ const Index = (props) => {
                     id_penjualan : idPenjualan,
                     id_service : dataService[b].Jenis_Service.id_service,
                     id_mekanik : dataContext.id_mekanik,
+                    jumlah : dataService[b].jumlah,
+                    total : dataService[b].total
                 }
 
                 await axios.post('http://localhost:5001/penjualan_service/register',dataPenjualanService);
@@ -218,7 +218,7 @@ const Index = (props) => {
 
                 <div class="col form-floating mb-3 px-0 mx-1">
                     <select class="form-select" aria-label="Default select example" onChange = {(e) => dispatch({type : 'SIMPAN_ID_MEKANIK',data : e.target.value})} disabled = {dataService.length > 0 ? false : true}>
-                        <option value='' selected>Tidak ada</option>
+                        <option value='' selected={dataService.length < 1 ? true : false}> Tidak ada</option>
                         {viewMekanik}
                     </select>
                     <label>Mekanik</label>

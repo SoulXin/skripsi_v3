@@ -42,9 +42,10 @@ const Index = () => {
         e.preventDefault();
         try{
             const dataSearch = {
-                nama : search,
+                nama_service : search,
                 aktif : aktif
             }
+            console.log(dataSearch)
             const response = await axios.post('http://localhost:5001/jenis_service/search',dataSearch);
             setData(response.data);
         }catch(error){

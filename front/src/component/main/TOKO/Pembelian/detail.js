@@ -166,6 +166,12 @@ const Index = (props) => {
             if(checkHutang || checkRetur){
                 alert('Tidak bisa dibatalkan karena data sedang digunakan');
             }else{
+                for(var a = 0; a < dataBarangDetail.length; a++){
+                    const dataUpdateBarang = {
+                        stok : parseInt(dataBarangDetail[a].Barang_Header.stok - dataBarangDetail[a].jumlah)
+                    }
+                    await axios.put(`http://localhost:5001/barang_header/update/${dataBarangDetail[a].Barang_Header.id_barang}`,dataUpdateBarang);
+                }
                 await axios.delete(`http://localhost:5001/pembelian_detail/delete_pembelian/${idPembelian}`);
                 await axios.delete(`http://localhost:5001/pembelian_header/delete/${idPembelian}`);
                 alert('Pembelian berhasil dibatalkan');
@@ -211,7 +217,7 @@ const Index = (props) => {
                 </div>
                 <div className="col">
                     <label>Supplier</label>
-                        <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)} disabled={status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur ? true : false }>
+                        <select class="form-select" aria-label="Default select example" onChange = {(e) => setIdSupplier(e.target.value)} disabled={status == "Selesai" || checkHutang || !dataContext.edit_pembelian || checkRetur || idPesananPembelian ? true : false }>
                         <option value="" selected>Tidak Ada</option>
                         {viewSupplier}
                     </select>

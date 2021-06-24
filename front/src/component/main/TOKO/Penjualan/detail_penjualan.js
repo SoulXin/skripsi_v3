@@ -142,7 +142,12 @@ const Index = (props) => {
     
                 // Barang
                 for(var b = 0; b < dataBarang.length; b++){
+                    const updateBarang = {
+                        stok : parseInt(dataBarang[b].Barang_Header.stok + dataBarang[b].jumlah)
+                    }
                     await axios.delete(`http://localhost:5001/penjualan_detail/delete_detail/${idPenjualan}/${dataBarang[b].id_barang}`);
+                    await axios.put(`http://localhost:5001/barang_header/update/${dataBarang[b].id_barang}`,updateBarang);
+
                 }
     
                 await axios.delete(`http://localhost:5001/penjualan_header/delete/${idPenjualan}`);

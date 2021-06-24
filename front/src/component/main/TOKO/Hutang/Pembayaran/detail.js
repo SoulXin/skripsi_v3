@@ -56,7 +56,7 @@ const Index = (props) => {
     }) : null;
 
     const handleSave = async () => {
-        if(tanggalPembayaran != '0000-00-00' || tanggalPembayaran != ''){
+        if(tanggalPembayaran != '0000-00-00'){
             try{
                 const dataHeader = {
                     tanggal_pembayaran : tanggalPembayaran,
@@ -185,7 +185,7 @@ const Index = (props) => {
                     </div>
 
                     <div className="form-floating mb-2">
-                        <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran} />
+                        <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran} required/>
                         <label className="form-label">Tanggal Pembayaran</label>
                     </div>
                     <div className="row">
