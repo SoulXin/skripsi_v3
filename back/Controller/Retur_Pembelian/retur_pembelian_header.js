@@ -100,16 +100,15 @@ exports.show_retur = async (req,res) => {
         const tempNum = [];
         const retur = await Retur_Pembelian_Header.findAll({
             where : {
-                [Op.not] : [{id_supplier : 0}]
+                [Op.not] : [{id_supplier : null}]
             },include : [{model : Retur_Pembelian_Detail, as : 'Retur_Pembelian_Detail', attributes : ['id_pembelian']}]
         })
         for(var a = 0;a < retur.length;a++){
-            if(tempNum.indexOf(retur[a].Retur_Pembelian_Detail.id_pembelian)){
-                tempNum.push(retur[a].Retur_Pembelian_Detail.id_pembelian);
+            if(tempNum.indexOf(retur[a].Retur_Pembelian_Detail[0].id_pembelian)){
+                tempNum.push(retur[a].Retur_Pembelian_Detail[0].id_pembelian);
             }
         }
         const pembelian = await Pembelian_Header.findAll({include : [{model : Supplier, as : 'Supplier'}]});
-
 
         var newArray = [];
         for (var i = 0; i < pembelian.length; i++) {
@@ -130,7 +129,7 @@ exports.show_retur = async (req,res) => {
             }
         }
 
-       res.status(200).json(retur);
+        res.status(200).json(newArray);
     }catch(error){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();

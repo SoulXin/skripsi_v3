@@ -69,13 +69,13 @@ const Index = (props) => {
                 </div>
             </div>
             <div className="row">
-                <div className="col-3">
+                {/* <div className="col-3">
                     <ReactToPrint
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Laporan Penyesuaian</button>}
                         content={() => componentRef.current}
                     />
                     <div style={{ display: "none" }}><Cetak_Penyesuaian_Stok ref={componentRef} dataTable = {dataLaporan} dari = {dari} sampai = {sampai}/></div>
-                </div>
+                </div> */}
 
                 <div className="col-3">
                     <ReactToPrint

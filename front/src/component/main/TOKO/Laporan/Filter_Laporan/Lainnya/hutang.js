@@ -77,7 +77,7 @@ const Index = (props) => {
             <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row mb-3">
                 <div className="col">
-                    <h2>Laporan Hutang</h2>
+                    <h2>Laporan Pembayaran Hutang</h2>
                 </div>
 
                 <div className="offset-1 col row">

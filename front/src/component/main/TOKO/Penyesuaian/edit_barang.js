@@ -43,20 +43,24 @@ const Index = (props) => {
         }
     }, [refresh]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const data = {
             jumlah_fisik : jumlahFisik,
             penyesuaian : jumlahFisik > jumlahSistem ? jumlahFisik - jumlahSistem : jumlahSistem - jumlahFisik,
         }
+
+        const dataUpdateBarang = {
+            stok : jumlahFisik
+        }
         if(jumlahFisik != 0){
-            axios.put(`http://localhost:5001/penyesuaian_detail/update/${idPenyesuaian}/${idBarang}`, data)
-            .then((res) => {
+            try{
+                await axios.put(`http://localhost:5001/penyesuaian_detail/update/${idPenyesuaian}/${idBarang}`, data);
+                await axios.put(`http://localhost:5001/barang_header/update/${idBarang}`,dataUpdateBarang);
                 alert('Jumlah barang berhasil di ubah');
                 props.history.goBack();
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            }catch(error){
+                console.log(error);
+            }
         }else{
             alert('Jumlah tidak boleh kosong');
         }

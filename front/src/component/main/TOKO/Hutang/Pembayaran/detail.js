@@ -157,7 +157,7 @@ const Index = (props) => {
                     <h3>Rincian</h3>
                     <div className="form-group mb-2">
                         <label>Jenis Pembayaran</label>
-                        <select class="form-select" onChange = { (e) => setJenisPembayaran(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran}>
+                        <select class="form-select" onChange = { (e) => setJenisPembayaran(e.target.value)} disabled = {!dataContext.edit_hutang}>
                             <option value = "1" selected = {jenisPembayaran ? true : false}>Tunai</option>
                             <option value = "0" selected = {!jenisPembayaran ? true : false}>Transfer Bank</option>
                         </select>
@@ -185,7 +185,7 @@ const Index = (props) => {
                     </div>
 
                     <div className="form-floating mb-2">
-                        <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang || statusPembayaran} required/>
+                        <input type="date" className="form-control" value = {tanggalPembayaran} onChange = {(e) => setTanggalPembayara(e.target.value)} disabled = {!dataContext.edit_hutang} required/>
                         <label className="form-label">Tanggal Pembayaran</label>
                     </div>
                     <div className="row">

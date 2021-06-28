@@ -100,7 +100,7 @@ const Index = () => {
                 {
                     // !dataContext.lihat_laporan_hutang ? null : 
                     <div className="col-2">
-                        <Link to = "/laporan_hutang" className="btn btn-outline-success mx-1 w-100">Hutang</Link>
+                        <Link to = "/laporan_hutang" className="btn btn-outline-success mx-1 w-100"> Pembayaran Hutang</Link>
                     </div>
                 }
                 {
