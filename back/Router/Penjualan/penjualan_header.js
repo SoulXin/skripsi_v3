@@ -13,6 +13,7 @@ router.delete('/delete/:id',penjualan_header_Controller.delete);
 router.get('/show_pesanan_penjualan/:id',penjualan_header_Controller.show_pesanan_penjualan);
 router.put('/proses_penjualan_header/:id',penjualan_header_Controller.proses_penjualan_header);
 router.post('/search_date',penjualan_header_Controller.search_date);
+router.get('/get_data_by_date/:date',penjualan_header_Controller.get_data_by_date);
 
 // Laporan
 router.post('/laporan_per_item',penjualan_header_Controller.laporan_per_item);

@@ -54,7 +54,7 @@ const Index = (props) => {
         const filter = dataService.filter((list) => list.id_service === e.id_service && list.id_penjualan === idPenjualan);
         if(!filter.length){ // => jika data filter memberikan return service tersebut, berarti service yg direturn tersebut blm ada di pesanan
             try{
-                var jumlah = prompt("Masukan jumlah barang"); // => prompt input jumlah
+                var jumlah = prompt("Masukan jumlah service"); // => prompt input jumlah
                 if(jumlah != '' && jumlah != 0){
                     const data = {
                         id_penjualan : idPenjualan,

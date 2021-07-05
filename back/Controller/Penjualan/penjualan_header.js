@@ -5,6 +5,7 @@ const { Op } = require("sequelize");
 const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const Barang_Header = require('../../Model/Barang/barang_header');
+const moment = require('moment');
 
 exports.register = (req,res) => {
     const {nama_pelanggan,nomor_polisi,nomor_antrian,tanggal_penjualan,grand_total} = req.body;
@@ -394,4 +395,21 @@ exports.laporan_per_item = async (req,res) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
     }
+}
+
+exports.get_data_by_date = (req,res) => {
+    const {date} = req.params;
+    const datee = moment(date).format('YYYY-MM-DD');
+
+    Penjualan_Header.findAll({
+        where : {
+            tanggal_penjualan : datee
+        }
+    })
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
 }

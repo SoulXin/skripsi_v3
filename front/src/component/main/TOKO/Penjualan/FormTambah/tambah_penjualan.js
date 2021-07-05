@@ -22,13 +22,21 @@ const Index = (props) => {
     const [totalBarang,setTotalBarang] = useState('');
     const [totalService,setTotalService] = useState('');
 
+    // No Antrian
+    const [noAntrian,setNoAntrian] = useState(0);
+
     useEffect(() => {
         const loadData = async () => {
             try{
                 const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_all');
                 const responsePenjualanDetail = await axios.get(`http://localhost:5001/penjualan_detail/show_detail/${props.location.state.id_penjualan}`);
                 const responsePenjualanService  = await axios.get(`http://localhost:5001/penjualan_service/show_detail/${props.location.state.id_penjualan}`);
-                
+
+                if(dataContext.tanggal_penjualan){
+                    const responsePenjualanHeader  = await axios.get(`http://localhost:5001/penjualan_header/get_data_by_date/${dataContext.tanggal_penjualan}`);
+                    setNoAntrian(responsePenjualanHeader.data.length > 0 ? responsePenjualanHeader.data.length + 1 : 1);
+                }
+
                 setIdPenjualan(props.location.state.id_penjualan);
                 setMekanik(responseMekanik.data);
                 setDataBarang(responsePenjualanDetail.data);
@@ -129,7 +137,7 @@ const Index = (props) => {
         const dataPenjualanHeader = {
             nama_pelanggan : dataContext.nama_pelanggan,
             nomor_polisi : dataContext.nomor_polisi,
-            nomor_antrian : 1,
+            nomor_antrian : noAntrian,
             tanggal_penjualan : dataContext.tanggal_penjualan,
             grand_total : totalBarang + totalService
         }
@@ -187,6 +195,12 @@ const Index = (props) => {
             return true;
         }
     }
+
+    const handleChangeDate = async (e) => {
+        await dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value});
+        const responsePenjualanHeader  = await axios.get(`http://localhost:5001/penjualan_header/get_data_by_date/${e.target.value}`);
+        setNoAntrian(responsePenjualanHeader.data.length > 0 ? responsePenjualanHeader.data.length + 1 : 1);
+    }
     return (
         <div className="container px-0 pt-5">
             {/* Atas */}
@@ -202,7 +216,7 @@ const Index = (props) => {
                     <label for="id_penjualan">ID Penjualan</label>
                 </div>
                 <div class="col form-floating mb-3 px-0 mx-1">
-                    <input type="date" class="form-control" id="tanggal_pemesanan"  value={dataContext.tanggal_penjualan} onChange = {(e) => dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value})} />
+                    <input type="date" class="form-control" id="tanggal_pemesanan"  value={dataContext.tanggal_penjualan} onChange = {(e) => handleChangeDate(e)} />
                     <label for="tanggal_pemesanan">Tanggal Penjualan</label>
                 </div>
 
@@ -224,7 +238,7 @@ const Index = (props) => {
                     <label>Mekanik</label>
                 </div>
                 <div class="col form-floating mb-3 px-0 mx-1">
-                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? idPenjualan : '-'} disabled/>
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? noAntrian : '-'} disabled/>
                     <label for="id_penjualan">Nomor Antrian</label>
                 </div>
             </div>

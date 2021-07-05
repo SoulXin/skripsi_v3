@@ -33,6 +33,9 @@ const Index = (props) => {
 
     const [namaMekanik,setNamaMekanik] = useState('');
 
+    // No antrian
+    const [noAntrian,setNoAntrian] = useState(0);
+
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -51,6 +54,7 @@ const Index = (props) => {
                 setIdPenjualan(responsePenjualan.data.id_penjualan);
                 setStatus(responsePenjualan.data.status);
                 setNamaMekanik(responsePenjualan.data.Penjualan_Service.length > 0 ? responsePenjualan.data.Penjualan_Service[0].Mekanik_Header.id_mekanik : '');
+                setNoAntrian(responsePenjualan.data.nomor_antrian);
 
                 dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : responsePenjualan.data.tanggal_penjualan});
                 dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : responsePenjualan.data.nama_pelanggan});
@@ -276,7 +280,7 @@ const Index = (props) => {
                     <label>Mekanik</label>
                 </div>
                 <div class="col form-floating mb-3 px-0 mx-1">
-                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? '15' : '-'} disabled/>
+                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? noAntrian : '-'} disabled/>
                     <label for="id_penjualan">Nomor Antrian</label>
                 </div>
             </div>

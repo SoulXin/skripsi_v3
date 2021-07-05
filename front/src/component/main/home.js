@@ -16,8 +16,9 @@ const Index = () => {
 
 
     return (
-        <div className = "col-lg-10 container-fluid" style = {{zIndex : 0}}>
+        <div className = "col-10 text-center container-fluid pt-5" style = {{zIndex : 0}}>
             <h1>Selamat Datang</h1>
+            <h1>Hai Sayang</h1>
         </div>
     )
 }

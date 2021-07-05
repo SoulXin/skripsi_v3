@@ -249,7 +249,7 @@ linkColor.forEach(l=> l.addEventListener('click', colorLink))
                             </ul>
 
                             <Link to="/index_penyesuaian" class={dataContext.lihat_penyesuaian ? "nav__link" : "nav__link visually-hidden"}>
-                                <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
+                                <i class='bx bx-grid-alt nav__icon' ></i>
                                 <span class="nav__name">Penyesuaian Stok</span>
                             </Link>
                             <button className={dataContext.lihat_retur_penjualan || dataContext.lihat_retur_pembelian ? "nav__link sub-btn" : "nav__link sub-btn visually-hidden"}>
@@ -266,17 +266,13 @@ linkColor.forEach(l=> l.addEventListener('click', colorLink))
                             </ul>
 
                             <Link to="/index_manajemen_akun" class={dataContext.lihat_manajemen_akun ? "nav__link" : "nav__link visually-hidden"}>
-                                <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
+                                <i class='bx bx-grid-alt nav__icon' ></i>
                                 <span class="nav__name">Manajemen Akun</span>
                             </Link>
                             
                             <Link to="/index_laporan" class={laporan ? "nav__link" : "nav__link visually-hidden"}>
-                                <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
+                                <i class='bx bx-grid-alt nav__icon' ></i>
                                 <span class="nav__name">Laporan</span>
-                            </Link>
-                            <Link to="/pengaturan" class={dataContext.lihat_pengaturan ? "nav__link" : "nav__link visually-hidden"}>
-                                <i class='bx bx-bar-chart-alt-2 nav__icon' ></i>
-                                <span class="nav__name">Pengaturan</span>
                             </Link>
                         </div>
                     </div> 
