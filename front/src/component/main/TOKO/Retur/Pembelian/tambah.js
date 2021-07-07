@@ -100,7 +100,7 @@ const Index = (props) => {
                                 const dataBarangUpdate = {
                                     stok : list.stok - dataRetur[a].jumlah
                                 }
-                                await axios.put(`http://localhost:5001/barang_detail/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
+                                await axios.put(`http://localhost:5001/barang_header/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
                                 setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
                                 // => jika tidak diberikan state 'updatebarang' nanti barangnya akan terus berkurang ketika tekan 'SIMPAN' berkali2
                             }

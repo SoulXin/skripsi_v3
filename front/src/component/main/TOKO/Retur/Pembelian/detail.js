@@ -15,6 +15,8 @@ const Index = (props) => {
     const [alasanRetur,setAlasanRetur] = useState('');
     const [grandTotal,setGrandTotal] = useState('');
     const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
+    const [dataBarang,setDataBarang] = useState([]);
+    const [updateBarang,setUpdateBarang] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
@@ -22,6 +24,9 @@ const Index = (props) => {
                 const detail = props.location.state;
                 const responseHeader = await axios.get(`http://localhost:5001/retur_pembelian_header/show_detail/${detail.id_retur_pembelian}`);
                 const responseDataRetur =  await axios.get(`http://localhost:5001/retur_pembelian_detail/show_detail/${detail.id_retur_pembelian}`);
+                const responseDataBarang = await axios.get('http://localhost:5001/barang_header/show_all');
+
+                setDataBarang(responseDataBarang.data);
                 setDataRetur(responseDataRetur.data);
                 setIdRetur(detail.id_retur_pembelian);
                 setIdPembelian(responseDataRetur.data[0].id_pembelian);
@@ -86,6 +91,19 @@ const Index = (props) => {
             }
 
             if(tanggalRetur != '' && dataRetur.length > 0){
+                // for(var a = 0; a < dataRetur.length; a++){
+                //     dataBarang.filter(async (list,index) => {
+                //         if(list.id_barang == dataRetur[a].id_barang && updateBarang){
+                //             const dataBarangUpdate = {
+                //                 stok : list.stok - dataRetur[a].jumlah
+                //             }
+                //             await axios.put(`http://localhost:5001/barang_header/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
+                //             setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
+                //             // => jika tidak diberikan state 'updatebarang' nanti barangnya akan terus berkurang ketika tekan 'SIMPAN' berkali2
+                //         }
+                //     });
+                // }
+
                 await axios.delete(`http://localhost:5001/retur_pembelian_detail/delete/${idRetur}/0`);
                 await axios.put(`http://localhost:5001/retur_pembelian_header/update/${idRetur}`,dataUpdate);
                 await props.history.goBack();

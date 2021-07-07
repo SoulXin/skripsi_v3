@@ -93,7 +93,7 @@ exports.show_all_hutang_supplier = async (req,res) => {
     const {id} = req.params;
 
     try{
-        const tempNum = [];
+        // const tempNum = [];
         const responsePembelian = await Pembelian_Header.findAll({
             where : {
                 [Op.and] : [
@@ -111,40 +111,73 @@ exports.show_all_hutang_supplier = async (req,res) => {
                 }
             ]
         });
+
         const responseRetur = await Retur_Pembelian_Header.findAll({
             include : [
+                
                 {
                     model : Retur_Pembelian_Detail,
                     as : 'Retur_Pembelian_Detail'
+                },
+                {
+                    model : Supplier,
+                    as : 'Supplier',
+                    where : {
+                        id_supplier : id
+                    },
                 }
             ]
         });
-        for(var a = 0; a < responseRetur.length; a++){
-            if(tempNum.indexOf(responseRetur[a].Retur_Pembelian_Detail[0].id_pembelian)){
-                tempNum.push(responseRetur[a].Retur_Pembelian_Detail[0].id_pembelian);
-            }
-        }
 
-        var newArray = [];
-        for (var i = 0; i < responsePembelian.length; i++) {
-            // we want to know if a[i] is found in b
-            var match = false; // we haven't found it yet
-            for (var j = 0; j < tempNum.length; j++) {
-                if (responsePembelian[i].id_pembelian == tempNum[j]) {
-                    // we have found a[i] in b, so we can stop searching
-                    match = true;
-                    break;
+        const check_total_retur = () => {
+            const arr = [];
+
+            for(var a = 0; a < responseRetur.length; a++ ){
+                var temp_total = 0;
+                var id_pembelian = '';
+                for(var b = 0; b < responseRetur[a].Retur_Pembelian_Detail.length; b++){
+                    temp_total += responseRetur[a].Retur_Pembelian_Detail[b].total
+                    id_pembelian = responseRetur[a].Retur_Pembelian_Detail[b].id_pembelian
                 }
-                // if we never find a[i] in b, the for loop will simply end,
-                // and match will remain false
+                arr.push({temp_total, id_pembelian});
             }
-            // add a[i] to newArray only if we didn't find a match.
-            if (!match) {
-                newArray.push(responsePembelian[i]);
-            }
+            return arr
         }
 
-        res.status(200).json(newArray);
+        responsePembelian.filter((list,index) => {
+            if(list.id_pembelian == check_total_retur()[index].id_pembelian){
+                list.grand_total = list.grand_total - check_total_retur()[index].temp_total
+            }
+        })
+
+        
+
+        // for(var a = 0; a < responseRetur.length; a++){
+        //     if(tempNum.indexOf(responseRetur[a].Retur_Pembelian_Detail[0].id_pembelian)){
+        //         tempNum.push(responseRetur[a].Retur_Pembelian_Detail[0].id_pembelian);
+        //     }
+        // }
+
+        // var newArray = [];
+        // for (var i = 0; i < responsePembelian.length; i++) {
+        //     // we want to know if a[i] is found in b
+        //     var match = false; // we haven't found it yet
+        //     for (var j = 0; j < tempNum.length; j++) {
+        //         if (responsePembelian[i].id_pembelian == tempNum[j]) {
+        //             // we have found a[i] in b, so we can stop searching
+        //             match = true;
+        //             break;
+        //         }
+        //         // if we never find a[i] in b, the for loop will simply end,
+        //         // and match will remain false
+        //     }
+        //     // add a[i] to newArray only if we didn't find a match.
+        //     if (!match) {
+        //         newArray.push(responsePembelian[i]);
+        //     }
+        // }
+
+        res.status(200).json(responsePembelian);
     }catch(err){
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
         res.status(400).end();

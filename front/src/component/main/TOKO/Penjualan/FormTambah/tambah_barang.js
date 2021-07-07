@@ -15,8 +15,14 @@ const Index = (props) => {
     useEffect(() => {
         const loadData = async () => {
             try{
+                const dataSearch = {
+                    nama_barang : '',
+                    merek_barang : '',
+                    jenis_kereta : '',
+                    aktif : 1
+                }
                 const detail = props.location.state;
-                const responseBarang = await axios.get('http://localhost:5001/barang_header/show_all');
+                const responseBarang = await axios.post('http://localhost:5001/barang_header/search',dataSearch);
                 const responsePenjualanDetail = await axios.get(`http://localhost:5001/penjualan_detail/show_detail/${detail}`);
 
                 setIdPenjualan(detail);

@@ -2,6 +2,7 @@ import React,{useEffect, useState,useRef} from 'react'
 import axios from 'axios'
 import ReactToPrint from 'react-to-print';
 import {Cetak_Barang} from '../../Hasil_Cetak/Master/barang'
+import { formatMoney } from '../../../../../global/function';
 
 const Index = (props) => {
     const componentRef = useRef();
@@ -15,7 +16,13 @@ const Index = (props) => {
     useEffect(() => {
         const loadData = async () => {
             try{
-                const responseBarang = await axios.get('http://localhost:5001/barang_header/show_all');
+                const dataSearch = {
+                    nama_barang : searchNamaBarang,
+                    merek_barang : searchMerekBarang,
+                    jenis_kereta : searchJenisKereta,
+                    aktif : 1
+                }
+                const responseBarang = await axios.post('http://localhost:5001/barang_header/search',dataSearch);
                 setData(responseBarang.data);
             }catch(error){
                 setError(true);
@@ -35,8 +42,8 @@ const Index = (props) => {
                 <td className="p-3">{list.merek_barang}</td>
                 <td className="p-3">{list.jenis_kereta}</td>
                 <td className="p-3">{list.Barang_Kategori.Kategori.nama_kategori}</td>
-                <td className="p-3">{list.harga_beli}</td>
-                <td className="p-3">{list.harga_jual}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga_beli)}</td>
+                <td className="p-3">Rp. {formatMoney(list.harga_jual)}</td>
                 <td className="p-3">{list.stok}</td>
             </tr>
         )
@@ -69,7 +76,6 @@ const Index = (props) => {
                 <div className="col-7">
                     <form className="form-group row" style={{position:'relative'}} onSubmit={handleSearch}>
                         <input type = "text" className="form-control col mx-1" placeholder="Nama Barang" onChange = {(e) => setSearchNamaBarang(e.target.value)} />
-                        <input type = "text" className="form-control col mx-1" placeholder="Merek Barang" onChange = {(e) => setSearchMerekBarang(e.target.value)} />
                         <input type = "text" className="form-control col mx-1" placeholder="Jenis Kereta" onChange = {(e) => setSearchJenisKereta(e.target.value)} />
                         <button type="submit" className="btn btn-success col-2 mx-1" >Cari</button>
                         <div className="col-3">
