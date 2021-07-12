@@ -26,22 +26,14 @@ const Index = () => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
-        var totalFisik = 0;
-        var totalSistem = 0;
-        var totalPenyesuaian = 0;
-        
-        list.Penyesuaian_Detail.map((list_detail) => {
-            totalFisik += list_detail.jumlah_fisik
-            totalSistem += list_detail.jumlah_sistem
-            totalPenyesuaian += list_detail.penyesuaian
-        });
+
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_penyesuaian}</td>
-                <td className="p-3">{list.tanggal_penyesuaian}</td>
-                <td className="p-3">{totalFisik}</td>
-                <td className="p-3">{totalSistem}</td>
-                <td className="p-3">{totalPenyesuaian}</td>
+                <td className="p-3">{list.Penyesuaian_Header.tanggal_penyesuaian}</td>
+                <td className="p-3">{list.jumlah_sistem}</td>
+                <td className="p-3">{list.jumlah_fisik}</td>
+                <td className="p-3">{list.penyesuaian}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/detail_penyesuaian',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
                 </td>
@@ -76,8 +68,8 @@ const Index = () => {
                         <tr>
                             <th className="p-3">ID Penyesuaian</th>
                             <th className="p-3">Tanggal Penyesuaian</th>
-                            <th className="p-3">Jumlah Fisik</th>
                             <th className="p-3">Jumlah Sistem</th>
+                            <th className="p-3">Jumlah Fisik</th>
                             <th className="p-3">Penyesuaian</th>
                             <th className="p-3"></th>
                         </tr>

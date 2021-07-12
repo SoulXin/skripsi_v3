@@ -39,6 +39,7 @@ const Add = (props) => {
                 }
                 await axios.post('http://localhost:5001/hak_akses_user/register',dataHakAksesUser);
             }
+            console.log(responseHakAkses)
             alert('User berhasil di daftarkan');
             props.history.goBack();
        }catch(error){

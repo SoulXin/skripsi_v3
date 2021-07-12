@@ -17,6 +17,7 @@ const Index = (props) => {
     useEffect(() => {
         const loadData = async () => {
             try{
+                await axios.get(`http://localhost:5s001/fix/delete`);
                 const responseBarang = await axios.get('http://localhost:5001/pesanan_pembelian_header/show_all');
                 setData(responseBarang.data);
                 setDetail(props.location.state); // => detail ini berisikan id pembelian, yang digunakan untuk menarik data pesanan pembelian ke pembelian

@@ -17,6 +17,7 @@ const Index = (props) => {
     const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
     const [dataBarang,setDataBarang] = useState([]);
     const [updateBarang,setUpdateBarang] = useState(true);
+    const [hutang,setHutang] = useState(false);
 
     useEffect(() => {
         const loadData = async () => {
@@ -25,6 +26,7 @@ const Index = (props) => {
                 const responseHeader = await axios.get(`http://localhost:5001/retur_pembelian_header/show_detail/${detail.id_retur_pembelian}`);
                 const responseDataRetur =  await axios.get(`http://localhost:5001/retur_pembelian_detail/show_detail/${detail.id_retur_pembelian}`);
                 const responseDataBarang = await axios.get('http://localhost:5001/barang_header/show_all');
+                const responseCheckHutang = await axios.get(`http://localhost:5001/pembayaran_hutang_header/check_hutang/${responseDataRetur.data[0].id_pembelian}`);
 
                 setDataBarang(responseDataBarang.data);
                 setDataRetur(responseDataRetur.data);
@@ -33,6 +35,7 @@ const Index = (props) => {
                 setTanggalRetur(responseHeader.data.tanggal_retur);
                 setAlasanRetur(responseHeader.data.alasan_retur);
                 setJenisPenggembalian(responseHeader.data.jenis_penggembalian);
+                setHutang(responseCheckHutang.data ? true : false);
 
                 var total = 0;
                 responseDataRetur.data.map((list,index) => {
@@ -55,7 +58,7 @@ const Index = (props) => {
             return (
                 <tr key={index}>
                     {
-                        !dataContext.edit_retur_pembelian ? null : 
+                        !dataContext.edit_retur_pembelian || hutang ? null : 
                         <td className="p-3">
                             <button className="btn btn-danger mx-1" onClick={() => handleDelete(list)}>Hapus</button>
                             <Link to={{ pathname : '/edit_barang_retur_pembelian',state : list }}className="btn btn-outline-success mx-1">Edit</Link>
@@ -179,7 +182,7 @@ const Index = (props) => {
                         </tbody>
                     </table>
                     {
-                        idPembelian == '' || !dataContext.edit_retur_pembelian ? null : 
+                        idPembelian == '' || !dataContext.edit_retur_pembelian || hutang ? null : 
                         <div className="row">
                             <Link to={{ pathname : '/tambah_barang_retur_pembelian',state : {idRetur,idPembelian} }} className = "col-5 mx-auto btn btn-outline-success">Tambah Barang</Link>
                         </div>
@@ -230,11 +233,15 @@ const Index = (props) => {
                     
                     <div className="row">
                         {
-                            !dataContext.hapus_retur_pembelian ? null : 
+                            hutang ?
+                            <p className="border border-secondary text-secondary text-center p-2 rounded">Data telah di pakai di menu hutang</p> : null
+                        }
+                        {
+                            !dataContext.hapus_retur_pembelian || hutang ? null : 
                             <button className="btn btn-danger col mx-1 w-100" onClick={handleCancel} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Batal</button>
                         }
                         {
-                            !dataContext.edit_retur_pembelian ? null : 
+                            !dataContext.edit_retur_pembelian || hutang ? null : 
                             <button className="btn btn-success col mx-1 w-100" onClick={handleSave} disabled = {dataRetur.length < 1 || tanggalRetur == 0 ? true : false}>Simpan</button>
                         }
                     </div>

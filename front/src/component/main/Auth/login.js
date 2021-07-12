@@ -25,7 +25,7 @@ const Login = (props) => {
         }
     }
     return (
-        <div class="container mt-5">
+        <div class="container" style={{ marginTop : 250}}>
             <div class="row">
                 <div class = "col-md-6 col-lg-4 mx-auto">
                     <h1>Login</h1>

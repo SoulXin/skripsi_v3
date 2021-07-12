@@ -40,7 +40,7 @@ const Index = (props) => {
         e.preventDefault();
         try{
             const dataSearch = {
-                nama : search
+                nama_service : search
             }
             const response = await axios.post('http://localhost:5001/jenis_service/search',dataSearch);
             setData(response.data);

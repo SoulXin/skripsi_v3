@@ -17,11 +17,11 @@ exports.register = (req,res) => {
     });
 }
 exports.show_all = (req,res) => {
-    Peneysuaian_Header.findAll({
+    Penyesuaian_Detail.findAll({
         include : [
             {
-                model : Penyesuaian_Detail,
-                as : 'Penyesuaian_Detail'
+                model : Penyesuaian_Header,
+                as : 'Penyesuaian_Header'
             }
         ]
     })

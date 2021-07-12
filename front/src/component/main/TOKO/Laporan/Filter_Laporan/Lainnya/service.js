@@ -61,6 +61,8 @@ const Index = (props) => {
             tanggal_penjualan : tanggal
         }
 
+        console.log(data)
+
         try{
             const responsePendapatanMekanik = await axios.post('http://localhost:5001/penjualan_header/show_all_service',data);
             setData(responsePendapatanMekanik.data);

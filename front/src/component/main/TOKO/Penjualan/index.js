@@ -12,6 +12,7 @@ const Index = () => {
     useEffect(() => {
         const loadData = async () => {
             try{
+                await axios.get(`http://localhost:5001/fix/delete`);
                 const response = await axios.get('http://localhost:5001/penjualan_header/show_all');
                 setData(response.data);
             }catch(error){

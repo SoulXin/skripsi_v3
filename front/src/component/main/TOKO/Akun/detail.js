@@ -19,7 +19,7 @@ const Add = (props) => {
             const detail = props.location.state;
             setUserId(detail.user_id);
             setUsername(detail.username);
-            const response = await axios.get('http://localhost:5001/hak_akses/show_all');
+            const response = await axios.get('http://localhost:5001/hak_akses/show_all_with_user');
             setDataAkses(response.data);
 
             if(JSON.parse(localStorage.getItem('userToken')).username == 'admin' && detail.username == 'admin'){

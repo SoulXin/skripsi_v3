@@ -6,6 +6,7 @@ const Penjualan_Service = require('../../Model/Penjualan/penjualan_service');
 const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const Barang_Header = require('../../Model/Barang/barang_header');
 const moment = require('moment');
+const Retur_Penjualan_Detail = require('../../Model/Retur_Penjualan/retur_penjualan_detail');
 
 exports.register = (req,res) => {
     const {nama_pelanggan,nomor_polisi,nomor_antrian,tanggal_penjualan,grand_total} = req.body;
@@ -71,14 +72,10 @@ exports.show_all_service = async (req,res) => {
         if(id_mekanik && tanggal_penjualan ){
             const penjualan_header = await Penjualan_Header.findAll({
                 where : {
-                    [Op.and] : [
-                        {
-                            tanggal_penjualan : {
-                                [Op.gte] :tanggal_penjualan ,
-                                [Op.lte] : date
-                            }
-                        }
-                    ]
+                    tanggal_penjualan : {
+                        [Op.gte] :tanggal_penjualan ,
+                        [Op.lte] : date
+                    }
                 },
                 include : [
                     {
@@ -118,6 +115,91 @@ exports.show_all_service = async (req,res) => {
                     })
                 }
             }  
+        }else if(id_mekanik){
+            const penjualan_header = await Penjualan_Header.findAll({
+                include : [
+                    {
+                        model : Penjualan_Detail,
+                        as : 'Penjualan_Detail',
+                    },
+                    {
+                        model : Penjualan_Service,
+                        as : 'Penjualan_Service',
+                        include : [
+                            {
+                                model : Jenis_Service,
+                                as : 'Jenis_Service'
+                            },
+                            {
+                                model : Mekanik_Header,
+                                as : 'Mekanik_Header',
+                                where : {
+                                    id_mekanik : id_mekanik
+                                }
+                            }
+                        ]
+                    },
+                    
+                ]
+            });
+
+            for(var a = 0;a < penjualan_header.length;a++){
+                for(var b = 0; b < penjualan_header[a].Penjualan_Service.length ;b++){
+                    temp_array.push({
+                        id_penjualan : penjualan_header[a].id_penjualan,
+                        id_service : penjualan_header[a].Penjualan_Service[b].id_service,
+                        id_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.id_mekanik,
+                        tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
+                        nama_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.nama_mekanik,
+                        service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
+                        harga : penjualan_header[a].Penjualan_Service[b].total
+                    })
+                }
+            }
+        }else if(tanggal_penjualan){
+            const penjualan_header = await Penjualan_Header.findAll({
+                where : {
+                    tanggal_penjualan : {
+                        [Op.gte] :tanggal_penjualan ,
+                        [Op.lte] : date
+                    }
+                },
+                include : [
+                    {
+                        model : Penjualan_Detail,
+                        as : 'Penjualan_Detail',
+                    },
+                    {
+                        model : Penjualan_Service,
+                        as : 'Penjualan_Service',
+                        include : [
+                            {
+                                model : Jenis_Service,
+                                as : 'Jenis_Service'
+                            },
+                            {
+                                model : Mekanik_Header,
+                                as : 'Mekanik_Header'
+                            }
+                        ]
+                    },
+                    
+                ]
+            });
+
+            for(var a = 0;a < penjualan_header.length;a++){
+                for(var b = 0; b < penjualan_header[a].Penjualan_Service.length ;b++){
+                    temp_array.push({
+                        id_penjualan : penjualan_header[a].id_penjualan,
+                        id_service : penjualan_header[a].Penjualan_Service[b].id_service,
+                        id_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.id_mekanik,
+                        tanggal_penjualan : penjualan_header[a].tanggal_penjualan,
+                        nama_mekanik : penjualan_header[a].Penjualan_Service[b].Mekanik_Header.nama_mekanik,
+                        service : penjualan_header[a].Penjualan_Service[b].Jenis_Service.nama_service,
+                        harga : penjualan_header[a].Penjualan_Service[b].total
+                    })
+                }
+            } 
         }else{
             const penjualan_header = await Penjualan_Header.findAll({
                 include : [
@@ -142,6 +224,7 @@ exports.show_all_service = async (req,res) => {
                     
                 ]
             });
+
             for(var a = 0;a < penjualan_header.length;a++){
                 for(var b = 0; b < penjualan_header[a].Penjualan_Service.length ;b++){
                     temp_array.push({
@@ -154,8 +237,7 @@ exports.show_all_service = async (req,res) => {
                         harga : penjualan_header[a].Penjualan_Service[b].total
                     })
                 }
-            }
-    
+            } 
         }
         res.status(200).json(temp_array);
     }catch(error){
@@ -182,6 +264,10 @@ exports.show_detail = (req,res) => {
                     }
                 ]
             },
+            {
+                model : Retur_Penjualan_Detail,
+                as : 'Retur_Penjualan_Detail'
+            }
              
         ]
     })

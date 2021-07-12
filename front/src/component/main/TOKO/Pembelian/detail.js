@@ -31,7 +31,6 @@ const Index = (props) => {
                 const responseHeader = await axios.get(`http://localhost:5001/pembelian_header/show_detail/${detail.id_pembelian}`);
                 const responseBarangDetail = await axios.get(`http://localhost:5001/pembelian_detail/show_detail/${detail.id_pembelian}`)
                 const responseSupplier = await axios.get('http://localhost:5001/supplier/show_all');
-               
                 const responseCheck = await axios.get(`http://localhost:5001/pembelian_header/show_detail/${detail.id_pembelian}`);
 
                 setCheckHutang(responseCheck.data.Pembayaran_Hutang_Detail ? true : false);
@@ -289,21 +288,22 @@ const Index = (props) => {
 
                     <div className="mt-3">
                         {
-                            status == 'Proses' ? null : 
-                            <p>Status Pembelian : {status == 'Selesai' ? 
+                            status == 'Proses' && !checkRetur && !checkHutang ? null : 
+                            <p>Status Pembelian : 
+                                { status == 'Selesai' ? 
                                 <ul>
                                     <li>Pembelian Sudah Lunas</li>
                                     {
                                         checkRetur ? 
-                                        <li>Data Telah Digunakan Pada Modul Retur</li> : null
+                                        <li>Data Telah Digunakan Pada Menu Retur</li> : null
                                     }
                                 </ul> :
                                 <ul>
                                     {
                                         checkHutang ? 
-                                        <li>Data Telah Digunakan Pada Modul Hutang</li> : null,
+                                        <li>Data Telah Digunakan Pada Menu Hutang</li> : null,
                                         checkRetur ? 
-                                        <li>Data Telah Digunakan Pada Modul Retur</li> : null
+                                        <li>Data Telah Digunakan Pada Menu Retur</li> : null
                                     }
                                 </ul>
                             }</p>

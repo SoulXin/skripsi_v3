@@ -20,7 +20,7 @@ const Index = (props) => {
                 console.log(responseDataPenyesuaianDetail)
                 setDataPenyesuaianDetail(responseDataPenyesuaianDetail.data);
                 setIdPenyesuaian(detail.id_penyesuaian);
-                setTanggalPenyesuaian(detail.tanggal_penyesuaian);
+                setTanggalPenyesuaian(detail.Penyesuaian_Header.tanggal_penyesuaian);
             }catch(error){
 
             }
@@ -32,7 +32,6 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = dataPenyesuaianDetail ? dataPenyesuaianDetail.map((list,index) => {
-        console.log(list)
         return (
             <tr key={index}>
                 {

@@ -145,8 +145,10 @@ exports.show_all_hutang_supplier = async (req,res) => {
         }
 
         responsePembelian.filter((list,index) => {
-            if(list.id_pembelian == check_total_retur()[index].id_pembelian){
-                list.grand_total = list.grand_total - check_total_retur()[index].temp_total
+            for(var a = 0; a < check_total_retur().length; a++){
+                if(list.id_pembelian == check_total_retur()[a].id_pembelian){
+                    list.grand_total = list.grand_total - check_total_retur()[a].temp_total
+                }
             }
         })
 
@@ -317,6 +319,25 @@ exports.search = async (req,res) => {
         res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
         res.status(400).end();
     }
-    
+}
 
+exports.check_hutang = async (req,res) => {
+    const {id} = req.params;
+    try{
+        const response = await Pembayaran_Hutang_Header.findOne({
+            include : [
+                {
+                    model : Pembayaran_Hutang_Detail,
+                    as : 'Pembayaran_Hutang_Detail',
+                    where : {
+                        id_pembelian : id
+                    }
+                }
+            ]
+        })
+        res.status(200).json(response);
+    }catch(error){
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${error} )`;
+        res.status(400).end();
+    }
 }

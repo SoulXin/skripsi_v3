@@ -12,6 +12,7 @@ const Index = () => {
     useEffect(() => {
         const loadData = async () => {
             try{
+                await axios.get(`http://localhost:5001/fix/delete`);
                 const responseBarang = await axios.get('http://localhost:5001/supplier/show_all');
                 setData(responseBarang.data);
             }catch(error){

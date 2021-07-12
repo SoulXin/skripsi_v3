@@ -143,7 +143,7 @@ exports.delete = async (req,res) => {
             });
         }
 
-
+        await transaction.commit();
         await res.status(200).send();
     }catch(error){
         await transaction.rollback();

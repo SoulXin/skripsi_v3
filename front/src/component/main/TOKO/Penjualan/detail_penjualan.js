@@ -46,6 +46,7 @@ const Index = (props) => {
                 const responseService = await axios.get(`http://localhost:5001/penjualan_service/show_detail/${detail}`);
                 const responseCheck = await axios.get(`http://localhost:5001/penjualan_header/show_detail/${detail}`);
 
+                console.log(responseCheck)
                 setCheckRetur(responseCheck.data.Retur_Penjualan_Detail ? true : false);
 
                 setDataMekanik(responseMekanik.data);
@@ -357,7 +358,7 @@ const Index = (props) => {
                                 checkRetur ? 
                                 <p>Status Penjualan : 
                                     <ul>
-                                        <li>Data Telah Digunakan Pada Modul Retur</li>
+                                        <li>Data Telah Digunakan Pada Menu Retur</li>
                                     </ul>
                                 </p> : null
                             }
