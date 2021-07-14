@@ -1,7 +1,7 @@
 import React, { useEffect, useState,useContext } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router-dom'
-import { checkLogin } from '../../../global/function';
+import { checkLogin, logout } from '../../../global/function';
 import {Context} from '../../../state_management/context'
 
 const Add = (props) => {
@@ -107,11 +107,25 @@ const Add = (props) => {
         }
     }
 
+    const handleDelete = async () => {
+        try{
+            await axios.delete(`http://localhost:5001/hak_akses_user/delete_user/${userId}`)
+            await axios.delete(`http://localhost:5001/user/delete_user/${userId}`)
+            logout();
+            await props.history.push('/login');
+        }catch(error){
+            console.log(error)
+        }
+    }
+    
+
     return (
         <div className = "container" >
             <div className="row" style={{position:'relative'}}>
                 <Link to="/index_manajemen_akun" className="btn btn-outline-secondary col-1" style={{position:'absolute',top:'15px'}}>Kembali</Link>
                 <h1 className="text-center border-bottom pt-2 pb-2 fw-bold col">Detail Akun</h1>
+                <button className="btn btn-danger offset-10 col-2" style={{position:'absolute',top:'15px'}} onClick={handleDelete}>Hapus Akun</button>
+
             </div>
 
             <h3>Hak Akses Untuk Akun - {username} : </h3>

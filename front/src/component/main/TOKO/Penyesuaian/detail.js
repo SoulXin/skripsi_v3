@@ -45,7 +45,7 @@ const Index = (props) => {
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.jumlah_sistem}</td>
                 <td className="p-3">{list.jumlah_fisik}</td>
-                <td className="p-3">{list.penyesuaian}</td>
+                <td className="p-3">{list.jumlah_sistem - list.jumlah_fisik}</td>
             </tr>
         )
     }) : null;
@@ -74,8 +74,9 @@ const Index = (props) => {
     const handleCancel = async () => {
         try{
             for(var a = 0; a < dataPenyesuaianDetail.length; a++){
+                const response_barang = await axios.get(`http://localhost:5001/barang_header/show_detail/${dataPenyesuaianDetail[a].id_barang}`); 
                 const data = {
-                    stok : dataPenyesuaianDetail[a].jumlah_sistem
+                    stok : response_barang.data.stok + dataPenyesuaianDetail[a].penyesuaian
                 }
                 await axios.put(`http://localhost:5001/barang_header/update/${dataPenyesuaianDetail[a].id_barang}`,data); 
             }

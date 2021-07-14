@@ -60,7 +60,7 @@ const Index = (props) => {
                         id_barang : e.id_barang,
                         jumlah_fisik : jumlahFisik,
                         jumlah_sistem : e.stok,
-                        penyesuaian : jumlahFisik > e.stok ? jumlahFisik - e.stok : e.stok - jumlahFisik,
+                        penyesuaian : e.stok - jumlahFisik,
                     }
 
                     console.log(dataTambah)

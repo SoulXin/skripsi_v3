@@ -39,7 +39,7 @@ const Index = (props) => {
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
                 <td className="p-3">{list.jumlah_sistem}</td>
                 <td className="p-3">{list.jumlah_fisik}</td>
-                <td className="p-3">{list.penyesuaian}</td>
+                <td className="p-3">{list.jumlah_sistem - list.jumlah_fisik}</td>
             </tr>
         )
     }) : null;

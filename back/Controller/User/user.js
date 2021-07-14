@@ -101,3 +101,18 @@ exports.change_password = async (req,res) => {
         res.status(400).send(error)
     }
 }
+
+exports.delete_user = (req,res) => {
+    const {id} = req.params;
+    User.destroy({
+        where : {
+            user_id : id
+        }
+    })
+    .then(user => {
+        res.status(200).json(user);
+    })
+    .catch(error => {
+        res.status(400).send(error)
+    })
+}

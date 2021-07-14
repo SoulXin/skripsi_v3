@@ -60,3 +60,18 @@ exports.update = (req,res) => {
         res.status(400).end();
     });
 }
+
+exports.delete_user = (req,res) => {
+    const {id} = req.params;
+    Hak_Akses_User.destroy({
+        where : {
+            user_id : id
+        }
+    })
+    .then((result) => {
+        res.status(200).json(result);
+    }).catch((err) => {
+        res.statusMessage = "Terjadi masalah dengan server" + ` ( ${err} )`;
+        res.status(400).end();
+    });
+}
