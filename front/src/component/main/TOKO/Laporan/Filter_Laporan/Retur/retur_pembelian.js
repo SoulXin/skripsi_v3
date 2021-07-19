@@ -53,7 +53,7 @@ const Index = (props) => {
                 }else{
                     setNamaSupplier('');
                 }
-           
+                alert('Berhasil di terapkan');
         }catch(error){
             setNamaSupplier('');
             console.log(error);
@@ -66,7 +66,7 @@ const Index = (props) => {
             <button className="col-1 btn btn-outline-secondary mb-3" onClick = {() => props.history.goBack()}>Kembali</button>
             <div className="row mb-3 border-bottom">
                 <h2 className="col-4">Laporan Retur Pembelian</h2>
-                <div className="offset-3 col-5 row">
+                <div className="col-8 row">
                     <div class="form-floating mb-3 px-0 col mx-1">
                         <input type="text" class="form-control" onChange = {(e) => setSearchSupplier(e.target.value)}/>
                         <label>Supplier</label>

@@ -48,11 +48,14 @@ const Index = (props) => {
             const responseDataLaporanPerItem = await axios.post('http://localhost:5001/retur_penjualan_header/laporan_per_item',data);
 
             if(responseDataLaporan.data.length > 0 && responseDataLaporanPerItem.data.length > 0){
-                setdataLaporan(responseDataLaporan.data);
-                setDataLaporanPerItem(responseDataLaporanPerItem.data);
-                setNamaPelanggan(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Retur_Penjualan_Detail[0].Penjualan_Pelanggan.nama_pelanggan : '');
-                setNomorPolisi(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Retur_Penjualan_Detail[0].Penjualan_Pelanggan.nomor_polisi : '');
+                setNamaPelanggan(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Retur_Penjualan_Detail[0].Penjualan_Header.nama_pelanggan : '');
+                setNomorPolisi(responseDataLaporan.data.length > 0 ? responseDataLaporan.data[0].Retur_Penjualan_Detail[0].Penjualan_Header.nomor_polisi : '');
             }
+
+            setdataLaporan(responseDataLaporan.data);
+            setDataLaporanPerItem(responseDataLaporanPerItem.data);
+            
+            alert('Berhasil di terapkan');
         }catch(error){
             setNamaPelanggan('');
             setNomorPolisi('');

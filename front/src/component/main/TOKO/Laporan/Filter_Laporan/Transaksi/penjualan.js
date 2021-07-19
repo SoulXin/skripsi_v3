@@ -43,6 +43,7 @@ const Index = (props) => {
             const responseDataLaporanPerItem = await axios.post('http://localhost:5001/penjualan_header/laporan_per_item',data);
             setdataLaporan(responseDataLaporan.data);
             setDataLaporanPerItem(responseDataLaporanPerItem.data);
+            alert('Berhasil di terapkan');
         }catch(error){
             console.log(error);
         }
