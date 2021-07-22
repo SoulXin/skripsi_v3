@@ -6,12 +6,15 @@ import './jquery'
 import { logout } from '../../global/function';
 import axios from 'axios';
 import {Context} from '../../state_management/context'
+import $ from 'jquery' 
 
 const Index = () => {
     const {dataContext,dispatch} = useContext(Context);
     const [laporan,setLaporan] = useState(false);
 
     useEffect(() => {
+        $('.sub-menu').slideToggle(); // => Awal reload dia ketutup
+
         showNavbar('header-toggle','nav-bar','body-pd','header')
         const loadData = async () => {
             await axios.get(`http://localhost:5001/fix/delete`);
