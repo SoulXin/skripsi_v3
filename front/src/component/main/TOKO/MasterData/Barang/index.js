@@ -90,7 +90,6 @@ const Index = () => {
                     <select class="form-select" aria-label="Default select example" onChange = {(e) => handleStatus(e.target.value)}>
                         <option value="1" selected>Aktif</option>
                         <option value="0">Tidak Aktif</option>
-                        
                     </select>
                 </div>
                 <div className="col-4">

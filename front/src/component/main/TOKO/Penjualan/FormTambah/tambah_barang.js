@@ -12,6 +12,8 @@ const Index = (props) => {
     const [dataBarang,setDataBarang] = useState([]);
     const [dataPenjualanDetail,setDataPenjualanDetail] = useState([]);
 
+    const [search,setSearch] = useState('');
+
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -98,11 +100,33 @@ const Index = (props) => {
             console.log(error)
         }
     }
+
+    const handleSearch = async (e) => {
+        e.preventDefault();
+        
+        const dataSearch = {
+            nama_barang : search,
+            merek_barang : '',
+            jenis_kereta : '',
+            aktif : 1
+        }
+        const response = await axios.post('http://localhost:5001/barang_header/search',dataSearch);
+        setDataBarang(response.data);
+    }
     return (
         <div className="container px-0 pt-5">
             {/* Bagian Atas */}
             <button className = "col-1 mb-3 row btn btn-outline-secondary" onClick = {props.history.goBack}>Kembali</button>
-            <h2 className="col-6 mb-3">Daftar Barang Yang Tersedia</h2>
+            <div className="col-12 row mb-3">
+                <h2 className="col-6">Daftar Barang Yang Tersedia</h2>
+                <form className="offset-2 col-4 row form-group" onSubmit = {handleSearch}>
+                    <div className="col-8">
+                        <label>Nama Barang</label>
+                        <input type = "text" value = {search} className="form-control" onChange = {(e) => setSearch(e.target.value)}/>
+                    </div>
+                    <button type="submit" className="col-4 btn btn-outline-success" >Cari</button>
+                </form>
+            </div>
             
             {/* List */}
             <div className="row">
