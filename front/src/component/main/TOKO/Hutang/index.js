@@ -14,6 +14,8 @@ const Index = (props) => {
     const [idSupplier,setIdSupplier] = useState('');
     const [supplier,setSupplier] = useState([]);
 
+    const [totalHutang,setTotalHutang] = useState('');
+
     // Variable temp untuk pembayaran hutang
     const [tempPembelian,setTempPembelian] = useState([]);
 
@@ -58,9 +60,15 @@ const Index = (props) => {
     const handleSearch = async () => {
         if(idSupplier != '0'){
             const response = await axios.get(`http://localhost:5001/pembayaran_hutang_header/show_all_hutang_supplier/${idSupplier}`);
-            console.log(idSupplier)
             setSearch(true);
             setData(response.data);
+            setTotalHutang(response.data);
+
+            var temp_array = [];
+            for(var i = 0; i < response.data.length;i++){
+                temp_array.push(response.data[i].grand_total);
+            }
+            setTotalHutang(temp_array.reduce((a,b) => {return a + b},0));
         }
     }
 
@@ -150,7 +158,7 @@ const Index = (props) => {
                     <tbody>
                         {viewData}
                         <tr>
-                            <th className="p-3">&nbsp;</th>
+                            <th className="p-3 pt-4">Jumlah Hutang : Rp. {formatMoney(totalHutang)}</th>
                             <th className="p-3">&nbsp;</th>
                             <th className="p-3">&nbsp;</th>
                             <th className="p-3">&nbsp;</th>

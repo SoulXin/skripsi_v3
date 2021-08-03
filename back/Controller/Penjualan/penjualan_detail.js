@@ -2,6 +2,7 @@ const Penjualan_Detail = require('../../Model/Penjualan/penjualan_detail');
 const { Op } = require("sequelize");
 const Barang_Header = require('../../Model/Barang/barang_header');
 const Barang_Kategori = require('../../Model/Barang/barang_kategori');
+const Kategori = require('../../Model/Kategori/kategori');
 
 exports.register = async (req,res) => {
     const {id_penjualan,id_barang,jumlah,total} = req.body;
@@ -41,6 +42,12 @@ exports.show_detail = (req,res) => {
                     {
                         model : Barang_Kategori,
                         as : 'Barang_Kategori',
+                        include : [
+                            {
+                                model : Kategori,
+                                as : 'Kategori',
+                            }
+                        ]
                     }
                 ]
             },

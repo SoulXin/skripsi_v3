@@ -49,6 +49,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
+        console.log(list)
         return (
             <tr key={index}>
                 <td className="p-3" style={{position:'relative'}}>
@@ -57,6 +58,7 @@ const Index = (props) => {
                 </td>
                 <td className="p-3">{list.Barang_Header.id_barang}</td>
                 <td className="p-3">{list.Barang_Header.nama_barang}</td>
+                <td className="p-3">{list.Barang_Header.Barang_Kategori.Kategori.nama_kategori}</td>
                 <td className="p-3">{list.Barang_Header.merek_barang}</td>
                 <td className="p-3">Rp. {formatMoney(list.Barang_Header.harga_beli)}</td>
                 <td className="p-3">{list.jumlah}</td>
@@ -185,6 +187,7 @@ const Index = (props) => {
                                 <th className="p-3"></th>
                                 <th className="p-3">ID Barang</th>
                                 <th className="p-3">Nama</th>
+                                <th className="p-3">Kategori</th>
                                 <th className="p-3">Merek</th>
                                 <th className="p-3">Harga Beli</th>
                                 <th className="p-3">Jumlah</th>

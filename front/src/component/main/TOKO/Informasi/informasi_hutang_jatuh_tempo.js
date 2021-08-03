@@ -54,6 +54,7 @@ const Index = () => {
             <div className="row mb-3">
                 <div className="col">
                     <h2>Hutang Jatuh Tempo</h2>
+                    <i>Hutang Yang Tampil Disini Adalah 7 Hari Sebelum Jatuh Tempo.</i>
                 </div>
 
 

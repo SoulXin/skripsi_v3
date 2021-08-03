@@ -167,7 +167,7 @@ const Index = (props) => {
                         <thead>
                             <tr>
                                 {
-                                    !dataContext.edit_retur_pembelian ? null : 
+                                    !dataContext.edit_retur_pembelian || hutang? null : 
                                     <th className="p-3"></th>
                                 }
                                 <th className="p-3">ID Barang</th>

@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import axios from 'axios'
-import { formatMoney } from '../../../global/function';
+import { formatMoney, formatRupiah, removeFormatMoney } from '../../../global/function';
 
 const Index = (props) => {
     const [data,setData] = useState([]);
@@ -41,20 +41,25 @@ const Index = (props) => {
         }
     }, [refresh]);
 
-    const handleSave = () => {
+    const handleSave = async () => {
         const data = {
+            harga_beli : removeFormatMoney(hargaBeli),
             jumlah : jumlah,
             total : hargaBeli * jumlah
         }
         if(jumlah && jumlah != 0){
-            axios.put(`http://localhost:5001/pembelian_detail/update/${idPembelian}/${idBarang}`, data)
-            .then((res) => {
-                alert('Jumlah barang berhasil di ubah');
-                props.history.goBack();
-            })
-            .catch((err) => {
-                console.log(err);
-            })
+            if(removeFormatMoney(hargaBeli) < hargaJual){
+                try{
+                    await axios.put(`http://localhost:5001/pembelian_detail/update/${idPembelian}/${idBarang}`, data);
+                    await axios.put(`http://localhost:5001/barang_header/update/${idBarang}`, data);
+                    alert('Jumlah barang berhasil di ubah');
+                    props.history.goBack();
+                }catch(error){
+                    console.log(error);
+                }
+            }else{
+                alert('Harga Beli Tidak Boleh Melebihi Atau Sama Dengan Harga Jual');
+            }
         }else{
             alert('Jumlah tidak boleh kosong');
         }
@@ -95,7 +100,7 @@ const Index = (props) => {
 
                 <div class="mb-3 col-6 mt-2">
                     <div className="form-floating px-0">
-                        <input type="text" class="form-control" id="nama_barang" value={"Rp. " + formatMoney(hargaBeli)} disabled/>
+                        <input type="text" class="form-control" id="nama_barang" value = {hargaBeli} onChange = {(e) => formatRupiah(e.target.value,'Rp. ',setHargaBeli)}/>
                         <label for="nama_barang">Harga Beli</label>
                     </div>
                 </div>

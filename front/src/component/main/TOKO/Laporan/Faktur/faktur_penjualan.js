@@ -44,11 +44,6 @@ export class Faktur_Penjualan extends React.PureComponent {
                             <td>{this.props.nama_pelanggan ? this.props.nama_mekanik : '-'}</td>
                         </tr>
                         <tr>
-                            <td>Nomor Antrian</td>
-                            <td> : </td>
-                            <td>{this.props.no_antrian ? this.props.no_antrian : '-'}</td>
-                        </tr>
-                        <tr>
                             <td>Nama Pelanggan</td>
                             <td> : </td>
                             <td>{this.props.nama_pelanggan ? this.props.nama_pelanggan : '-'}</td>

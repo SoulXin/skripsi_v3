@@ -22,20 +22,12 @@ const Index = (props) => {
     const [totalBarang,setTotalBarang] = useState('');
     const [totalService,setTotalService] = useState('');
 
-    // No Antrian
-    const [noAntrian,setNoAntrian] = useState(0);
-
     useEffect(() => {
         const loadData = async () => {
             try{
                 const responseMekanik = await axios.get('http://localhost:5001/mekanik_header/show_all');
                 const responsePenjualanDetail = await axios.get(`http://localhost:5001/penjualan_detail/show_detail/${props.location.state.id_penjualan}`);
                 const responsePenjualanService  = await axios.get(`http://localhost:5001/penjualan_service/show_detail/${props.location.state.id_penjualan}`);
-
-                if(dataContext.tanggal_penjualan){
-                    const responsePenjualanHeader  = await axios.get(`http://localhost:5001/penjualan_header/get_data_by_date/${dataContext.tanggal_penjualan}`);
-                    setNoAntrian(responsePenjualanHeader.data.length > 0 ? responsePenjualanHeader.data.length + 1 : 1);
-                }
 
                 setIdPenjualan(props.location.state.id_penjualan);
                 setMekanik(responseMekanik.data);
@@ -76,6 +68,7 @@ const Index = (props) => {
                 </td>
                 <td>{list.Barang_Header.id_barang}</td>
                 <td>{list.Barang_Header.nama_barang}</td>
+                <td>{list.Barang_Header.Barang_Kategori.Kategori.nama_kategori}</td>
                 <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                 <td>{list.jumlah}</td>
                 <td>Rp. {formatMoney(list.Barang_Header.harga_jual * list.jumlah)}</td>
@@ -137,7 +130,6 @@ const Index = (props) => {
         const dataPenjualanHeader = {
             nama_pelanggan : dataContext.nama_pelanggan,
             nomor_polisi : dataContext.nomor_polisi,
-            nomor_antrian : noAntrian,
             tanggal_penjualan : dataContext.tanggal_penjualan,
             grand_total : totalBarang + totalService
         }
@@ -199,7 +191,6 @@ const Index = (props) => {
     const handleChangeDate = async (e) => {
         await dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : e.target.value});
         const responsePenjualanHeader  = await axios.get(`http://localhost:5001/penjualan_header/get_data_by_date/${e.target.value}`);
-        setNoAntrian(responsePenjualanHeader.data.length > 0 ? responsePenjualanHeader.data.length + 1 : 1);
     }
     return (
         <div className="container px-0 pt-5">
@@ -237,10 +228,6 @@ const Index = (props) => {
                     </select>
                     <label>Mekanik</label>
                 </div>
-                <div class="col form-floating mb-3 px-0 mx-1">
-                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? noAntrian : '-'} disabled/>
-                    <label for="id_penjualan">Nomor Antrian</label>
-                </div>
             </div>
             {/* Isi */}
             <div className="row">
@@ -252,12 +239,13 @@ const Index = (props) => {
                         <table class="table table-hover border">
                             <thead>
                                 <tr>
-                                    <th className="p-3"></th>
-                                    <th className="p-3">ID Barang</th>
-                                    <th className="p-3">Nama</th>
-                                    <th className="p-3">Harga</th>
-                                    <th className="p-3">Jumlah</th>
-                                    <th className="p-3">Total</th>
+                                    <th></th>
+                                    <th>ID Barang</th>
+                                    <th>Nama</th>
+                                    <th>Kategori</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -269,12 +257,12 @@ const Index = (props) => {
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th className="p-3"></th>
-                                    <th className="p-3">ID Service</th>
-                                    <th className="p-3">Nama</th>
-                                    <th className="p-3">Harga</th>
-                                      <th className="p-3">Jumlah</th>
-                                    <th className="p-3">Total</th>
+                                    <th></th>
+                                    <th>ID Service</th>
+                                    <th>Nama</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>

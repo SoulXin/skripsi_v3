@@ -31,6 +31,7 @@ const Index = () => {
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_barang}</td>
+                <td className="p-3">{list.Barang_Kategori.Kategori.nama_kategori}</td>
                 <td className="p-3">{list.nama_barang}</td>
                 <td className="p-3">{list.merek_barang}</td>
                 <td className="p-3">{list.jenis_kereta}</td>
@@ -108,6 +109,7 @@ const Index = () => {
                     <thead>
                         <tr>
                             <th className="p-3">ID Barang</th>
+                            <th className="p-3">Kategori</th>
                             <th className="p-3">Nama</th>
                             <th className="p-3">Merek</th>
                             <th className="p-3">Jenis Kereta</th>

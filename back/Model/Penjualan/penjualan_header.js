@@ -16,9 +16,6 @@ const Penjualan_Header = db.sequelize.define('penjualan_header',{
     nomor_polisi : {
         type : Sequelize.STRING
     },
-    nomor_antrian : {
-        type : Sequelize.INTEGER
-    },
     tanggal_penjualan : {
         type : Sequelize.DATEONLY
     },

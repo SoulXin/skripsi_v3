@@ -48,6 +48,10 @@ export class Cetak_Supplier extends React.PureComponent {
                     }
                 </table>
             </div>
+            <div className="row mt-5 pt-5">
+                <p className="offset-1 col-2 text-center border-top">Pencetak</p>
+                <p className="offset-6 col-2 text-center  border-top">Penerima</p>
+            </div>
         </div>
       );
     }

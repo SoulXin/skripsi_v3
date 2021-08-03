@@ -28,7 +28,7 @@ const Index = (props) => {
     }, [refresh]);
 
     const viewData = data ? data.map((list,index) => {
-        if(list.Penjualan_Detail.length > 0){
+        if(list.Penjualan_Detail.length > 0 && list.status != 'Proses'){
             return (
                <tr key={index}>
                    <td className="p-3">{list.id_penjualan}</td>

@@ -33,9 +33,6 @@ const Index = (props) => {
 
     const [namaMekanik,setNamaMekanik] = useState('');
 
-    // No antrian
-    const [noAntrian,setNoAntrian] = useState(0);
-
     useEffect(() => {
         const loadData = async () => {
             try{
@@ -55,7 +52,6 @@ const Index = (props) => {
                 setIdPenjualan(responsePenjualan.data.id_penjualan);
                 setStatus(responsePenjualan.data.status);
                 setNamaMekanik(responsePenjualan.data.Penjualan_Service.length > 0 ? responsePenjualan.data.Penjualan_Service[0].Mekanik_Header.id_mekanik : '');
-                setNoAntrian(responsePenjualan.data.nomor_antrian);
 
                 dispatch({type : 'SIMPAN_TANGGAL_PENJUALAN',data : responsePenjualan.data.tanggal_penjualan});
                 dispatch({type : 'SIMPAN_NAMA_PELANGGAN',data : responsePenjualan.data.nama_pelanggan});
@@ -99,6 +95,7 @@ const Index = (props) => {
                     </td>
                 }
                 <td>{list.Barang_Header.id_barang}</td>
+                <td>{list.Barang_Header.Barang_Kategori.Kategori.nama_kategori}</td>
                 <td>{list.Barang_Header.nama_barang}</td>
                 <td>Rp. {formatMoney(list.Barang_Header.harga_jual)}</td>
                 <td>{list.jumlah}</td>
@@ -168,7 +165,6 @@ const Index = (props) => {
         const dataPenjualanHeader = {
             nama_pelanggan : dataContext.nama_pelanggan,
             nomor_polisi : dataContext.nomor_polisi,
-            nomor_antrian : 15,
             tanggal_penjualan : dataContext.tanggal_penjualan,
             grand_total : totalBarang + totalService
         }
@@ -250,7 +246,7 @@ const Index = (props) => {
                         trigger={() => <button className="btn btn-outline-success w-100">Cetak Faktur</button>}
                         content={() => componentRef.current}
                     />
-                    <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} idPenjualan = {idPenjualan} nama_mekanik = {namaMekanik} no_antrian = {"5"}  nama_pelanggan = {dataContext.nama_pelanggan} nopol = {dataContext.nomor_polisi}/></div>
+                    <div style={{ display: "none" }}><Faktur_Penjualan ref={componentRef}  dataTableBarang = {dataBarang} dataTableService = {dataService} idPenjualan = {idPenjualan} nama_mekanik = {namaMekanik} nama_pelanggan = {dataContext.nama_pelanggan} nopol = {dataContext.nomor_polisi}/></div>
                 </div>
             </div>
             <div className="row">
@@ -280,10 +276,6 @@ const Index = (props) => {
                     </select>
                     <label>Mekanik</label>
                 </div>
-                <div class="col form-floating mb-3 px-0 mx-1">
-                    <input type="text" class="form-control" id="id_penjualan" placeholder="Id Penjualan" value={dataService.length > 0 ? noAntrian : '-'} disabled/>
-                    <label for="id_penjualan">Nomor Antrian</label>
-                </div>
             </div>
             {/* Isi */}
             <div className="row">
@@ -297,13 +289,14 @@ const Index = (props) => {
                                 <tr>
                                     {
                                         status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ?  
-                                        null : <th className="p-3"></th>
+                                        null : <th></th>
                                     }
-                                    <th className="p-3">ID Barang</th>
-                                    <th className="p-3">Nama</th>
-                                    <th className="p-3">Harga</th>
-                                    <th className="p-3">Jumlah</th>
-                                    <th className="p-3">Total</th>
+                                    <th>ID Barang</th>
+                                    <th>kategori</th>
+                                    <th>Nama</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -317,13 +310,13 @@ const Index = (props) => {
                                 <tr>
                                     {
                                         status == "Tolak" || status == "Selesai" || !dataContext.edit_penjualan || checkRetur ?  
-                                        null : <th className="p-3"></th>
+                                        null : <th></th>
                                     }
-                                    <th className="p-3">ID Service</th>
-                                    <th className="p-3">Nama</th>
-                                    <th className="p-3">Harga</th>
-                                    <th className="p-3">Jumlah</th>
-                                    <th className="p-3">Total</th>
+                                    <th>ID Service</th>
+                                    <th>Nama</th>
+                                    <th>Harga</th>
+                                    <th>Jumlah</th>
+                                    <th>Total</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -362,6 +355,14 @@ const Index = (props) => {
                                     </ul>
                                 </p> : null
                             }
+                            {
+                                status == 'Selesai' ? 
+                                <p>Status Penjualan : 
+                                    <ul>
+                                        <li>Penjualan Telah Selesai</li>
+                                    </ul>
+                                </p> : null
+                            }
                         
 
                     <div className="row">
@@ -378,7 +379,7 @@ const Index = (props) => {
                             <button className="btn btn-success w-100 col mx-1 mt-3" onClick = {handleComplete}>Selesai</button>
                         }
                         {
-                            !dataContext.edit_penjualan || checkRetur || status == 'Proses' ? null : 
+                            !dataContext.edit_penjualan || checkRetur || status == 'Proses' || status == 'Selesai'  ? null : 
                             <button className="btn btn-outline-success w-100 col mx-1 mt-3" onClick = {handleEdit}>Ubah</button>
                         }
                     </div>

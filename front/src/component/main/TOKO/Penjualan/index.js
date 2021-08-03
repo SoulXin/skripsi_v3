@@ -26,13 +26,22 @@ const Index = () => {
     }, []);
 
     const viewDataOffiline = data ? data.map((list,index) => {
+        const temp_array = [];
+
+        var total_service = 0
+        for(var a = 0; a < list.Penjualan_Service.length;a++){
+            temp_array.push(list.Penjualan_Service[a].total);
+        }
+
+        total_service = temp_array.reduce((a,b) => { return a + b},0);
+
         return (
             <tr key={index}>
                 <td className="p-3">{list.id_penjualan}</td>
                 <td className="p-3">{list.tanggal_penjualan}</td>
                 <td className="p-3">{list.nama_pelanggan ? list.nama_pelanggan : '-'}</td>
                 <td className="p-3">{list.nomor_polisi ? list.nomor_polisi : '-'}</td>
-                <td className="p-3">Rp. {formatMoney(list.grand_total)}</td>
+                <td className="p-3">Rp. {formatMoney(list.grand_total + total_service)}</td>
                 <td className="p-3">{list.status}</td>
                 <td className="p-3" style={{position:'relative'}}>
                     <Link to={{ pathname : '/detail_penjualan_offline',state : list.id_penjualan }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>

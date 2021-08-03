@@ -100,7 +100,7 @@ const ContextProvider = (props) => {
 
 
         // Retur
-        jenis_penggembalian : '',
+        jenis_penggembalian : '1',
         tanggal_retur : '',
         alasan_retur : '',
 

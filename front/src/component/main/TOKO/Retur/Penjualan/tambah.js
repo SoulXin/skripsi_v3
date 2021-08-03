@@ -104,16 +104,28 @@ const Index = (props) => {
                     for(var a = 0; a < dataRetur.length; a++){
                         dataBarang.filter(async (list,index) => {
                             if(list.id_barang == dataRetur[a].id_barang && updateBarang){
-                                const dataBarangUpdate = {
-                                    stok : list.stok + dataRetur[a].jumlah
+                                if(dataContext.jenis_penggembalian == '0'){
+                                    const dataBarangUpdate = {
+                                        stok : list.stok + dataRetur[a].jumlah
+                                    }
+                                    await axios.put(`http://localhost:5001/barang_header/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
+                                    setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
+                                    // => jika tidak diberikan state 'updatebarang' nanti barangnya akan terus berkurang ketika tekan 'SIMPAN' berkali2
+                                }else if(dataContext.jenis_penggembalian == '1' && dataRetur[0].Penjualan_Header.grand_total == grandTotal){
+                                    const dataBarangUpdate = {
+                                        status : 'Batal'
+                                    }
+                                    await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataBarangUpdate);
+                                    setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
+                                    // => jika tidak diberikan state 'updatebarang' nanti barangnya akan terus berkurang ketika tekan 'SIMPAN' berkali2
                                 }
-                                await axios.put(`http://localhost:5001/barang_header/update/${dataRetur[a].id_barang}`,dataBarangUpdate);
-                                setUpdateBarang(false); // => state untuk memberitahukan bahwa barang sudah update,
-                                // => jika tidak diberikan state 'updatebarang' nanti barangnya akan terus berkurang ketika tekan 'SIMPAN' berkali2
                             }
                         });
                     }
-                    await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
+
+                    if(dataContext.jenis_penggembalian == '0'){
+                        await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
+                    }
                     await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete/${idRetur}/0`);
                     await axios.put(`http://localhost:5001/retur_penjualan_header/update/${idRetur}`,dataUpdate);
                     await props.history.goBack();

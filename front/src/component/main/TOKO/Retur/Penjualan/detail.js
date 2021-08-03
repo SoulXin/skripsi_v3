@@ -18,7 +18,7 @@ const Index = (props) => {
     const [alasanRetur,setAlasanRetur] = useState('');
     const [grandTotal,setGrandTotal] = useState('');
 
-    const [jenisPenggembalian,setJenisPenggembalian] = useState('1');
+    const [jenisPenggembalian,setJenisPenggembalian] = useState(true);
 
     useEffect(() => {
         const loadData = async () => {
@@ -89,7 +89,22 @@ const Index = (props) => {
                 grand_total : grandTotal
             }
 
+
+
             if(tanggalRetur != '' && dataRetur.length > 0){
+                if(jenisPenggembalian == '0' && dataRetur[0].Penjualan_Header.grand_total == grandTotal){
+                    const dataPenjualan = {
+                        status : 'Selesai'
+                    }
+
+                    await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualan);
+                }else if(jenisPenggembalian == '1'){
+                    const dataPenjualan = {
+                        status : 'Batal'
+                    }
+                    
+                    await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualan);
+                }
                 await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_temp/${idRetur}`);
                 await axios.put(`http://localhost:5001/retur_penjualan_header/update/${idRetur}`,dataUpdate);
                 await props.history.goBack();
@@ -118,8 +133,12 @@ const Index = (props) => {
 
     const handleCancel = async () => {
         try{
+            const dataPenjualanHeader = {
+                status : 'Selesai'
+            }
             await axios.delete(`http://localhost:5001/retur_penjualan_detail/delete_retur/${idRetur}`);
             await axios.delete(`http://localhost:5001/retur_penjualan_header/delete/${idRetur}`);
+            await axios.put(`http://localhost:5001/penjualan_header/update/${idPenjualan}`,dataPenjualanHeader);
             alert('Data Retur Berhasil Dihapus');
             props.history.goBack();
         }catch(error){

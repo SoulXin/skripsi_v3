@@ -20,7 +20,7 @@ export class Cetak_Penjualan extends React.PureComponent {
                 <div className="col-6">
                     <table>
                         <tr>
-                            <td>Dari Tanggalxxx</td>
+                            <td>Dari Tanggal</td>
                             <td>{this.props.dari ? this.props.dari : '-'}</td>
                         </tr>
                         <tr>

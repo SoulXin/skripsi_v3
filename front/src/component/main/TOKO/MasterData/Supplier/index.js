@@ -37,8 +37,8 @@ const Index = () => {
                 <td className="p-3">{list.no_rek_supplier}</td>
                 <td className="p-3">{list.keterangan}</td>
                 <td className="p-3">{list.aktif ? "Aktif" : "Tidak Aktif"}</td>
-                <td className="p-3" style={{position:'relative'}}>
-                    <Link to={{ pathname : '/form_supplier',state : list }} style={{position:'absolute',right : 10,bottom:10, padding: 5}} className="btn btn-outline-success">Detail</Link>
+                <td className="p-3" >
+                    <Link to={{ pathname : '/form_supplier',state : list }} className="btn btn-outline-success">Detail</Link>
                 </td>
             </tr>
         )

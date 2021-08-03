@@ -9,11 +9,10 @@ const moment = require('moment');
 const Retur_Penjualan_Detail = require('../../Model/Retur_Penjualan/retur_penjualan_detail');
 
 exports.register = (req,res) => {
-    const {nama_pelanggan,nomor_polisi,nomor_antrian,tanggal_penjualan,grand_total} = req.body;
+    const {nama_pelanggan,nomor_polisi,tanggal_penjualan,grand_total} = req.body;
     Penjualan_Header.create({
         nama_pelanggan : nama_pelanggan,
         nomor_polisi : nomor_polisi,
-        nomor_antrian : nomor_antrian,
         tanggal_penjualan : tanggal_penjualan,
         grand_total : grand_total
     })
@@ -31,6 +30,10 @@ exports.show_all = (req,res) => {
             {
                 model : Penjualan_Detail,
                 as : 'Penjualan_Detail',
+            },
+            {
+                model : Penjualan_Service,
+                as : 'Penjualan_Service'
             }
         ]
     })
@@ -297,11 +300,10 @@ exports.search = (req,res) => {
 
 exports.update = (req,res) => {
     const {id} = req.params;
-    const {nama_pelanggan,nomor_polisi,nomor_antrian,tanggal_penjualan,grand_total,status} = req.body;
+    const {nama_pelanggan,nomor_polisi,tanggal_penjualan,grand_total,status} = req.body;
     Penjualan_Header.update({
         nama_pelanggan : nama_pelanggan,
         nomor_polisi : nomor_polisi,
-        nomor_antrian : nomor_antrian,
         tanggal_penjualan : tanggal_penjualan,
         grand_total : grand_total,
         status : status
